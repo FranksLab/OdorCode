@@ -1,4 +1,4 @@
-function FilesKK = FindFilesKKedited(ExptType)
+function FilesKK = FindFilesKK(ExptType)
 
 % FindFilesBR
 % Based on a user selection or text input find related files for a given
@@ -12,7 +12,10 @@ brpath = 'Y:\';
 if strcmp(ExptType,'KWIK')
     [filename, pathname] = uigetfile([hebbpath,'*kwik']);
     Expt = filename(1:15);
-    FilesKK.KWIK = [pathname,filename];   
+    FilesKK.KWIK = [pathname,filename]; 
+elseif strcmp(ExptType,'KWX')
+    [filename, pathname] = uigetfile([brpath,'*.KWX']);
+    Expt = filename(1:15);
 elseif strcmp(ExptType,'LFP')
     [filename, pathname] = uigetfile([brpath,'*.ns6']);
     Expt = filename(1:15);
@@ -25,10 +28,10 @@ else % user fed in a spike file location I hope.
     Expt = ExptType(1:15);
 end
 
+FilesKK.KWIK = [hebbpath,'SortedKWIK\',Expt,'.kwik'];
+FilesKK.KWX = [hebbpath,'KWX\',Expt,'.kwx'];
 FilesKK.LFP = [brpath,Expt,'.ns6'];
 FilesKK.AIP = [brpath,Expt,'.ns3'];
-FilesKK.KWIK = [hebbpath,'SortedKWIK\',Expt,'.kwik'];
-
 
 % Expt will now look something like this '24-Apr-2014-001'
 % 
