@@ -70,6 +70,30 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % LaserTimes only needs to be created in optogenetic experiments.
 % First, try to find Laser on and off times. If there are no pulses
 % leave LaserTimes empty. We may want to know every Laserswitching time, so
-% probably we need, for every valve: LaserTimes{Valve}.LaserOn ...
-% LaserOff, and LaserTimes{Valve}(Trial) = 1 for Laser was on, else 0.
+% probably we need, for every valve: LaserTimes{Valve}.LaserStart time relative to PREX ...
+% LaserStop, and LaserTimes{Valve}(Trial) = 1 for Laser was on, else 0.
+% [LaserTimes] = CreateLaserTimes(ValveTimes,LASER,t);
+[LaserOn,LaserOff] = LaserPulseFinder(LASER,t);
+
+if ~isempty(LaserOn)  
+    for Valve = 1:length(ValveTimes.PREXTimes)
+        [~,~,~,AssignDist] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},LaserOn,'previous');
+        LaserTimes.TrialType{Valve} = AssignDist<5; % This is hardcoded at 
+        % 5 now, but should be flexible later. If distance between PREX and 
+        % previous LaserOn is less than some number it was a laser trial.
+        
+        % LaserStart relative to PREXTimes
+        LaserTimes.LaserStart{Valve} = -AssignDist .* LaserTimes.TrialType{Valve};
+        
+        % LaserStop relative to PREXTimes
+        [~,~,~,AssignDist] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},LaserOff,'next');
+        LaserTimes.LaserStop{Valve} = AssignDist .* LaserTimes.TrialType{Valve};
+    end
+else
+    LaserTimes = 'NoLaser';
+end
+
+
+
+
 end
