@@ -1,4 +1,5 @@
 function [LaserON, LaserOFF] = LaserPulseFinder(LASER,t)
+%% If LASER is flat, then LaserON and LaserOFF will be empty.
  LASER = LASER-max(LASER)/2;
  SignSwitch = LASER(1:end-1).*LASER(2:end);
  dLASER = diff(LASER);

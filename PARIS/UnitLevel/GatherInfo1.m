@@ -4,7 +4,7 @@ function [ValveTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix
 FilesKK = FindFilesKK(KWIKfile);
 
 %% Get Analog Input Info
-[Fs,t,VLOs,FVO,resp,~] = NS3Unpacker(FilesKK.AIP);
+[Fs,t,VLOs,FVO,resp,LASER] = NS3Unpacker(FilesKK.AIP);
 
 %% Breath LFP Coherence
 % openNSx(FilesKK.LFP,'c:16');
@@ -66,4 +66,10 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % be the Number of Trials in length.
 [ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,tWarpLinear,Fs);
 
+%% Create LaserTimes
+% LaserTimes only needs to be created in optogenetic experiments.
+% First, try to find Laser on and off times. If there are no pulses
+% leave LaserTimes empty. We may want to know every Laserswitching time, so
+% probably we need, for every valve: LaserTimes{Valve}.LaserOn ...
+% LaserOff, and LaserTimes{Valve}(Trial) = 1 for Laser was on, else 0.
 end
