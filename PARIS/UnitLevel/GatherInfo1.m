@@ -1,4 +1,4 @@
-function [ValveTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix] = GatherInfo1(KWIKfile)
+function [ValveTimes,LaserTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix] = GatherInfo1(KWIKfile)
 
 %% Get File Names
 FilesKK = FindFilesKK(KWIKfile);
@@ -64,6 +64,10 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % inhalation) for the respiration cycle that immediately follows all of the 
 % Final Valve Switches associated with selection of Valve 1. This should
 % be the Number of Trials in length.
+
+% 10/22/14 - It's possible I want to analyze spikes on their own or
+% with respect to Laser when no Valves were switched. Modify CreateValveTimes to
+% allow GatherInfo1 to continue if there are no FV switches.
 [ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,tWarpLinear,Fs);
 
 %% Create LaserTimes
@@ -75,19 +79,32 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % [LaserTimes] = CreateLaserTimes(ValveTimes,LASER,t);
 [LaserOn,LaserOff] = LaserPulseFinder(LASER,t);
 
-if ~isempty(LaserOn)  
-    for Valve = 1:length(ValveTimes.PREXTimes)
-        [~,~,~,AssignDist] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},LaserOn,'previous');
-        LaserTimes.TrialType{Valve} = AssignDist<5; % This is hardcoded at 
-        % 5 now, but should be flexible later. If distance between PREX and 
-        % previous LaserOn is less than some number it was a laser trial.
+if ~isempty(LaserOn)
+    
+    % Absolute Laser on and off times in the recording
+    LaserTimes.LaserOn = LaserOn;
+    LaserTimes.LaserOff = LaserOff;
+    LaserTimes.LaserTimeWarpOn  = tWarpLinear(round(LaserTimes.LaserOn.*Fs));
+    LaserTimes.LaserTimeWarpOff  = tWarpLinear(round(LaserTimes.LaserOff.*Fs));
+    [~,LaserTimes.PREXTimes,LaserTimes.PREXIndex] = CrossExamineMatrix(LaserTimes.LaserOn,PREX,'next');  
+    LaserTimes.PREXTimeWarp  = tWarpLinear(round(LaserTimes.PREXTimes.*Fs));
+    
+    if ~ischar(ValveTimes)
         
-        % LaserStart relative to PREXTimes
-        LaserTimes.LaserStart{Valve} = -AssignDist .* LaserTimes.TrialType{Valve};
+        for Valve = 1:length(ValveTimes.PREXTimes)
+            [~,~,~,AssignDist] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},LaserOn,'previous');
+            LaserTimes.TrialType{Valve} = AssignDist<5; % This is hardcoded at
+            % 5 now, but should be flexible later. If distance between PREX and
+            % previous LaserOn is less than some number it was a laser trial.
+            
+            % LaserStart relative to PREXTimes
+            LaserTimes.TrialStart{Valve} = -AssignDist .* LaserTimes.TrialType{Valve};
+            
+            % LaserStop relative to PREXTimes
+            [~,~,~,AssignDist] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},LaserOff,'next');
+            LaserTimes.TrialStop{Valve} = AssignDist .* LaserTimes.TrialType{Valve};
+        end
         
-        % LaserStop relative to PREXTimes
-        [~,~,~,AssignDist] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},LaserOff,'next');
-        LaserTimes.LaserStop{Valve} = AssignDist .* LaserTimes.TrialType{Valve};
     end
 else
     LaserTimes = 'NoLaser';
