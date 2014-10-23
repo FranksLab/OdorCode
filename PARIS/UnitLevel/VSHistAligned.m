@@ -1,4 +1,4 @@
-function [HistAligned,HistAlignSumRate,HistAlignSmoothRate] = VSHistAligned(ValveTimes,SpikeTimes,Edges,BinSize)
+function [HistAligned,HistAlignSumRate,HistAlignSmoothRate,RasterAlign] = VSHistAligned(ValveTimes,SpikeTimes,Edges,BinSize)
 
 HistAligned = cell(size(ValveTimes.PREXTimes,2),size(SpikeTimes.tsec,1));
 HistAlignSumRate = cell(size(ValveTimes.PREXTimes,2),size(SpikeTimes.tsec,1));
@@ -8,8 +8,9 @@ for Unit = 1:size(SpikeTimes.tsec,1)
     st = SpikeTimes.tsec{Unit};
     for Valve = 1:size(ValveTimes.PREXTimes,2)
         [CEM,~,~] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},st','hist');
+        RasterAlign{Valve,Unit} = num2cell(CEM,2);
         [HistAligned{Valve,Unit},~] = histc(CEM,Edges,2);
-        HistAlignSumRate{Valve,Unit} = sum(HistAligned{Valve,Unit})/(BinSize*size(ValveTimes.PREXTimes,2));
+        HistAlignSumRate{Valve,Unit} = sum(HistAligned{Valve,Unit})/(BinSize*size(ValveTimes.PREXTimes{Valve},2));
         HistAlignSmoothRate{Valve,Unit} = smooth(HistAlignSumRate{Valve,Unit},4);
     end
 end
