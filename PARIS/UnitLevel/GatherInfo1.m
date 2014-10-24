@@ -54,7 +54,7 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % in seconds. SpikeTimes.tsec{1} is the combined spike train of all
 % identified units. stwarped warps all the spike times in breath cycles
 % according to zero-crossings. 
-[SpikeTimes] = CreateSpikeTimes(FilesKK.KWIK,Fs,tWarpLinear);
+[SpikeTimes] = CreateSpikeTimes(FilesKK,Fs,tWarpLinear);
 
 %% Create ValveTimes
 % ValveTimes is a structure with five fields: FVSwitchTimesOn,

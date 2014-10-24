@@ -1,7 +1,7 @@
-function [SpikeTimes] = CreateSpikeTimes(KWIKfile,Fs,tWarpLinear)
+function [SpikeTimes] = CreateSpikeTimes(FilesKK,Fs,tWarpLinear)
 
 % Retrieve SpikeTimes from cluster file
-[SpikeTimes] = SpikeTimesKK(KWIKfile);
+[SpikeTimes] = SpikeTimesKK(FilesKK);
 
 % Warp SpikeTimes by tWarp
 SpikeTimes.stwarped = cell(length(SpikeTimes.tsec),1);

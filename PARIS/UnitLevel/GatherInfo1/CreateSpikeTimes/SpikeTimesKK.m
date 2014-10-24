@@ -1,16 +1,14 @@
-function [UnitID,waveform] = SpikeTimesKK(file)
+function [UnitID] = SpikeTimesKK(FilesKK)
 % SpikeTimesKK will return a structure called UnitID with tsec, chans, and
 % units. UnitID{1} is the sum of all sorted Units.
 
-spiketimes = double(hdf5read(file.KWIK, '/channel_groups/0/spikes/time_samples'));
-clusternumbers = double(hdf5read(file.KWIK, '/channel_groups/0/spikes/clusters/main'));
+spiketimes = double(hdf5read(FilesKK.KWIK, '/channel_groups/0/spikes/time_samples'));
+clusternumbers = double(hdf5read(FilesKK.KWIK, '/channel_groups/0/spikes/clusters/main'));
 unitlist = unique(clusternumbers);
-
-waveform = hdf5read(file.KWX, '/channel_groups/0/waveforms_raw')
 
 for(count=1:length(unitlist))
     str=['/channel_groups/0/clusters/main/',num2str(count)];
-    clustergroups(count) = double(h5readatt(file.KWIK,str,'cluster_group'));
+    clustergroups(count) = double(h5readatt(FilesKK.KWIK,str,'cluster_group'));
 end
 
 % For only sorted MUA
