@@ -17,7 +17,7 @@ if ~isempty(FVOpens)
     %% CreateValveTimesR (ValveTimes.FVSwitchTimesOn,PREX)
     
     % Assign PREX times (i.e. inhalation starts) to FVOpenings
-    [ValveTimes.PREXIndex,ValveTimes.PREXTimes,ValveTimes.PREXTimeWarp,ValveTimes.FVTimeWarp] = PREXValveAssigner (ValveTimes.FVSwitchTimesOn,PREX,tWarpLinear,Fs);
+    [ValveTimes.PREXIndex,ValveTimes.PREXTimes,ValveTimes.PREXTimeWarp,ValveTimes.FVTimeWarp] = PREXAssigner (ValveTimes.FVSwitchTimesOn,PREX,tWarpLinear,Fs);
     % ValveTimes.PREXTimes = ValveTimes.FVSwitchTimesOn;
     
 else
