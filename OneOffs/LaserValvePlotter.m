@@ -1,48 +1,17 @@
 clear all
 close all
 clc
+%%
 
-
-[ValveTimes,LaserTimes,SpikeTimes,PREX,Fs,t,efd.BreathStats] = GatherInfo1('Z:/SortedKwik/17-Oct-2014-006.kwik');
+[ValveTimes,LaserTimes,LVTimes,SpikeTimes,PREX,Fs,t,efd.BreathStats] = GatherInfo1('Z:/SortedKwik/17-Oct-2014-006.kwik');
 
 %%
 %% Histogram Parameters
 BinSize = 0.02; % in seconds
 PST = [-10 15]; % in seconds
 
-VT = ValveTimes;
-FN = fieldnames(VT);
+LVT = LVTimes;
 for LaserStat = 1:2;
-    for i = 1:length(FN)
-        for Valve = 1:length(VT.(FN{i}))
-            LVT{LaserStat}.(FN{i}){Valve} = VT.(FN{i}){Valve}(LaserTimes.TrialType{Valve}==LaserStat-1);
-        end
-    end
-    [efd.ValveSpikes{LaserStat},Edges] = CreateValveSpikes(LVT{LaserStat},SpikeTimes,PREX,BinSize,PST);
-    efd.HistStats{LaserStat} = CreateHistStats(Edges,BinSize,efd.BreathStats,efd.ValveSpikes{LaserStat});
-end
-
-%% Plotting 1
-clear all
-close all
-clc
-
-
-[ValveTimes,LaserTimes,SpikeTimes,PREX,Fs,t,efd.BreathStats] = GatherInfo1('Z:/SortedKwik/17-Oct-2014-006.kwik');
-
-%%
-%% Histogram Parameters
-BinSize = 0.02; % in seconds
-PST = [-10 15]; % in seconds
-
-VT = ValveTimes;
-FN = fieldnames(VT);
-for LaserStat = 1:2;
-    for i = 1:length(FN)
-        for Valve = 1:length(VT.(FN{i}))
-            LVT{LaserStat}.(FN{i}){Valve} = VT.(FN{i}){Valve}(LaserTimes.TrialType{Valve}==LaserStat-1);
-        end
-    end
     [efd.ValveSpikes{LaserStat},Edges] = CreateValveSpikes(LVT{LaserStat},SpikeTimes,PREX,BinSize,PST);
     efd.HistStats{LaserStat} = CreateHistStats(Edges,BinSize,efd.BreathStats,efd.ValveSpikes{LaserStat});
 end
