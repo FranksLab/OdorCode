@@ -1,4 +1,4 @@
-function [ValveTimes,LaserTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix] = GatherInfo1(KWIKfile)
+function [ValveTimes,LaserTimes,LVTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix] = GatherInfo1(KWIKfile)
 
 %% Get File Names
 FilesKK = FindFilesKK(KWIKfile);
@@ -73,44 +73,31 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 %% Create LaserTimes
 % LaserTimes only needs to be created in optogenetic experiments.
 % First, try to find Laser on and off times. If there are no pulses
-% leave LaserTimes empty. We may want to know every Laserswitching time, so
-% probably we need, for every valve: LaserTimes{Valve}.LaserStart time relative to PREX ...
-% LaserStop, and LaserTimes{Valve}(Trial) = 1 for Laser was on, else 0.
-% [LaserTimes] = CreateLaserTimes(ValveTimes,LASER,t);
-[LaserOn,LaserOff] = LaserPulseFinder(LASER,t);
+% make LaserTimes 'NoLaser'. 
+[LaserTimes] = CreateLaserTimes(LASER,PREX,t,tWarpLinear,Fs);
 
-if ~isempty(LaserOn)
-    
-    % Absolute Laser on and off times in the recording
-    LaserTimes.LaserOn = LaserOn;
-    LaserTimes.LaserOff = LaserOff;
-    LaserTimes.LaserTimeWarpOn  = tWarpLinear(round(LaserTimes.LaserOn.*Fs));
-    LaserTimes.LaserTimeWarpOff  = tWarpLinear(round(LaserTimes.LaserOff.*Fs));
-    [~,LaserTimes.PREXTimes,LaserTimes.PREXIndex] = CrossExamineMatrix(LaserTimes.LaserOn,PREX,'next');  
-    LaserTimes.PREXTimeWarp  = tWarpLinear(round(LaserTimes.PREXTimes.*Fs));
-    
-    if ~ischar(ValveTimes)
-        
-        for Valve = 1:length(ValveTimes.PREXTimes)
-            [~,~,~,AssignDist] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},LaserOn,'previous');
-            LaserTimes.TrialType{Valve} = AssignDist<5; % This is hardcoded at
-            % 5 now, but should be flexible later. If distance between PREX and
-            % previous LaserOn is less than some number it was a laser trial.
-            
-            % LaserStart relative to PREXTimes
-            LaserTimes.TrialStart{Valve} = -AssignDist .* LaserTimes.TrialType{Valve};
-            
-            % LaserStop relative to PREXTimes
-            [~,~,~,AssignDist] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},LaserOff,'next');
-            LaserTimes.TrialStop{Valve} = AssignDist .* LaserTimes.TrialType{Valve};
-        end
-        
-    end
+% [LaserOn,LaserOff] = LaserPulseFinder(LASER,t);
+% 
+% if ~isempty(LaserOn)
+%     
+%     % Absolute Laser on and off times in the recording
+%     LaserTimes.LaserOn = LaserOn;
+%     LaserTimes.LaserOff = LaserOff;
+%     LaserTimes.LaserTimeWarpOn  = tWarpLinear(round(LaserTimes.LaserOn.*Fs));
+%     LaserTimes.LaserTimeWarpOff  = tWarpLinear(round(LaserTimes.LaserOff.*Fs));
+%     [~,LaserTimes.PREXTimes,LaserTimes.PREXIndex] = CrossExamineMatrix(LaserTimes.LaserOn,PREX,'next');  
+%     LaserTimes.PREXTimeWarp  = tWarpLinear(round(LaserTimes.PREXTimes.*Fs));
+%  
+
+%% Create LVTimes
+% If there are laser and valve pulses then we want to label valve switches
+% by their laser status. I will embed a LaserStat attribute, but really the
+% system is: LVTimes{1} is the ValveTimes with the laser off. and
+% LVTimes{2} is when the laser is on. 
+if ~ischar(ValveTimes) && ~ischar(LaserTimes)
+    [LVTimes] = CreateLVTimes(LaserTimes,ValveTimes);
 else
-    LaserTimes = 'NoLaser';
+    LVTimes = 'NoLVTimes';
 end
-
-
-
 
 end
