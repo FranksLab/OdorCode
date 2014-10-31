@@ -4,35 +4,49 @@ function [UnitID] = SpikeTimesKK(FilesKK)
 
 spiketimes = double(hdf5read(FilesKK.KWIK, '/channel_groups/0/spikes/time_samples'));
 clusternumbers = double(hdf5read(FilesKK.KWIK, '/channel_groups/0/spikes/clusters/main'));
+allwaveforms = hdf5read(FilesKK.KWX, '/channel_groups/0/waveforms_raw');
+
 unitlist = unique(clusternumbers);
 
-for(count=1:length(unitlist))
-    str=['/channel_groups/0/clusters/main/',num2str(count)];
+for count=1:length(unitlist)
+
+    str=['/channel_groups/0/clusters/main/',num2str(unitlist(count))];
     clustergroups(count) = double(h5readatt(FilesKK.KWIK,str,'cluster_group'));
 end
 
 % For only sorted MUA
-GoodClusters=unitlist(find(clustergroups==2));
-for channel = 1
-    for unit = 1:length(GoodClusters)
-        TSECS{unit+1,channel} = spiketimes(find(clusternumbers==GoodClusters(unit)))/30000;  
-        Units{unit+1,channel} = GoodClusters(unit); 
-    end
-end
+GoodClusters=unitlist(clustergroups==2);
 
+for unit = 1:length(GoodClusters)
+    TSECS{unit+1} = spiketimes(clusternumbers==GoodClusters(unit))/30000;
+    Units{unit+1} = GoodClusters(unit);
+    
+    % Finds position (a pair (x,y) in microns relative to the whole shank)
+    % of the channel with the best waveform which was calculated in WaveformKK
+    [avgwaveform(unit+1),maxpeak(unit+1),channel(unit+1),width(unit+1)] = WaveformKK(allwaveforms(:,:, clusternumbers==GoodClusters(unit)));
+    position(unit+1) = {double(h5readatt(FilesKK.KWIK, ['/channel_groups/0/channels/',num2str(channel(unit+1)-1)],'position'))};
+    spikeoccurences(unit+1)=size(allwaveforms(:,:, clusternumbers==GoodClusters(unit)),3);
+end
+scatter(width(2:end),spikeoccurences(2:end))
+xlabel('width')
+ylabel('number of spikes')
 tsec = TSECS(:);
 UnitID.tsec = tsec;
 tsecmat = sort(cell2mat(UnitID.tsec(2:end))); 
 UnitID.tsec{1} = tsecmat;
 
-%%
-
 units = Units(:);
 UnitID.units = units;
 UnitID.units{1} = 0;
 
+UnitID.Wave.AverageWaveform=avgwaveform;
+UnitID.Wave.MaximumPeak=maxpeak;
+UnitID.Wave.Channel=channel;
+UnitID.Wave.Width=width;
+UnitID.Wave.Position=position;
 
-% %% For unsorted + sorted (MUA)
+
+%% For unsorted + sorted (MUA)
 % for channel = 1
 %     for unit = 2:length(unitlist)
 %         TSECS{unit-1,channel} = spiketimes(CC==unitlist(unit))/30000;  
