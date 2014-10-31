@@ -25,5 +25,7 @@ AssignedFVSwitchTimesOff = cat(2,FVSwitchTimesOff{:});
 
 FVSwitchTimesOn{1} = FVOpens(~ismember(FVOpens, AssignedFVSwitchTimesOn));
 FVSwitchTimesOff{1} = FVCloses(~ismember(FVCloses, AssignedFVSwitchTimesOff));
+FVSwitchTimesOn{9} = FVOpens(~ismember(FVOpens, AssignedFVSwitchTimesOn));
+FVSwitchTimesOff{9} = FVCloses(~ismember(FVCloses, AssignedFVSwitchTimesOff));
 
 end

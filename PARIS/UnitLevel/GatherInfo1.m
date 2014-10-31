@@ -1,10 +1,10 @@
-function [ValveTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix] = GatherInfo1(KWIKfile)
+function [ValveTimes,LaserTimes,LVTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix] = GatherInfo1(KWIKfile)
 
 %% Get File Names
 FilesKK = FindFilesKK(KWIKfile);
 
 %% Get Analog Input Info
-[Fs,t,VLOs,FVO,resp,~] = NS3Unpacker(FilesKK.AIP);
+[Fs,t,VLOs,FVO,resp,LASER] = NS3Unpacker(FilesKK.AIP);
 
 %% Breath LFP Coherence
 % openNSx(FilesKK.LFP,'c:16');
@@ -64,6 +64,40 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % inhalation) for the respiration cycle that immediately follows all of the 
 % Final Valve Switches associated with selection of Valve 1. This should
 % be the Number of Trials in length.
+
+% 10/22/14 - It's possible I want to analyze spikes on their own or
+% with respect to Laser when no Valves were switched. Modify CreateValveTimes to
+% allow GatherInfo1 to continue if there are no FV switches.
 [ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,tWarpLinear,Fs);
+
+%% Create LaserTimes
+% LaserTimes only needs to be created in optogenetic experiments.
+% First, try to find Laser on and off times. If there are no pulses
+% make LaserTimes 'NoLaser'. 
+[LaserTimes] = CreateLaserTimes(LASER,PREX,t,tWarpLinear,Fs);
+
+% [LaserOn,LaserOff] = LaserPulseFinder(LASER,t);
+% 
+% if ~isempty(LaserOn)
+%     
+%     % Absolute Laser on and off times in the recording
+%     LaserTimes.LaserOn = LaserOn;
+%     LaserTimes.LaserOff = LaserOff;
+%     LaserTimes.LaserTimeWarpOn  = tWarpLinear(round(LaserTimes.LaserOn.*Fs));
+%     LaserTimes.LaserTimeWarpOff  = tWarpLinear(round(LaserTimes.LaserOff.*Fs));
+%     [~,LaserTimes.PREXTimes,LaserTimes.PREXIndex] = CrossExamineMatrix(LaserTimes.LaserOn,PREX,'next');  
+%     LaserTimes.PREXTimeWarp  = tWarpLinear(round(LaserTimes.PREXTimes.*Fs));
+%  
+
+%% Create LVTimes
+% If there are laser and valve pulses then we want to label valve switches
+% by their laser status. I will embed a LaserStat attribute, but really the
+% system is: LVTimes{1} is the ValveTimes with the laser off. and
+% LVTimes{2} is when the laser is on. 
+if ~ischar(ValveTimes) && ~ischar(LaserTimes)
+    [LVTimes] = CreateLVTimes(LaserTimes,ValveTimes);
+else
+    LVTimes = 'NoLVTimes';
+end
 
 end

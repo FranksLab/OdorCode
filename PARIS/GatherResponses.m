@@ -5,7 +5,7 @@ function [efd] = GatherResponses(KWIKfile)
 % 
 % %%
 % CLUfile = 'Z:\CLU files\08-Aug-2014-004.clu.1';
-[ValveTimes,SpikeTimes,PREX,Fs,t,efd.BreathStats] = GatherInfo1(KWIKfile);
+[ValveTimes,LaserTimes,SpikeTimes,PREX,Fs,t,efd.BreathStats] = GatherInfo1(KWIKfile);
 
 
 %% Histogram Parameters
