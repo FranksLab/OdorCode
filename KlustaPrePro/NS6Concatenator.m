@@ -9,22 +9,28 @@ clc
 
 %% Select all files to concatenate
  [fname, path] = uigetfile('*.ns*', 'Choose an NSx file...','MultiSelect','on');
-
+ if ~iscell(fname)
+ fname = {fname};
+ end
+ 
 %% Collect headerless versions of data into datas cell
-for i = 1:length(fname)
+    
+for i = 1:length(fname)    
     %% open data files sequentially headerlessly
     datas{i} = openNSxHL([path fname{i}]);
-
+%     %% for testing. truncate
+%     datas{i} = datas{i}(1:180*32*30000);
     %% Do referencing via SchooFi absolute value maneuver
     datas{i} = AbValReferee(datas{i});
-
 end
+
+
 
 %% Concatenate all datas.
 data = cell2mat(datas');
 
 %% Choose a name for your new giant file
-newfname = [path fname{1}(1:12),'cat.dat'];
+newfname = [path fname{1}(1:15),'-Line-HP100-Ref.dat'];
 
 % Opening the output file for saving
 FIDw = fopen(newfname, 'w+', 'ieee-le');

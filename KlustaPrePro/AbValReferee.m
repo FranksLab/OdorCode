@@ -4,11 +4,16 @@ function [hldr] = AbValReferee(data)
 data = reshape(data,[32 length(data)/32]); % to get back to linearized just use (:) on a matrix this shape
 data = double(data);
 
+%% cut line noise
+[B,A] = butter(2,[59/15000 61/15000],'stop');
+dataline = filtfilt(B,A,data');
+dataline = dataline';
+
 %% high pass filter the data
-low = 500;
+low = 100;
 Fs = 30000;
 [D,C] = butter(2,low/(Fs/2),'high');
-data = filtfilt(D,C,data');
+data = filtfilt(D,C,dataline');
 data = data';
 
 %% Exclude weird or dead channels from consideration as references.
