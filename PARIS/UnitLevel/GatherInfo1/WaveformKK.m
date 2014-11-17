@@ -10,8 +10,8 @@ channel=find(maxpeak==peaks);
 
 %% Find spike width for best channel
 bestwaveform=avgwaveform(:,channel)';
-x=1:3/8:32;
-y=spline(1:32,bestwaveform,x);
+x=1:3/8:size(avgwaveform,1);
+y=spline(1:size(avgwaveform,1),bestwaveform,x);
 %plot(x,y,'o',x,y)
 midtrough=(y(1)+min(y))/2;
 shiftedwave=y-midtrough;
