@@ -26,7 +26,7 @@ for k = 1:length(fname)
     readSize= double(ChannelCount * 66);
     ExtendedHeader = fread(FID, readSize, '*uint8'); % connector bank info is in here
     for headerIDX = 1:ChannelCount %gathering all the A's and B's
-		offset = double((headerIDX-1)*66);
+        offset = double((headerIDX-1)*66);
         BankNum(headerIDX)=char(ExtendedHeader(21+offset) + ('A' - 1));
     end
     Bloc=find(BankNum=='B');
@@ -35,11 +35,12 @@ for k = 1:length(fname)
     %%
     HeaderBytes   = double(typecast(BasicHeader(3:6), 'uint32')) + dataHeaderBytes; % how many Bytes to skip before data
     fseek(FID, 0, 'eof'); % move to the end of the file
-    DataPoints = double(ftell(FID))-HeaderBytes; % measure how long the data is
+    DataBytes = double(ftell(FID))-HeaderBytes; % measure how long the data is IN BYTES
+    DataPoints = DataBytes/2;
     
     
     % work in 10 minute chunks, this should be set to the max multiple that Memory can handle
-    ChunkSize = 32*600*30000; 
+    ChunkSize = 32*600*30000;
     
     % create a chunks folder if it doesn't exist, in the
     % UnitSortingAnalysis folder
@@ -50,46 +51,57 @@ for k = 1:length(fname)
     % Start from headerbytes+0 and read a chunk (eg 0:1). next time start from one
     % chunk size later (1:2). last iteration read to end of file (eg 2:2.5)
     for j = 0:floor(DataPoints/ChunkSize)
-        ChunkPosition = HeaderBytes + (j)*ChunkSize;
+        ChunkPosition = HeaderBytes + (j)*ChunkSize*2; % Here ChunkSize is
+        % multiplied by two because the unit of ChunkSize is "datapoints"
+        % each of which takes 2 bytes. But ChunkPosition needs to be in
+        % bytes to tell fseek where to move.
+        
         fseek(FID,ChunkPosition, 'bof');
         if j == floor(DataPoints/ChunkSize) % indicating last iteration
             Chunk = fread(FID, inf, '*int16');
         else
-            Chunk = fread(FID, ChunkSize, '*int16'); % We still don't know why, but ChunkSize has to be divided by 2
+            Chunk = fread(FID, ChunkSize, '*int16');
         end
         
         % Do the filtering and referencing for this chunk.
-        [ChunkAVR1 ChunkAVR2] = AbValReferee(Chunk,ChannelCount,Bloc); 
-        size(ChunkAVR1)
-        size(ChunkAVR2)
-        % Chunk naming convention .chunk1.1 1.2 2.1 etc
-        newfname = [path 'chunks\' fname{k}(1:15) '.chunk' num2str(k) '.' num2str(j)];
-        % Opening the output file for saving
-        FIDw = fopen(newfname, 'w+', 'ieee-le');
-        fwrite(FIDw, ChunkAVR, 'int16');
-        fclose(FIDw);
+        [ChunkAVR] = AbValReferee(Chunk,ChannelCount,Bloc);
+        %         size(ChunkAVR1)
+        %         size(ChunkAVR2)
+        for bank = 1:length(ChunkAVR)
+            % Chunk naming convention .chunk1.1.1 .chunk1.1.2 (file,chunk,bank) 1.2.1 2.1.1 etc
+            newfname = [path 'chunks\' fname{k}(1:15) '.chunk' num2str(k) '.' num2str(j) '.' num2str(bank)];
+            % Opening the output file for saving
+            FIDw = fopen(newfname, 'w+', 'ieee-le');
+            fwrite(FIDw, ChunkAVR{bank}, 'int16');
+            fclose(FIDw);
+        end
     end
     
     fclose(FID);
-    ChunksPerFile(k) = j+1; 
+    ChunksPerFile(k) = j+1;
 end
 %%
-CatSeries = [];
-%
-for k = 1:length(fname)
-    D = dir([path,'chunks\*.chunk',num2str(k),'*']);
-    [~,order] = sort( {D.name} );
-    D = D(order);
-    CatList = {D.name};
-    for j = 1:ChunksPerFile(k)
-        CatSeries = [CatSeries CatList{j} ,'+'];        
-    end
-end
-CatCmd = ['copy /b ' CatSeries(1:end-1) ,' ', fname{1}(1:12) 'cat.dat'];
 
+% Chunk naming convention .chunk1.1.1 .chunk1.1.2 (file,chunk,bank) 1.2.1 2.1.1 etc
+for bank = 1:length(ChunkAVR)
+    CatSeries = [];
+    for k = 1:length(fname)
+        D = dir([path,'chunks\*.chunk',num2str(k),'*',num2str(bank)]);
+        [~,order] = sort( {D.name} );
+        D = D(order);
+        CatList = {D.name};
+        for j = 1:ChunksPerFile(k)
+            CatSeries = [CatSeries CatList{j} ,'+'];
+        end
+    end
+    CatCmd{bank} = ['copy /b ' CatSeries(1:end-1) ,' ', fname{1}(1:12) [num2str(bank),'cat.dat']];
+end
+%%
 
 cd([path,'chunks']);% move to the chunks directory
-system(CatCmd);
+for bank = 1:length(CatCmd)
+system(CatCmd{bank});
+end
 system('del *chunk*')
 cd c:;
 
@@ -97,32 +109,3 @@ cd c:;
 %   %% in cmd.exe run this:
 %   copy /b Z:\UnitSortingAnalysis\31-Jul-2014_Analysis\chunks\*.* z:\UnitSortingAnalysis\chunked.dat
 % system('copy /b Z:\UnitSortingAnalysis\31-Jul-2014_Analysis\chunks\*.* z:\UnitSortingAnalysis\chunked1.dat')
-
-
-
-% %% Collect headerless versions of data into datas cell
-%
-% for i = 1:length(fname)
-%     %% open data files sequentially headerlessly
-%     datas{i} = openNSxHL([path fname{i}]);
-% %     %% for testing. truncate
-% %     datas{i} = datas{i}(1:180*32*30000);
-%     %% Do referencing via SchooFi absolute value maneuver
-%     datas{i} = AbValReferee(datas{i});
-% end
-%
-%
-%
-% %% Concatenate all datas.
-% data = cell2mat(datas');
-%
-% %% Choose a name for your new giant file
-% newfname = [path fname{1}(1:15),'-Line-HP100-Ref.dat'];
-%
-% % Opening the output file for saving
-% FIDw = fopen(newfname, 'w+', 'ieee-le');
-%
-% % Writing data into file
-% disp('Writing the converted data into the new .dat file...');
-% fwrite(FIDw, data, 'int16');
-% fclose(FIDw);
