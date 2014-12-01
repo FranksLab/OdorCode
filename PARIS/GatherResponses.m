@@ -1,4 +1,4 @@
-function [efd] = GatherResponses(KWIKfile)
+function [efd,Edges] = GatherResponses(KWIKfile)
 % clear all
 % close all
 % clc
