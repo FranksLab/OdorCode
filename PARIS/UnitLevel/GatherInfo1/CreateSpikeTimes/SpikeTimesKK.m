@@ -36,13 +36,20 @@ for unit = 1:length(GoodClusters)
     
     % Finds position (a pair (x,y) in microns relative to the whole shank)
     % of the channel with the best waveform which was calculated in WaveformKK
-    [avgwaveform(unit+1),maxpeak(unit+1),channel(unit+1),spikewidth(unit+1)] = WaveformKK(allwaveforms(:,:, clusternumbers==GoodClusters(unit)));
+    [avgwaveform(unit+1),maxpeak(unit+1),channel(unit+1),spikewidth(unit+1),ISVD(unit+1)] = WaveformKK(allwaveforms(:,:, clusternumbers==GoodClusters(unit)));
     position(unit+1) = {double(h5readatt(FilesKK.KWIK, ['/channel_groups/',probe,'/channels/',num2str(channel(unit+1)-1)],'position'))};
     spikeoccurences(unit+1)=size(allwaveforms(:,:, clusternumbers==GoodClusters(unit)),3);
 end
+%% ISVD
+scatter(ISVD(2:end),spikeoccurences(2:end))
+xlabel('ISVD')
+ylabel('number of spikes')
+%% spike width with half maximum
+figure(2); clf
 scatter(spikewidth(2:end),spikeoccurences(2:end))
 xlabel('width')
 ylabel('number of spikes')
+%%
 tsec = TSECS(:);
 UnitID.tsec = tsec;
 tsecmat = sort(cell2mat(UnitID.tsec(2:end))); 
@@ -56,6 +63,7 @@ UnitID.Wave.AverageWaveform=avgwaveform;
 UnitID.Wave.MaximumPeak=maxpeak;
 UnitID.Wave.Channel=channel;
 UnitID.Wave.Width=spikewidth;
+UnitID.Wave.ISVD=ISVD;
 UnitID.Wave.Position=position;
 
 

@@ -1,4 +1,4 @@
-function [efd] = GatherResponses(KWIKfile)
+function [efd,Edges] = GatherResponses(KWIKfile)
 % clear all
 % close all
 % clc
@@ -14,6 +14,8 @@ PST = [-10 15]; % in seconds
 
 %% Here we are gathering information. Creating histograms, some spike counts, and statistics based on histograms.
 [efd.ValveSpikes,Edges] = CreateValveSpikes(ValveTimes,SpikeTimes,PREX,BinSize,PST);
+% [efd.ValveSpikes,Edges] = CreateValveSpikes(LVTimes{2},SpikeTimes,PREX,BinSize,PST);
+
 efd.HistStats = CreateHistStats(Edges,BinSize,efd.BreathStats,efd.ValveSpikes);
 % 
 % 
