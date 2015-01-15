@@ -1,8 +1,8 @@
-function [hldr] = AbValReferee(data,ChannelCount,Bloc)
+function [hldr,badchan] = AbValReferee(data,ChannelCount,Bloc)
 %% make a data matrix
  data = reshape(data,[ChannelCount length(data)/ChannelCount]); % to get back to linearized just use (:) on a matrix this shape
  data = double(data);
- dataS = {data};
+%  dataS = {data};
 if ~isempty(Bloc)
 %     data = reshape(data,[ChannelCount length(data)/ChannelCount]); % to get back to linearized just use (:) on a matrix this shape
 %     data = double(data);
@@ -10,6 +10,8 @@ if ~isempty(Bloc)
     dataS{1} = data(1:Bloc-1,:);
     dataS{2} = data(Bloc:end,:);
 
+else
+    dataS{1} = data;
 %     for j=0:(length(data)/ChannelCount)-1 %Split 48 or 64 channel data into two separate matrices
 %         data1((1+j*(Bloc-1)):(Bloc-1+j*(Bloc-1)))=data((1+j*ChannelCount):(Bloc-1+j*ChannelCount));
 %         data2((1+j*(ChannelCount-Bloc+1)):((ChannelCount-Bloc+1)+j*(ChannelCount-Bloc+1)))=data((Bloc+j*ChannelCount):(ChannelCount+j*ChannelCount));
@@ -52,7 +54,7 @@ for count=1:length(dataS)
     a = a';
     b = abs((a-mean(a))/std(a));
     
-    Excludos = b>1;
+    Excludos = b>2.5;
     
     %% Find the absolute value of the data.
     abdata = abs(data);
@@ -77,5 +79,9 @@ for count=1:length(dataS)
 %         hldr2 = int16(datarefd(:));
 %     end
     hldr{count} = int16(datarefd(:));
+    
+    badchan{count} = Excludos;
 end
+
+
 end
