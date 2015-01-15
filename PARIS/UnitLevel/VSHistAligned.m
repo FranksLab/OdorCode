@@ -10,7 +10,7 @@ for Unit = 1:size(SpikeTimes.tsec,1)
         [CEM,~,~] = CrossExamineMatrix(ValveTimes.PREXTimes{Valve},st','hist');
         RasterAlign{Valve,Unit} = num2cell(CEM,2);
         HistAlign = histc(CEM,Edges,2);
-        [HistAligned{Valve,Unit},~] = HistAlign/BinSize;
+        HistAligned{Valve,Unit} = HistAlign/BinSize;
         HistAlignSumRate{Valve,Unit} = sum(HistAlign)/(BinSize*size(ValveTimes.PREXTimes{Valve},2));
         HistAlignSmoothRate{Valve,Unit} = smooth(HistAlignSumRate{Valve,Unit},4);
     end
