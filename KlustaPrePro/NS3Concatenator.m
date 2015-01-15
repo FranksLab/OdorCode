@@ -30,38 +30,51 @@ for k = 1:length(fname)
     
     
     % work in 10 minute chunks, this should be set to the max multiple that Memory can handle
-    ChunkSize = 32*600*30000;
+    ChunkSize = 8*600*2000;
     
     % create a chunks folder if it doesn't exist, in the
     % UnitSortingAnalysis folder
-    if ~exist([path,'chunks'],'dir')
-        mkdir(path,'chunks');
+    if ~exist([path,'COM'],'dir')
+        mkdir(path,'COM');
     end
     
-    % Start from headerbytes+0 and read a chunk (eg 0:1). next time start from one
-    % chunk size later (1:2). last iteration read to end of file (eg 2:2.5)
-    for j = 0:floor(DataPoints/ChunkSize)
-        ChunkPosition = HeaderBytes + (j)*ChunkSize*2; % Here ChunkSize is
-        % multiplied by two because the unit of ChunkSize is "datapoints"
-        % each of which takes 2 bytes. But ChunkPosition needs to be in
-        % bytes to tell fseek where to move.
-        
-        fseek(FID,ChunkPosition, 'bof');
-        if j == floor(DataPoints/ChunkSize) % indicating last iteration
-            Chunk = fread(FID, inf, '*int16');
-        else
-            Chunk = fread(FID, ChunkSize, '*int16');
-        end
-        
-       
-            % Chunk naming convention .chunk1.1.1 .chunk1.1.2 (file,chunk,bank) 1.2.1 2.1.1 etc
-            newfname = [path 'chunks\' fname{k}(1:15) '.chunk' num2str(k) '.' num2str(j)];
-            % Opening the output file for saving
-            FIDw = fopen(newfname, 'w+', 'ieee-le');
-            fwrite(FIDw, Chunk, 'int16');
-            fclose(FIDw);
-       
+    if k ==1
+        fseek(FID, 0, 'bof'); 
+        Header = fread(FID, HeaderBytes, '*uint8');
+        headerfname = [path 'COM\' fname{k}(1:15) '.headerchunk'];
+        % Opening the output file for saving
+        FIDw = fopen(headerfname, 'w+', 'ieee-le');
+        fwrite(FIDw, Header, 'uint8');
+        fclose(FIDw);
     end
+
+%%
+% Start from headerbytes+0 and read a chunk (eg 0:1). next time start from one
+% chunk size later (1:2). last iteration read to end of file (eg 2:2.5)
+for j = 0:floor(DataPoints/ChunkSize)
+    
+    ChunkPosition = HeaderBytes + (j)*ChunkSize*2; % Here ChunkSize is
+    % multiplied by two because the unit of ChunkSize is "datapoints"
+    % each of which takes 2 bytes. But ChunkPosition needs to be in
+    % bytes to tell fseek where to move.
+    
+    
+    fseek(FID,ChunkPosition, 'bof');
+    if j == floor(DataPoints/ChunkSize) % indicating last iteration
+        Chunk = fread(FID, inf, '*int16');
+    else
+        Chunk = fread(FID, ChunkSize, '*int16');
+    end
+    
+    
+    % Chunk naming convention .chunk1.1.1 .chunk1.1.2 (file,chunk,bank) 1.2.1 2.1.1 etc
+    newfname = [path 'COM\' fname{k}(1:15) '.chunk' num2str(k) '.' num2str(j,'%02.0f')];
+    % Opening the output file for saving
+    FIDw = fopen(newfname, 'w+', 'ieee-le');
+    fwrite(FIDw, Chunk, 'int16');
+    fclose(FIDw);
+    
+end
     
     fclose(FID);
     ChunksPerFile(k) = j+1;
@@ -69,10 +82,10 @@ end
 %%
 
 % Chunk naming convention .chunk1.1.1 .chunk1.1.2 (file,chunk,bank) 1.2.1 2.1.1 etc
-for bank = 1:length(ChunkAVR)
-    CatSeries = [];
+
+    CatSeries = [headerfname,'+'];
     for k = 1:length(fname)
-        D = dir([path,'chunks\*.chunk',num2str(k),'*',num2str(bank)]);
+        D = dir([path,'COM\*.chunk',num2str(k),'*']);
         [~,order] = sort( {D.name} );
         D = D(order);
         CatList = {D.name};
@@ -80,14 +93,12 @@ for bank = 1:length(ChunkAVR)
             CatSeries = [CatSeries CatList{j} ,'+'];
         end
     end
-    CatCmd{bank} = ['copy /b ' CatSeries(1:end-1) ,' ', fname{1}(1:12) [num2str(bank),'cat.dat']];
-end
+    CatCmd = ['copy /b ' CatSeries(1:end-1) ,' ', fname{1}(1:15) ,'-COM.ns3'];
+
 %%
 
-cd([path,'chunks']);% move to the chunks directory
-for bank = 1:length(CatCmd)
-system(CatCmd{bank});
-end
+cd([path,'COM']);% move to the chunks directory
+system(CatCmd);
 system('del *chunk*')
 cd c:;
 

@@ -6,29 +6,6 @@ FilesKK = FindFilesKK(KWIKfile);
 %% Get Analog Input Info
 [Fs,t,VLOs,FVO,resp,LASER] = NS3Unpacker(FilesKK.AIP);
 
-%% Breath LFP Coherence
-% openNSx(FilesKK.LFP,'c:16');
-% data = double(downsample(NS6.Data,15));
-% params.Fs = 2000;
-% params.fpass = [0.5 10];
-% params.tapers = [2 3];
-% params.trialave = 0;
-% params.err = [0];
-% [C,phi,S12,S1,S2,tco,f]=cohgramc(data',resp',[60 10],params);
-% [a,b] = max(S2,[],2);
-% IND = sub2ind(size(C),1:length(tco),b');
-% CohAtBF = C(IND);
-% figure
-% subplot(3,1,1)
-% imagesc(tco,f,S2'); axis xy;
-% subplot(3,1,2)
-% imagesc(tco,f,C'); axis xy;
-% subplot(3,1,3)
-% plot(tco,CohAtBF)
-% 
-% return
-
-
 %% Have to get Final Valve Times to clean up respiration trace
 % FV Opens and FV Closes
 [FVOpens, FVCloses] = FVSwitchFinder(FVO,t);
@@ -36,7 +13,7 @@ FilesKK = FindFilesKK(KWIKfile);
 %% BreathProcessing (resp,Fs,t)
 
 % Find respiration cycles. 
-[InhTimes,PREX,POSTX,RRR] = FreshBreath(resp,Fs,t,FVOpens);
+[InhTimes,PREX,POSTX,RRR,BbyB] = FreshBreath(resp,Fs,t,FVOpens,FVCloses,FilesKK);
 
 % Warp respiration cycles according to zerocrossings using ZXwarp. 
 % tWarp is necessary for warpingspikes
@@ -44,8 +21,8 @@ FilesKK = FindFilesKK(KWIKfile);
 BreathStats.AvgRate = 1/BreathStats.AvgPeriod;
 BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 
-% Get Warped breath example
-[warpFmatrix,tFmatrix] = BreathWarpMatrix(RRR,InhTimes,PREX,POSTX,Fs);
+% % Get Warped breath example
+% [warpFmatrix,tFmatrix] = BreathWarpMatrix(RRR,InhTimes,PREX,POSTX,Fs);
 
 %% SpikeProcessing (FilesKK)
 % SpikeTimes is a structure with three fields: tsec, stwarped, and units. units contains
@@ -69,6 +46,18 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % with respect to Laser when no Valves were switched. Modify CreateValveTimes to
 % allow GatherInfo1 to continue if there are no FV switches.
 [ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,tWarpLinear,Fs);
+
+% Create StateIndex
+for Valve = 1:length(ValveTimes.PREXIndex)
+    for Trial = 1:length(ValveTimes.PREXIndex{Valve})
+        PreBreathH = BbyB.Height(ValveTimes.PREXIndex{Valve}(Trial)-5:ValveTimes.PREXIndex{Valve}(Trial)+10);
+        ValveTimes.StateIndex{Valve}(Trial) = std(PreBreathH)/abs(mean(PreBreathH));  
+        ThreeAfter = BbyB.Width(ValveTimes.PREXIndex{Valve}(Trial):ValveTimes.PREXIndex{Valve}(Trial)+2);
+        SixBefore = BbyB.Width(ValveTimes.PREXIndex{Valve}(Trial)-7:ValveTimes.PREXIndex{Valve}(Trial)-1);
+        ValveTimes.Sniff{Valve}(Trial) = 1/mean(ThreeAfter);
+        ValveTimes.SniffDiff{Valve}(Trial) = 1/(mean(ThreeAfter))-1/mean(SixBefore);
+    end
+end
 
 %% Create LaserTimes
 % LaserTimes only needs to be created in optogenetic experiments.

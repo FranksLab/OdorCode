@@ -9,7 +9,7 @@ function [efd,Edges] = GatherResponses(KWIKfile)
 
 
 %% Histogram Parameters
-BinSize = 0.02; % in seconds
+BinSize = 0.002; % in seconds
 PST = [-10 15]; % in seconds
 
 %% Here we are gathering information. Creating histograms, some spike counts, and statistics based on histograms.
@@ -17,6 +17,9 @@ PST = [-10 15]; % in seconds
 % [efd.ValveSpikes,Edges] = CreateValveSpikes(LVTimes{2},SpikeTimes,PREX,BinSize,PST);
 
 efd.HistStats = CreateHistStats(Edges,BinSize,efd.BreathStats,efd.ValveSpikes);
+efd.StateIndex = ValveTimes.StateIndex;
+efd.Sniff = ValveTimes.Sniff;
+efd.SniffDiff = ValveTimes.SniffDiff;
 % 
 % 
 % %%

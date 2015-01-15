@@ -12,7 +12,7 @@ clc
 if ~iscell(fname)
     fname = {fname};
 end
-
+%%
 % fname is a cell containing all filenames to concatenate.
 % make chunks for each file separately
 for k = 1:length(fname)
@@ -81,30 +81,41 @@ for k = 1:length(fname)
     ChunksPerFile(k) = j+1;
 end
 %%
+% Chunks per File says how many 5 minute sections in a dual site recording.
+Sections = ceil(ChunksPerFile*5/30);
+Sectionsplit = ceil((1:ChunksPerFile)/(ChunksPerFile/Sections));
+
 
 % Chunk naming convention .chunk1.1.1 .chunk1.1.2 (file,chunk,bank) 1.2.1 2.1.1 etc
 for bank = 1:length(ChunkAVR)
-    CatSeries = [];
-    for k = 1:length(fname)
-        D = dir([path,'chunks\*.chunk',num2str(k),'*',num2str(bank)]);
-        [~,order] = sort( {D.name} );
-        D = D(order);
-        CatList = {D.name};
-        for j = 1:ChunksPerFile(k)
-            CatSeries = [CatSeries CatList{j} ,'+'];
+    for Section = 1:Sections
+        a = 1
+        CatSeries = [];
+        for k = 1:length(fname)
+            D = dir([path,'chunks\*.chunk',num2str(k),'*',num2str(bank)]);
+            [~,order] = sort( {D.name} );
+            D = D(order);
+            CatList = {D.name};
+            for j = find(Sectionsplit == Section);
+                CatSeries = [CatSeries CatList{j} ,'+'];
+            end
         end
+        CatCmd{bank,Section} = ['copy /b ' CatSeries(1:end-1) ,' ', fname{1}(1:15) ['_',num2str(Section,'%02.0f'),'_',num2str(bank),'.dat']];
     end
-    CatCmd{bank} = ['copy /b ' CatSeries(1:end-1) ,' ', fname{1}(1:12) [num2str(bank),'COM.dat']];
 end
 %%
 
 cd([path,'chunks']);% move to the chunks directory
-for bank = 1:length(CatCmd)
-system(CatCmd{bank});
-badchan{bank}
+for bank = 1:size(CatCmd,1)
+    for Section = 1:size(CatCmd,2)
+        system(CatCmd{bank,Section});
+    end
+    badchan{bank}
 end
 system('del *chunk*')
 cd c:;
+
+
 
 %%
 %   %% in cmd.exe run this:

@@ -1,23 +1,23 @@
-function [avgwaveform,maxpeak,channel,width,ISVD] = WaveformKK(clusterwaveform)
+function [avgwaveform,channelsort,channelpeaks,ISVD] = WaveformKK(clusterwaveform)
 
 
 %waveform = hdf5read(channelwaveform, '/channel_groups/0/waveforms_filtered');
 %% Find average waveform and calculate max peak for best channel
 avgwaveform=squeeze(mean(clusterwaveform,3))';
 peaks=peak2peak(avgwaveform,1);
-maxpeak=max(peaks);
-channel=find(maxpeak==peaks);
+[channelpeaks,channelsort] = sort(peaks,'descend');
+bestchannel = channelsort(1);
 
 %% Find spike width for best channel
-bestwaveform=avgwaveform(:,channel)';
+bestwaveform=avgwaveform(:,bestchannel)';
 %x=1:3/8:size(avgwaveform,1)
 %y=spline(1:size(avgwaveform,1),bestwaveform,x)
 x=1:size(avgwaveform,1);
 y=bestwaveform;
-plot(x,y)
+% plot(x,y)
 %% new method (ISVD)
 V26=interp1(x,y,x(min(y)==y)+0.00026*30000,'spline');
-ISVD = -100*(min(y)-V26)/(maxpeak);
+ISVD = -100*(min(y)-V26)/(channelpeaks(1));
 
 
 %% old method (half maximum width)

@@ -6,7 +6,6 @@ clc
 % can match experimental events with these spikes. That means you have to
 % think about the header.
 
-
 %% Select all files to concatenate
 [fname, path] = uigetfile('*.ns*', 'Choose an NSx file...','MultiSelect','on');
 if ~iscell(fname)

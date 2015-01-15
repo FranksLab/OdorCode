@@ -7,7 +7,13 @@ function [Scores] = OCscores(KWIKfile)
 % you are generating scores for, check Scores(x).RType
 
 %% Here we are gathering information. Creating histograms, some spike counts, and statistics based on histograms.
-[efd] = GatherResponses(KWIKfile);
+EFDfile = ['Z:\EFDfiles\',KWIKfile(15:31),'efd.mat'];
+if exist(EFDfile,'file')
+    load(EFDfile)
+else
+    [efd,Edges] = GatherResponses(KWIKfile);
+    save(EFDfile,'efd','Edges')
+end
 
 %% To measure things like Z scores, ROCs, and even baseline activity I need to define "The Response".
 % For now, The Response will be calcuated for First Cycle Spike Count,

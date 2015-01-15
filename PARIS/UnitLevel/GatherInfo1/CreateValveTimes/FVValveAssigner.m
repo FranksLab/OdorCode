@@ -19,13 +19,23 @@ for i = 1:length(VLOpens)
     end
 end
 
+% 
+% AssignedFVSwitchTimesOn = cat(2,FVSwitchTimesOn{:});
+% AssignedFVSwitchTimesOff = cat(2,FVSwitchTimesOff{:});
 
-AssignedFVSwitchTimesOn = cat(2,FVSwitchTimesOn{:});
-AssignedFVSwitchTimesOff = cat(2,FVSwitchTimesOff{:});
+UnassignedFVSwitchTimesOn = FVOpens(~ismember(FVOpens, cat(2,FVSwitchTimesOn{:})));
+UnassignedFVSwitchTimesOff = FVCloses(~ismember(FVCloses, cat(2,FVSwitchTimesOff{:})));
 
-FVSwitchTimesOn{1} = FVOpens(~ismember(FVOpens, AssignedFVSwitchTimesOn));
-FVSwitchTimesOff{1} = FVCloses(~ismember(FVCloses, AssignedFVSwitchTimesOff));
-FVSwitchTimesOn{9} = FVOpens(~ismember(FVOpens, AssignedFVSwitchTimesOn));
-FVSwitchTimesOff{9} = FVCloses(~ismember(FVCloses, AssignedFVSwitchTimesOff));
+if NV<=8
+FVSwitchTimesOn{1} = UnassignedFVSwitchTimesOn;
+FVSwitchTimesOff{1} = UnassignedFVSwitchTimesOff;
+else
+FVSwitchTimesOn{1} = UnassignedFVSwitchTimesOn(1:2:end);
+FVSwitchTimesOff{1} = UnassignedFVSwitchTimesOff(1:2:end);
+FVSwitchTimesOn{9} = UnassignedFVSwitchTimesOn(2:2:end);
+FVSwitchTimesOff{9} = UnassignedFVSwitchTimesOff(2:2:end);
+end
+
+
 
 end
