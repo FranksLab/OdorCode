@@ -87,10 +87,10 @@ D = D(:,1:N_max);
 
 L = N_tot/(NT*(T(2)-T(1)));
 if 2*L*NT*sig < 1 || L < 0.1 
-  disp('Spikes very low density: are the units right? is the kernel width sensible?')
-  disp(['Total events: ' num2str(fix(100*N_tot)/100) ' sig: ' ...
-        num2str(fix(1000*sig)) 'ms T: ' num2str(fix(100*T)/100) ' events/sig: ' ...
-        num2str(fix(100*N_tot*sig/(T(2)-T(1)))/100)])
+%   disp('Spikes very low density: are the units right? is the kernel width sensible?')
+%   disp(['Total events: ' num2str(fix(100*N_tot)/100) ' sig: ' ...
+%         num2str(fix(1000*sig)) 'ms T: ' num2str(fix(100*T)/100) ' events/sig: ' ...
+%         num2str(fix(100*N_tot*sig/(T(2)-T(1)))/100)])
 end
 
 %    Smear each spike out  
