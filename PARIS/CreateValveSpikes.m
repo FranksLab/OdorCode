@@ -3,6 +3,9 @@ function [ValveSpikes,Edges] = CreateValveSpikes(ValveTimes,SpikeTimes,PREX,BinS
 Edges = PST(1):BinSize:PST(2); % Keep "Edges" around for plotting
 
 %% Create Trial by Trial and Summed Aligned Histograms
+[ValveSpikes.HistSwitched, ValveSpikes.HistSwitchSumRate, ValveSpikes.HistSwitchSmoothRate,ValveSpikes.RasterSwitch] = VSHistSwitched(ValveTimes,SpikeTimes,Edges,BinSize);
+
+%% Create Trial by Trial and Summed Aligned Histograms
 [ValveSpikes.HistAligned, ValveSpikes.HistAlignSumRate, ValveSpikes.HistAlignSmoothRate,ValveSpikes.RasterAlign] = VSHistAligned(ValveTimes,SpikeTimes,Edges,BinSize);
 
 %% Create Trial by Trial and Summed Warped Histograms
