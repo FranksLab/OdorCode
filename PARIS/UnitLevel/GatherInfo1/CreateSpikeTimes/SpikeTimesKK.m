@@ -2,7 +2,7 @@ function [UnitID] = SpikeTimesKK(FilesKK)
 % SpikeTimesKK will return a structure called UnitID with tsec, chans, and
 % units. UnitID{1} is the sum of all sorted Units.
 
-STWfile = ['Z:\STWfiles\',FilesKK.AIP(17:31),'stw.mat'];
+STWfile = ['Z:\STWfiles\',FilesKK.KWIK(15:31),'stw.mat'];
 if exist(STWfile,'file')
     load(STWfile)
 else
