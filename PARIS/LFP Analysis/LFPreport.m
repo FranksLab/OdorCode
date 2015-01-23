@@ -6,10 +6,10 @@ Fs = 100;
 [B,A] = butter(3, [.1/(Fs/2) 40/(Fs/2) ]);
 [BR,AR] = butter(3, [.1/(Fs/2) 40/(Fs/2) ]);
 
-load BatchProcessing\ExperimentCatalog_AWKX.mat
+% load BatchProcessing\ExperimentCatalog_AWKX.mat
 %%
-for RecordSet = 1:size(Raws,2);
-    for Record = 1:size(Raws{RecordSet},2)
+% for RecordSet = 15%1:size(Raws,2);
+%     for Record = 1:size(Raws{RecordSet},2)
         Raw = ['Y:\',Date{RecordSet},'-',Raws{RecordSet}{Record}];
         AIP = ['Y:\',Date{RecordSet},'-',AIPs{RecordSet}{Record}];
         LFPchan = 1:4;
@@ -75,10 +75,10 @@ for RecordSet = 1:size(Raws,2);
         set(gca,'XTick',(max(t)),'XTickLabel',round(max(t)))
         
         %% Print the figure
-        print( gcf, '-dpdf','-painters', ['Z:/',Date{RecordSet},'-',Raws{RecordSet}{Record}(1:end-4),'LFPRpt']);
-    end
-end
+%         print( gcf, '-dpdf','-painters', ['Z:/',Date{RecordSet},'-',Raws{RecordSet}{Record}(1:end-4),'LFPRpt']);
+%     end
+% end
 
 %%
 
-save('BatchProcessing\LFPReports_AWKX.mat', 'CLR', 'SR', 'SL');
+% save('BatchProcessing\LFPReports_AWKX.mat', 'CLR', 'SR', 'SL');
