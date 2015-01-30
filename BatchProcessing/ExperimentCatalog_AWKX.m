@@ -1,5 +1,5 @@
 %% Experiment Catalog : AW-KX
-
+clear all
 % There are 17 record sets as of 12/11/14 that are relevant to these
 % experiments. Let's get together some basic information so other scripts
 % can work with this stuff. And standardize the file naming system for dual
@@ -66,6 +66,10 @@ Date{9} = '03-Sep-2014';
 Raws{9} = {'001.ns6','002.ns6','003.ns6'};
 AIPs{9} = {'001.ns3','002.ns3','003.ns3'};
 States{9} = {'A','AK','K'};
+PBank{9} = '1';
+OBank{9} =  [];
+TSETS{9} = {1:20,23:33};
+VOIpanel{9} = [4,8];
 
 %% Record Set 10
 Date{10} = '28-Oct-2014';
@@ -84,6 +88,10 @@ Date{12} = '04-Nov-2014';
 Raws{12} = {'002.ns6'};
 AIPs{12} = {'002.ns3'};
 States{12} = {'AK'};
+PBank{12} = '1';
+OBank{12} = [];
+TSETS{12} = {1:12,15:30};
+VOIpanel{12} = [4,7,8,12,15,16];
 
 %% Record Set 13
 Date{13} = '05-Nov-2014';
@@ -96,25 +104,36 @@ Date{14} = '19-Nov-2014';
 Raws{14} = {'004.ns6'};
 AIPs{14} = {'004.ns3'};
 States{14} = {'AK'};
-Chunks{14,1} = {'11cat','12cat','13cat'};
-Chunks{14,2} = {'21cat','22cat','23cat'};
-Sites{14,1} = 'O';
-Sites{14,2} = 'P';
 
 %% Record Set 15
 Date{15} = '08-Dec-2014';
 Raws{15} = {'001.ns6'};
 AIPs{15} = {'001.ns3'};
 States{15} = {'AK'};
+PBank{15} = '2';
+OBank{15} = '1';
+TSETS{15} = {1:10,21:30};
+VOIpanel{15} = [4,7,8,12,15,16];
 
 %% Record Set 16
 Date{16} = '08-Dec-2014';
 Raws{16} = {'002.ns6'};
 AIPs{16} = {'002.ns3'};
 States{16} = {'AK'};
+PBank{16} = '2';
+OBank{16} = '1';
+TSETS{16} = {1:10,21:30};
+VOIpanel{16} = [4,7,8,12,15,16];
 
 %% Record Set 17
 Date{17} = '09-Dec-2014';
 Raws{17} = {'001.ns6','002.ns6','003.ns6'};
 AIPs{17} = {'001.ns3','002.ns3','003.ns3'};
 States{17} = {'K','A','K'};
+PBank{17} = '2';
+OBank{17} = '1';
+TSETS{17} = {11:20,21:30};
+VOIpanel{17} = [4,7,8,12,15,16];
+
+%%
+save BatchProcessing\ExperimentCatalog_AWKX.mat
