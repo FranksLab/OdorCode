@@ -63,15 +63,15 @@ for k = 1:length(fname)
         end
         
         % Do the filtering and referencing for this chunk.
-        [ChunkAVR, badchan] = AbValReferee(Chunk,ChannelCount,Bloc);
+        DSChunk = Downsampler(Chunk,ChannelCount,Bloc);
         %         size(ChunkAVR1)
         %         size(ChunkAVR2)
-        for bank = 1:length(ChunkAVR)
+        for bank = 1:length(DSChunk)
             % Chunk naming convention .chunk1.1.1 .chunk1.1.2 (file,chunk,bank) 1.2.1 2.1.1 etc
             newfname = [path 'chunks\' fname{k}(1:15) '.chunk' num2str(k) '.' num2str(j,'%02.0f') '.' num2str(bank)];
             % Opening the output file for saving
             FIDw = fopen(newfname, 'w+', 'ieee-le');
-            fwrite(FIDw, ChunkAVR{bank}, 'int16');
+            fwrite(FIDw, DSChunk{bank}, 'int16');
             fclose(FIDw);
         end
     end
@@ -82,7 +82,7 @@ end
 %%
 
 % Chunk naming convention .chunk1.1.1 .chunk1.1.2 (file,chunk,bank) 1.2.1 2.1.1 etc
-for bank = 1:length(ChunkAVR)
+for bank = 1:length(DSChunk)
     CatSeries = [];
     for k = 1:length(fname)
         D = dir([path,'chunks\*.chunk',num2str(k),'*',num2str(bank)]);
@@ -100,7 +100,6 @@ end
 cd([path,'chunks']);% move to the chunks directory
 for bank = 1:length(CatCmd)
 system(CatCmd{bank});
-badchan{bank}
 end
 system('del *chunk*')
 cd c:;
