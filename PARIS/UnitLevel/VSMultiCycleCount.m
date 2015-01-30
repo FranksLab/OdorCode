@@ -1,7 +1,7 @@
-function [MultiCycleSpikeCount] = VSMultiCycleCount(ValveTimes,SpikeTimes,PREX,CyclestoCheck)
+function [MultiCycleSpikeCount,MultiCycleSpikeRate] = VSMultiCycleCount(ValveTimes,SpikeTimes,PREX,CyclestoCheck)
 
 MultiCycleSpikeCount = cell(size(ValveTimes.PREXIndex,2),size(SpikeTimes.tsec,1),CyclestoCheck);
-
+MultiCycleSpikeRate = cell(size(ValveTimes.PREXIndex,2),size(SpikeTimes.tsec,1),CyclestoCheck);
 for i = 1:size(ValveTimes.PREXIndex,2)
 a(i) = size(ValveTimes.PREXIndex{i},2);
 end
@@ -22,6 +22,7 @@ for Unit = 1:size(SpikeTimes.tsec,1)
         
         MultiCycleSpikeCount{Valve,Unit,Cycle} = sum(x3==1);
         MultiCycleSpikeCount{Valve,Unit,Cycle}(maxa+(a(Valve)-maxa+1):maxa) = NaN;   
+        MultiCycleSpikeRate{Valve,Unit,Cycle} = MultiCycleSpikeCount{Valve,Unit,Cycle}./(EndofCycle-Beginning);
     end
     
 end
