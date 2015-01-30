@@ -8,7 +8,7 @@ NV = zeros(1,NVLs);
 
 for VL = 1:NVLs
     VLO = VLOs(VL,:);
-    VLO = VLO-(min(VLO))-500;
+    VLO = VLO-(min(VLO))-900;
     SignSwitch = VLO(1:end-1).*VLO(2:end);
     if sum(SignSwitch)==0
         continue
@@ -18,7 +18,7 @@ for VL = 1:NVLs
     O = find(dVLO>0 & SignSwitch<0);
     
     if ~isempty(O)
-        VLPks = VLO(O+10); % What's the VL signal a few samples after it turns on?
+        VLPks = VLO(O+10)-VLO(O+100); % What's the VL signal a few samples after it turns on?
         [n,b] = hist(VLPks,32);
         vidx = b(n>0);
         NV(VL) = length(vidx);
