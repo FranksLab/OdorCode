@@ -48,18 +48,24 @@ Date{6} = '14-Aug-2014';
 Raws{6} = {'002.ns6','003.ns6','004.ns6','005.ns6','006.ns6'};
 AIPs{6} = {'002.ns3','003.ns3','004.ns3','005.ns3','006.ns3'};
 States{6} = {'A','AK','K','KA','AK'};
+PBank{6} = '2';
+OBank{6} = '1';
 
 %% Record Set 7
 Date{7} = '15-Aug-2014';
 Raws{7} = {'001.ns6','002.ns6','003.ns6'};
 AIPs{7} = {'001.ns3','002.ns3','003.ns3'};
 States{7} = {'AK','KA','AK'};
+PBank{7} = '2';
+OBank{7} = '1';
 
 %% Record Set 8
 Date{8} = '02-Sep-2014';
 Raws{8} = {'001.ns6','002.ns6','003.ns6'};
 AIPs{8} = {'001.ns3','002.ns3','003.ns3'};
 States{8} = {'A','AK','K'};
+PBank{8} = '1';
+OBank{8} =  [];
 
 %% Record Set 9
 Date{9} = '03-Sep-2014';
@@ -98,12 +104,18 @@ Date{13} = '05-Nov-2014';
 Raws{13} = {'001.ns6'};
 AIPs{13} = {'001.ns3'};
 States{13} = {'AK'};
+PBank{13} = '1';
+OBank{13} = [];
+VOIpanel{12} = [4,7,8,12,15,16];
 
 %% Record Set 14
 Date{14} = '19-Nov-2014';
 Raws{14} = {'004.ns6'};
 AIPs{14} = {'004.ns3'};
 States{14} = {'AK'};
+PBank{14} = '2';
+OBank{14} = '1';
+VOIpanel{12} = [4,7,8,12,15,16];
 
 %% Record Set 15
 Date{15} = '08-Dec-2014';
