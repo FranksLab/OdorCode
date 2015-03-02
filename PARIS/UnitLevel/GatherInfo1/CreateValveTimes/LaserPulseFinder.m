@@ -3,9 +3,13 @@ function [LaserON, LaserOFF] = LaserPulseFinder(LASER,t)
  LASER = LASER-max(LASER)/2;
  SignSwitch = LASER(1:end-1).*LASER(2:end);
  dLASER = diff(LASER);
- 
+ if isempty(SignSwitch)|isempty(dLASER)
+     O=[];
+     C=[];
+ else
  O = dLASER>0 & SignSwitch<0;
  C = dLASER<0 & SignSwitch<0;
+ end
  
  LaserON = t(O);
  LaserOFF = t(C);

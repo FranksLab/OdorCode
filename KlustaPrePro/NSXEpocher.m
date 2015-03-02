@@ -9,7 +9,7 @@ EL6 = 15*30000;
 EL3 = 15*2000;
 
 %%
-for RecordSet = 9%:size(Raws,2);
+for RecordSet = 3%:size(Raws,2);
     for Record = 1:size(Raws{RecordSet},2)
         Raw = ['Y:\',Date{RecordSet},'-',Raws{RecordSet}{Record}];
         AIP = ['Y:\',Date{RecordSet},'-',AIPs{RecordSet}{Record}];
