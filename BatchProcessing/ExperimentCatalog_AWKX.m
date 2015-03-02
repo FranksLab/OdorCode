@@ -76,18 +76,30 @@ PBank{9} = '1';
 OBank{9} =  [];
 TSETS{9} = {1:20,23:33};
 VOIpanel{9} = [4,8];
+VCpanel{9} = [2,3,4;6,7,8];
+
 
 %% Record Set 10
 Date{10} = '28-Oct-2014';
 Raws{10} = {'001.ns6'};
 AIPs{10} = {'001.ns3'};
 States{10} = {'K'};
+PBank{10} = '1';
+OBank{10} =  [];
+TSETS{10} = {[],1:12};
+VOIpanel{10} = [4,7,8,12,15,16];
+VCpanel{10} = [2,3,4,5;10,11,12,13];
 
 %% Record Set 11
 Date{11} = '29-Oct-2014';
 Raws{11} = {'002.ns6'};
 AIPs{11} = {'002.ns3'};
 States{11} = {'K'};
+PBank{11} = '1';
+OBank{11} =  [];
+TSETS{11} = {[],1:12};
+VOIpanel{11} = [4,7,8,12,15,16];
+VCpanel{11} = [2,3,4,5;10,11,12,13];
 
 %% Record Set 12
 Date{12} = '04-Nov-2014';
@@ -98,6 +110,8 @@ PBank{12} = '1';
 OBank{12} = [];
 TSETS{12} = {1:12,15:30};
 VOIpanel{12} = [4,7,8,12,15,16];
+VCpanel{12} = [2,3,4,5;10,11,12,13];
+
 
 %% Record Set 13
 Date{13} = '05-Nov-2014';
@@ -106,7 +120,9 @@ AIPs{13} = {'001.ns3'};
 States{13} = {'AK'};
 PBank{13} = '1';
 OBank{13} = [];
-VOIpanel{12} = [4,7,8,12,15,16];
+VOIpanel{13} = [4,7,8,12,15,16];
+VCpanel{13} = [2,3,4,5;10,11,12,13];
+
 
 %% Record Set 14
 Date{14} = '19-Nov-2014';
@@ -115,7 +131,9 @@ AIPs{14} = {'004.ns3'};
 States{14} = {'AK'};
 PBank{14} = '2';
 OBank{14} = '1';
-VOIpanel{12} = [4,7,8,12,15,16];
+VOIpanel{14} = [4,7,8,12,15,16];
+VCpanel{14} = [2,3,4,5;10,11,12,13];
+
 
 %% Record Set 15
 Date{15} = '08-Dec-2014';
@@ -126,6 +144,7 @@ PBank{15} = '2';
 OBank{15} = '1';
 TSETS{15} = {1:10,21:30};
 VOIpanel{15} = [4,7,8,12,15,16];
+VCpanel{15} = [2,3,4,5;10,11,12,13];
 
 %% Record Set 16
 Date{16} = '08-Dec-2014';
@@ -136,6 +155,8 @@ PBank{16} = '2';
 OBank{16} = '1';
 TSETS{16} = {1:10,21:30};
 VOIpanel{16} = [4,7,8,12,15,16];
+VCpanel{16} = [2,3,4,5;10,11,12,13];
+
 
 %% Record Set 17
 Date{17} = '09-Dec-2014';
@@ -146,6 +167,8 @@ PBank{17} = '2';
 OBank{17} = '1';
 TSETS{17} = {11:20,21:30};
 VOIpanel{17} = [4,7,8,12,15,16];
+VCpanel{17} = [2,3,4,5;10,11,12,13];
+
 
 %%
 save BatchProcessing\ExperimentCatalog_AWKX.mat
