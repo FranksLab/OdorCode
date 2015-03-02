@@ -12,17 +12,17 @@ FilesKK = FindFilesKK(KWIKfile);
 
 %% BreathProcessing (resp,Fs,t)
 
-% Find respiration cycles. 
+% Find respiration cycles.
 [InhTimes,PREX,POSTX,RRR,BbyB] = FreshBreath(resp,Fs,t,FVOpens,FVCloses,FilesKK);
 
-% Warp respiration cycles according to zerocrossings using ZXwarp. 
+% Warp respiration cycles according to zerocrossings using ZXwarp.
 % tWarp is necessary for warpingspikes
 [tWarp,tWarpLinear,BreathStats.AvgPeriod] = ZXwarp(InhTimes,PREX,POSTX,t,Fs);
 BreathStats.AvgRate = 1/BreathStats.AvgPeriod;
 BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 
 % % Get Warped breath example
-% [warpFmatrix,tFmatrix] = BreathWarpMatrix(RRR,InhTimes,PREX,POSTX,Fs);
+[warpFmatrix,tFmatrix] = BreathWarpMatrix(RRR,InhTimes,PREX,POSTX,Fs);
 
 %% SpikeProcessing (FilesKK)
 % SpikeTimes is a structure with three fields: tsec, stwarped, and units. units contains
@@ -30,15 +30,15 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % Klustaviewa display. tsec obviously contains the spiketimes for each unit
 % in seconds. SpikeTimes.tsec{1} is the combined spike train of all
 % identified units. stwarped warps all the spike times in breath cycles
-% according to zero-crossings. 
+% according to zero-crossings.
 [SpikeTimes] = CreateSpikeTimes(FilesKK,Fs,tWarpLinear);
 
 %% Create ValveTimes
 % ValveTimes is a structure with five fields: FVSwitchTimesOn,
 % FVSwitchTimesOff, PREXIndex, PREXTimes, PREXTimeWarp.
 % These are each 1xNumberofValves cells. For instance, PREXIndex{1} contains
-% the index number of the PreInhalation zero crossing (i.e. the start of 
-% inhalation) for the respiration cycle that immediately follows all of the 
+% the index number of the PreInhalation zero crossing (i.e. the start of
+% inhalation) for the respiration cycle that immediately follows all of the
 % Final Valve Switches associated with selection of Valve 1. This should
 % be the Number of Trials in length.
 
@@ -48,41 +48,42 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 [ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,tWarpLinear,Fs);
 
 % Create StateIndex
-for Valve = 1:length(ValveTimes.PREXIndex)
-    for Trial = 1:length(ValveTimes.PREXIndex{Valve})
-        PreBreathH = BbyB.Height(ValveTimes.PREXIndex{Valve}(Trial)-5:ValveTimes.PREXIndex{Valve}(Trial)+10);
-        ValveTimes.StateIndex{Valve}(Trial) = std(PreBreathH)/abs(mean(PreBreathH));  
-        ThreeAfter = BbyB.Width(ValveTimes.PREXIndex{Valve}(Trial):ValveTimes.PREXIndex{Valve}(Trial)+2);
-        SixBefore = BbyB.Width(ValveTimes.PREXIndex{Valve}(Trial)-7:ValveTimes.PREXIndex{Valve}(Trial)-1);
-        ValveTimes.Sniff{Valve}(Trial) = 1/mean(ThreeAfter);
-        ValveTimes.SniffDiff{Valve}(Trial) = 1/(mean(ThreeAfter))-1/mean(SixBefore);
+if ~ischar(ValveTimes)
+    for Valve = 1:length(ValveTimes.PREXIndex)
+        for Trial = 1:length(ValveTimes.PREXIndex{Valve})
+            PreBreathH = BbyB.Height(ValveTimes.PREXIndex{Valve}(Trial)-5:min(ValveTimes.PREXIndex{Valve}(Trial)+10,length(ValveTimes.PREXIndex{Valve})));
+            ValveTimes.StateIndex{Valve}(Trial) = std(PreBreathH)/abs(mean(PreBreathH));
+            ThreeAfter = BbyB.Width(ValveTimes.PREXIndex{Valve}(Trial):ValveTimes.PREXIndex{Valve}(Trial)+2);
+            SixBefore = BbyB.Width(ValveTimes.PREXIndex{Valve}(Trial)-7:ValveTimes.PREXIndex{Valve}(Trial)-1);
+            ValveTimes.Sniff{Valve}(Trial) = 1/mean(ThreeAfter);
+            ValveTimes.SniffDiff{Valve}(Trial) = 1/(mean(ThreeAfter))-1/mean(SixBefore);
+        end
     end
 end
-
 %% Create LaserTimes
 % LaserTimes only needs to be created in optogenetic experiments.
 % First, try to find Laser on and off times. If there are no pulses
-% make LaserTimes 'NoLaser'. 
+% make LaserTimes 'NoLaser'.
 [LaserTimes] = CreateLaserTimes(LASER,PREX,t,tWarpLinear,Fs);
 
 % [LaserOn,LaserOff] = LaserPulseFinder(LASER,t);
-% 
+%
 % if ~isempty(LaserOn)
-%     
+%
 %     % Absolute Laser on and off times in the recording
 %     LaserTimes.LaserOn = LaserOn;
 %     LaserTimes.LaserOff = LaserOff;
 %     LaserTimes.LaserTimeWarpOn  = tWarpLinear(round(LaserTimes.LaserOn.*Fs));
 %     LaserTimes.LaserTimeWarpOff  = tWarpLinear(round(LaserTimes.LaserOff.*Fs));
-%     [~,LaserTimes.PREXTimes,LaserTimes.PREXIndex] = CrossExamineMatrix(LaserTimes.LaserOn,PREX,'next');  
+%     [~,LaserTimes.PREXTimes,LaserTimes.PREXIndex] = CrossExamineMatrix(LaserTimes.LaserOn,PREX,'next');
 %     LaserTimes.PREXTimeWarp  = tWarpLinear(round(LaserTimes.PREXTimes.*Fs));
-%  
+%
 
 %% Create LVTimes
 % If there are laser and valve pulses then we want to label valve switches
 % by their laser status. I will embed a LaserStat attribute, but really the
 % system is: LVTimes{1} is the ValveTimes with the laser off. and
-% LVTimes{2} is when the laser is on. 
+% LVTimes{2} is when the laser is on.
 if ~ischar(ValveTimes) && ~ischar(LaserTimes)
     [LVTimes] = CreateLVTimes(LaserTimes,ValveTimes);
 else
