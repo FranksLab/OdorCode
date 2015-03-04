@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 function [ATW,KTW,sWDt,U] = StateWindowFinder(RRR,PREX,BbyB)
+=======
+>>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
 
 
 

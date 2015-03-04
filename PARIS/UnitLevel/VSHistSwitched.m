@@ -9,6 +9,9 @@ for Unit = 1:size(SpikeTimes.tsec,1)
     for Valve = 1:size(ValveTimes.PREXTimes,2)
         [CEM,~,~] = CrossExamineMatrix(ValveTimes.FVSwitchTimesOn{Valve},st','hist');
         RasterSwitch{Valve,Unit} = num2cell(CEM,2);
+        for k = 1:size(RasterSwitch{Valve,Unit},1)
+            RasterSwitch{Valve,Unit}{k} = RasterSwitch{Valve,Unit}{k}(RasterSwitch{Valve,Unit}{k}>-5 & RasterSwitch{Valve,Unit}{k} < 10);
+        end
         HistSwitch = histc(CEM,Edges,2);
         HistSwitched{Valve,Unit} = HistSwitch/BinSize;
         HistSwitchSumRate{Valve,Unit} = sum(HistSwitch)/(BinSize*size(ValveTimes.FVSwitchTimesOn{Valve},2));

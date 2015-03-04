@@ -5,6 +5,7 @@ fclose all
 clc
 load BatchProcessing\ExperimentCatalog_AWKX.mat
 %% KX injection changes the regularity of respiration
+<<<<<<< HEAD
 RecordSetList = 17;
 %RecordSetList = 15;
 ChannelCount=32;
@@ -13,6 +14,8 @@ PSpectrumK=cell(3,length(Date));
 for RecordSet=RecordSetList
 load(['z:\RESPfiles\recordset',num2str(RecordSet,'%03.0f'),'com.mat']);
 
+=======
+>>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
 %% Windowing for plots.
 % Use 180 second windows with 90 second overlap. Value at any given point
 % will reflect the 90 seconds before and after. First and last windows will
@@ -21,7 +24,11 @@ clear Br*
 clear CVH*
 clear X
 clear CVW*
+<<<<<<< HEAD
 clear layer*
+=======
+
+>>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
 
 MaxTime = round(length(RRR)/2000);
 WW = 30;
@@ -49,11 +56,19 @@ end
 
 RF = BrFq(6:end-5);
 
+<<<<<<< HEAD
 [ATW,KTW,sWDt,U]=StateWindowFinder(RRR,PREX,BbyB);
 matATW=cell2mat(ATW)
 matKTW=cell2mat(KTW)
 maxATW=find(max(matATW(2:2:end)-matATW(1:2:end))==matATW(2:2:end)-matATW(1:2:end))
 maxKTW=find(max(matKTW(2:2:end)-matKTW(1:2:end))==matKTW(2:2:end)-matKTW(1:2:end))
+=======
+[ATW,KTW]=StateWindowFinder(RRR,PREX,BbyB);
+matATW=cell2mat(ATW);
+matKTW=cell2mat(KTW);
+maxATW=find(max(matATW(2:2:end)-matATW(1:2:end)));
+maxKTW=find(max(matKTW(2:2:end)-matKTW(1:2:end)));
+>>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
 %%
 % load BatchProcessing\ExperimentCatalog_AWKX.mat
 % RecordSet=9; Record = 1;
@@ -78,6 +93,7 @@ for C = 1:32
     [PxLK(C,:),F] = pwelch(double(LFPdata(C,KTW{maxKTW}(1)*60*1000:min(length(LFPdata),KTW{maxKTW}(2)*60*1000))),2^11,[],2^12,1000);
 end
 %%
+<<<<<<< HEAD
 poly3col{1} = [1,8,2,7,3,6,13,5,4,12]'+1;
 poly3col{2} = [16,15,17,14,20,11,21,10,31,0,29,9]'+1;
 poly3col{3} = [30,18,28,19,27,25,26,23,24,22]'+1;
@@ -88,10 +104,21 @@ coeffvarA=std(rowsA)./mean(rowsA);
 rowavgA=mean(rowsA);
 layerpkA=find(rowavgA==max(rowavgA(:,find(coeffvarA<0.1))));
 %[~,layerpkA] = max(aA(poly3col{2}));
+=======
+poly3col{1} = [17,14,20,11,21,10,31,0,29,9]'+1;
+poly3col{2} = [16,15,1,8,2,7,3,6,13,5,4,12]'+1;
+poly3col{3} = [30,18,28,19,27,25,26,23,24,22]'+1;
+
+% PxLA(18,:) = nan(size(PxLA(18,:)));
+
+aA = mean(PxLA(:,F>100),2);
+[~,layerpkA] = max(aA(poly3col{2}));
+>>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
 layerA = poly3col{2}(layerpkA);
 if layerpkA>3
 layerdpA = poly3col{2}(layerpkA-3);
 end
+<<<<<<< HEAD
 if numel(poly3col{2}-2)>=layerpkA+3
 layerspA = poly3col{2}(layerpkA+3);
 end
@@ -111,6 +138,23 @@ layerspK = poly3col{2}(layerpkK+3);
 end
 
 figure(find(RecordSet==RecordSetList))
+=======
+if numel(poly3col{2})>=layerpkA+3
+layerspA = poly3col{2}(layerpkA+3);
+end
+
+aK = mean(PxLK(:,F>100),2);
+[~,layerpkK] = max(aK(poly3col{2}));
+layerK = poly3col{2}(layerpkK);
+if layerpkK>3
+layerdpK = poly3col{2}(layerpkK-3);
+end
+if numel(poly3col{2})>=layerpkK+3
+layerspK = poly3col{2}(layerpkK+3);
+end
+
+figure(1)
+>>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
 positions = [200 200 600 400];
 set(gcf,'Position',positions)
 set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
@@ -183,6 +227,7 @@ if exist('layerspK')
 plot(F,log10(PxLK(layerspK,:)),'r'); xlim([15 100])
 end
 
+<<<<<<< HEAD
 %awk power spectrum
 PSpectrumA{1,RecordSet}=log10(PxLA(layerA,:));
 if exist('layerdpA')
@@ -202,10 +247,13 @@ end
 
 end
 
+=======
+>>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
 
 %legend('M','D','S',0)
 %% filter it some (mainly to get rid of DC drift)
 %         DDL = filtfilt(B,A,double(LFPdata.Data'));
+<<<<<<< HEAD
 % DDL = LFPdata';
 % DDL = mean(DDL,2);
 % DDL = double(LFPdata');
@@ -214,6 +262,16 @@ end
 % TotSamples =  min(length(DDL),length(DDR));
 % DDL = DDL(1:TotSamples);
 % DDR = DDR(1:TotSamples);
+=======
+DDL = LFPdata';
+DDL = mean(DDL,2);
+DDL = double(LFPdata');
+%         DDR = filtfilt(BR,AR,double(RESdata.Data'));
+DDR = double(RESdata.Data);
+TotSamples =  min(length(DDL),length(DDR));
+DDL = DDL(1:TotSamples);
+DDR = DDR(1:TotSamples);
+>>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
 
 %% Get the Power Spectral Density
 % [PxL,F] = pwelch(DDL,[2^12],[],2^14,500);
@@ -224,6 +282,7 @@ end
 
 %% Get the spectrograms and coherogram
 %%
+<<<<<<< HEAD
 % params.Fs = Fs;
 % params.fpass = [.1 100];
 % params.tapers = [2.5 4];
@@ -396,6 +455,180 @@ end
 % plot([1 1],[500 2500],'k')
 % xlim([0  3])
 % ylim([-5000 5000])
+=======
+params.Fs = Fs;
+params.fpass = [.1 100];
+params.tapers = [2.5 4];
+params.trialave = 0;
+params.err = [0];
+% [SL,t,f]=mtspecgramc(DDL,[15,7.5],params);
+% [SR,t,f]=mtspecgramc(DDR,[15,7.5],params);
+%
+[CLR{RecordSet},phi,SRL,SR{RecordSet},SL{RecordSet},t,f] = cohgramc(DDR',DDL',[30,3],params);
+
+
+%% plotting
+figure(2)
+set(0,'defaultlinelinewidth',1.0)
+set(0,'defaultaxeslinewidth',0.8)
+%         set(0,'DefaultAxesColorOrder',[0.1,0.3,0.3])
+positions = [800 200 MaxTime/12 600];
+set(gcf,'Position',positions)
+set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
+
+
+
+
+highfreq = find(f>15);
+lowfreq = find(f<10);
+subplot(6,1,3)
+imagesc(t,f(highfreq),log10(SL{RecordSet}(:,highfreq))'); axis xy
+% title('LFP')
+ylabel('Freq (Hz)')
+set(gca,'YTick',[min(f(highfreq)),(max(f(highfreq)))],'YTickLabel',round([min(f(highfreq)),(max(f(highfreq)))]))
+set(gca,'XTick',[])
+% caxis([0 35])
+h = colorbar;
+caxis([0 3.2])
+ca = caxis;
+set(h,'YTick',[0 ca(2)])
+
+subplot(6,1,4)
+imagesc(t,f(lowfreq),log10(SL{RecordSet}(:,lowfreq))'); axis xy
+% title('LFP')
+ylabel('Freq (Hz)')
+set(gca,'YTick',[min(f(lowfreq)),(max(f(lowfreq)))],'YTickLabel',round([min(f(lowfreq)),(max(f(lowfreq)))]))
+% set(gca,'XTick',[max(t)/2,max(t)],'XTickLabel',['40';'80'])
+% xlabel('Time (min)')
+set(gca,'XTick',[])
+caxis([0 7.8])
+h = colorbar;
+ca = caxis;
+set(h,'YTick',[0 ca(2)])
+
+xll = get(gca,'XLim');
+
+
+
+
+
+subplot(6,1,1)
+hold on
+
+%         x = BrFq(6:end-5);
+%         plot(WDt(6:end-5),x,'Color',[.5 .1 .1])
+
+x = BrFq;
+plot(WDt,x,'Color',[.5 .1 .1])
+
+%         x([SetT,SetK]) = NaN;
+%         plot(WDt,x,'Color',[.5 .1 .1])
+%         x = BrFq; x([SetT,SetA]) = NaN;
+%         plot(WDt,x,'Color',[.5 .1 .1],'LineStyle',':')
+ylim([0 5])
+xlim(xll)
+set(gca,'XTick',[],'YTick',get(gca,'YLim'))
+ylabel('Resp Fq (Hz)')
+caxis([0 40])
+colorbar
+
+subplot(6,1,2)
+hold on
+%         x = CVHwd(6:end-5);
+%         plot(WDt(6:end-5),x,'Color',[.1 .5 .1])
+
+x = CVHwd;
+plot(WDt,x,'Color',[.1 .5 .1])
+
+%         x([SetT,SetK]) = NaN;
+%         plot(WDt,x,'Color',[.1 .5 .1])
+%         x = CVHwd; x([SetT,SetA]) = NaN;
+%         plot(WDt,x,'Color',[.1 .5 .1],'LineStyle',':')
+%         x = CVWwd(6:end-5);
+%         plot(WDt(6:end-5),x,'Color',[.1 .1 .5])
+
+x = CVWwd;
+plot(WDt,x,'Color',[.1 .1 .5])
+
+
+%         x([SetT,SetK]) = NaN;
+%         plot(WDt,x,'Color',[.1 .1 .5])
+%         x = CVWwd; x([SetT,SetA]) = NaN;
+%         plot(WDt,x,'Color',[.1 .1 .5],'LineStyle',':')
+ylim([0 1.5])
+xlim(xll)
+set(gca,'XTick',[],'YTick',get(gca,'YLim'))
+text(2700,.4,'CV Height','Color',[.1 .5 .1])
+text(2700,.27,'CV Width','Color',[.1 .1 .5])
+ylabel('Breath CV')
+colorbar
+
+
+gammaband = find(f>30 & f<80);
+[~,rb] = CrossExamineMatrix(RF,f,'next');
+rbi = rb/(f(2)-f(1));
+band = (-30:30);
+bandb = bsxfun(@plus,rbi,band');
+bandbi = bsxfun(@plus,bandb,(0:length(f):length(f)*length(t)-length(f)));
+
+spect = SL{RecordSet}';
+
+rbL = spect(bandbi);
+
+subplot(6,1,5)
+% respband = find(f>1.5 & f<3);
+plot(t,log10(sum(SL{RecordSet}(:,gammaband)')),'b')
+hold on
+plot(t,log10(sum(rbL)),'k')
+xlim(xll)
+colorbar;
+set(gca,'XTick',[])
+
+
+
+
+subplot(6,1,6)
+% respband = find(f>1.5 & f<3);
+% plot(t,(sum(rbL)/max(sum(rbL)))./(sum(SL{RecordSet}(:,gammaband)')/max(sum(SL{RecordSet}(:,gammaband)'))),'k')
+plot(t,(sum(rbL))./(sum(SL{RecordSet}(:,:)')),'k')
+% plot(t,log10((sum(rbL))./(sum(SL{RecordSet}(:,gammaband)'))),'k')
+% ylim([0 3])
+
+
+% ylim([0 1])
+xlabel('Time (sec)')
+
+xlim(xll)
+colorbar;
+set(gca,'XTick',[round(max(t)/2),round(max(t))]);%,'XTickLabel',['40';'80'])
+%
+
+%%
+figure(3)
+positions = [900 200 300 600];
+set(gcf,'Position',positions)
+set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
+
+
+subplot(5,1,1);
+plot(0:0.0005:20,RRR(580000*4:590000*4),'k'); xlim([0.5 3.5])
+ylim([-200 200])
+subplot(5,1,2)
+plot(0:0.002:20,DDL(580000:590000),'k'); xlim([0.5 3.5])
+ylim([-5000 5000])
+subplot(5,1,3);
+plot(0:0.0005:8,RRR(1691500*4:1695500*4),'k'); xlim([0 3])
+ylim([-200 200])
+subplot(5,1,4)
+plot(0:0.002:8,DDL(1691500:1695500),'k'); xlim([0  3])
+ylim([-5000 5000])
+subplot(5,1,5)
+plot([.5 1],[500 500],'k')
+hold on
+plot([1 1],[500 2500],'k')
+xlim([0  3])
+ylim([-5000 5000])
+>>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
 
 
 %

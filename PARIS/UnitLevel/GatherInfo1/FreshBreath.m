@@ -32,8 +32,10 @@ else
         for i = 1:length(FVOpens)
             %%
             FVOsamples = (round((FVOpens(i))*Fs):round((FVOpens(i)+.15)*Fs));
+            FVOsamples = FVOsamples(FVOsamples<length(RESP));
             astRESP(FVOsamples) = smooth(RESP(FVOsamples),99);
             FVCsamples = (round((FVCloses(i))*Fs):round((FVCloses(i)+.15)*Fs));
+            FVCsamples = FVCsamples(FVCsamples<length(RESP));
             astRESP(FVCsamples) = smooth(RESP(FVCsamples),99);
             FVsamples = (round((FVOpens(i)-1)*Fs):round((FVCloses(i)+1)*Fs));
             [pk,lc] = findpeaks(abs(RESP(FVsamples)-astRESP(FVsamples)),'minpeakdistance',1800);
