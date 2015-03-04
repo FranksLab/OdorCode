@@ -2,18 +2,19 @@
 clear all
 close all
 clc
-
 %% KX injection changes the regularity of respiration
-load 'z:\RESPfiles\recordset015com.mat'
+RecordSetList = [8 9 12 13 14 15 16 17];
+
+for RecordSet = RecordSetList
+    clearvars -except rgammaA rgammaK RecordSetList RecordSet BrFqA BrFqK CVHwdA CVHwdK CVWwdA CVWwdK
+    load BatchProcessing\ExperimentCatalog_AWKX.mat
+    ChannelCount=32;
+load(['z:\RESPfiles\recordset',num2str(RecordSet,'%03.0f'),'com.mat']);
+
  %% Windowing.
         % Use 180 second windows with 90 second overlap. Value at any given point
         % will reflect the 90 seconds before and after. First and last windows will
         % contain only 90 seconds.
-        clear Br*
-        clear CVH*
-        clear X
-        clear CVW*
-        
         
         MaxTime = round(length(RRR)/2000);
         WW = 30;
@@ -64,25 +65,30 @@ load 'z:\RESPfiles\recordset015com.mat'
 
         
 %%
-load BatchProcessing\ExperimentCatalog_AWKX.mat
-RecordSet = 15; Record = 1;
-Fs = 500;
+% load BatchProcessing\ExperimentCatalog_AWKX.mat
+% RecordSet=9; Record = 1;
+Fs = 1000;
 [B,A] = butter(3, [.1/(Fs/2) 40/(Fs/2) ]);
 [BR,AR] = butter(3, [.1/(Fs/2) 40/(Fs/2) ]);
 
- Raw = ['Y:\',Date{RecordSet},'-',Raws{RecordSet}{Record}];
-        AIP = ['Y:\',Date{RecordSet},'-',AIPs{RecordSet}{Record}];
-        LFPchan = 33:34;
-        
+        AIP = ['Z:\NS3files\COM\RecordSet', num2str(RecordSet,'%03.0f'),'com.ns3'];      
         %% Get some LFP data
-        LFPdata = openNSx(Raw,'channels',LFPchan,'skipfactor',60);
-        RESdata = openNSx(AIP,'c:5','skipfactor',4);
-        
+%         if ~exist('layer{RecordSet}')
+%             error('no layer');
+%         end
+        Channels=layer{RecordSet};
+        %Channels=1:2;
+        path=['Z:\LFPfiles\'];
+        fdata=fopen([path, 'RecordSet', num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.lfp']);
+        LFPdata=fread(fdata,'*int16');
+        LFPdata=reshape(LFPdata,ChannelCount,[]);
+        RESdata = openNSx(AIP,'c:5','skipfactor',2);
+        LFPdata=LFPdata(Channels,:);
         %% filter it some (mainly to get rid of DC drift)
 %         DDL = filtfilt(B,A,double(LFPdata.Data'));
-        DDL = LFPdata.Data';
-        DDL = mean(DDL,2);
-        DDL = double(LFPdata.Data');
+        DDL = LFPdata;
+        DDL = mean(DDL,1);
+        DDL = double(LFPdata);
 %         DDR = filtfilt(BR,AR,double(RESdata.Data'));
         DDR = double(RESdata.Data);
         TotSamples =  min(length(DDL),length(DDR));
@@ -106,7 +112,7 @@ Fs = 500;
         % [SL,t,f]=mtspecgramc(DDL,[15,7.5],params);
         % [SR,t,f]=mtspecgramc(DDR,[15,7.5],params);
         %
-        [CLR{RecordSet}{Record},phi,SRL,SR{RecordSet}{Record},SL{RecordSet}{Record},t,f] = cohgramc(DDR',DDL',[30,3],params);
+        [CLR{RecordSet},phi,SRL,SR{RecordSet},SL{RecordSet},t,f] = cohgramc(DDR',DDL',[30,3],params);
                 
         %%
 %         close all
@@ -116,7 +122,7 @@ Fs = 500;
 %         set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
        
 %         h1 = axes('Units','Points','Position',[100 210 TotSamples/3000 50]);
-%         imagesc(t,f,log10(SR{RecordSet}{Record})'); axis xy
+%         imagesc(t,f,log10(SR{RecordSet})'); axis xy
 %         caxis([0 5])
 %         title('Breath')
 %         ylabel('Freq (Hz)')
@@ -141,7 +147,7 @@ Fs = 500;
 highfreq = find(f>15);
 lowfreq = find(f<10);
 subplot(6,1,3)
-imagesc(t,f(highfreq),log10(SL{RecordSet}{Record}(:,highfreq))'); axis xy
+imagesc(t,f(highfreq),log10(SL{RecordSet}(:,highfreq))'); axis xy
 % title('LFP')
 ylabel('Freq (Hz)')
 set(gca,'YTick',[min(f(highfreq)),(max(f(highfreq)))],'YTickLabel',round([min(f(highfreq)),(max(f(highfreq)))]))
@@ -153,7 +159,7 @@ ca = caxis;
 set(h,'YTick',[0 ca(2)])
 
 subplot(6,1,4)
-imagesc(t,f(lowfreq),log10(SL{RecordSet}{Record}(:,lowfreq))'); axis xy
+imagesc(t,f(lowfreq),log10(SL{RecordSet}(:,lowfreq))'); axis xy
 % title('LFP')
 ylabel('Freq (Hz)')
 set(gca,'YTick',[min(f(lowfreq)),(max(f(lowfreq)))],'YTickLabel',round([min(f(lowfreq)),(max(f(lowfreq)))]))
@@ -179,7 +185,8 @@ xll = get(gca,'XLim');
         
         x = BrFq; 
         plot(WDt,x,'Color',[.5 .1 .1])
-        
+        BrFqA{RecordSet}=mean(BrFq(60/OL*ATW{RecordSet}(1)-19:60/OL*ATW{RecordSet}(2)-19));
+        BrFqK{RecordSet}=mean(BrFq(60/OL*KTW{RecordSet}(1)-19:60/OL*KTW{RecordSet}(2)-19));
 %         x([SetT,SetK]) = NaN;
 %         plot(WDt,x,'Color',[.5 .1 .1])
 %         x = BrFq; x([SetT,SetA]) = NaN;
@@ -198,6 +205,8 @@ xll = get(gca,'XLim');
         
          x = CVHwd; 
         plot(WDt,x,'Color',[.1 .5 .1])
+        CVHwdA{RecordSet}=mean(CVHwd(60/OL*ATW{RecordSet}(1)-19:60/OL*ATW{RecordSet}(2)-19));
+        CVHwdK{RecordSet}=mean(CVHwd(60/OL*KTW{RecordSet}(1)-19:60/OL*KTW{RecordSet}(2)-19));
         
 %         x([SetT,SetK]) = NaN;
 %         plot(WDt,x,'Color',[.1 .5 .1])
@@ -208,8 +217,8 @@ xll = get(gca,'XLim');
         
         x = CVWwd; 
         plot(WDt,x,'Color',[.1 .1 .5])
-        
-        
+        CVWwdA{RecordSet}=mean(CVWwd(60/OL*ATW{RecordSet}(1)-19:60/OL*ATW{RecordSet}(2)-19));
+        CVWwdK{RecordSet}=mean(CVWwd(60/OL*KTW{RecordSet}(1)-19:60/OL*KTW{RecordSet}(2)-19));
 %         x([SetT,SetK]) = NaN;
 %         plot(WDt,x,'Color',[.1 .1 .5])
 %         x = CVWwd; x([SetT,SetA]) = NaN;
@@ -230,13 +239,13 @@ gammaband = find(f>30 & f<80);
 bandb = bsxfun(@plus,rbi,band');
 bandbi = bsxfun(@plus,bandb,(0:length(f):length(f)*length(t)-length(f)));
 
-spect = SL{RecordSet}{Record}';
+spect = SL{RecordSet}';
 
 rbL = spect(bandbi);
  
 subplot(6,1,5)
 % respband = find(f>1.5 & f<3);
-plot(t,log10(sum(SL{RecordSet}{Record}(:,gammaband)')),'b')
+plot(t,log10(sum(SL{RecordSet}(:,gammaband)')),'b')
 hold on
 plot(t,log10(sum(rbL)),'k')
 xlim(xll)
@@ -247,51 +256,101 @@ set(gca,'XTick',[])
 
 
  subplot(6,1,6)
+ rgamma=(sum(rbL))./(sum(SL{RecordSet}(:,:)'));
 % respband = find(f>1.5 & f<3);
-% plot(t,(sum(rbL)/max(sum(rbL)))./(sum(SL{RecordSet}{Record}(:,gammaband)')/max(sum(SL{RecordSet}{Record}(:,gammaband)'))),'k')
-plot(t,(sum(rbL))./(sum(SL{RecordSet}{Record}(:,:)')),'k')
-% plot(t,log10((sum(rbL))./(sum(SL{RecordSet}{Record}(:,gammaband)'))),'k')
+% plot(t,(sum(rbL)/max(sum(rbL)))./(sum(SL{RecordSet}(:,gammaband)')/max(sum(SL{RecordSet}(:,gammaband)'))),'k')
+plot(t,rgamma,'k')
+% plot(t,log10((sum(rbL))./(sum(SL{RecordSet}(:,gammaband)'))),'k')
 % ylim([0 3])
-
-
+rgammaA{RecordSet}=mean(rgamma(t>ATW{RecordSet}(1)*60&t<ATW{RecordSet}(2)*60));
+rgammaK{RecordSet}=mean(rgamma(t>KTW{RecordSet}(1)*60&t<KTW{RecordSet}(2)*60));
 % ylim([0 1])
  xlabel('Time (min)')
 
 xlim(xll)
 colorbar;
-set(gca,'XTick',[max(t)/2,max(t)],'XTickLabel',['40';'80'])
-
-
+set(gca,'XTick',[max(t)/2,max(t)]);%,'XTickLabel',['40';'80'])
+print(gcf, '-dpdf','-painters', ['z:\StateFig',num2str(RecordSet)])
+end
 %%
-figure(2)
- positions = [900 200 300 600];
-        set(gcf,'Position',positions)
-        set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
-
-
-subplot(5,1,1); 
-plot(0:0.0005:20,RRR(580000*4:590000*4),'k'); xlim([0.5 3.5])
-ylim([-200 200])
-subplot(5,1,2)
-plot(0:0.002:20,DDL(580000:590000),'k'); xlim([0.5 3.5])
-ylim([-5000 5000])
-subplot(5,1,3); 
-plot(0:0.0005:8,RRR(1691500*4:1695500*4),'k'); xlim([0 3])
-ylim([-200 200])
-subplot(5,1,4)
-plot(0:0.002:8,DDL(1691500:1695500),'k'); xlim([0  3])
-ylim([-5000 5000])
-subplot(5,1,5)
-plot([.5 1],[500 500],'k')
+figure(3)
+rgammaAK=[cell2mat(rgammaA)',cell2mat(rgammaK)'];
+bar(nanmean(rgammaAK),'facecolor',[.8 .8 .8],'edgecolor','k');
 hold on
-plot([1 1],[500 2500],'k')
- xlim([0  3])
-ylim([-5000 5000])
+errorb(nanmean(rgammaAK),nanstd(rgammaAK)/sqrt(size(rgammaAK,1)),'top','linewidth',.8);
+ylabel('R\gamma Ratio')
+set(gca,'YTick',get(gca,'YLim'))
+set(gca,'XTickLabel',{'Awake','KX'})
+set(gca,'XLim',[0 3])
+ box off
+
+figure(4)
+subplot(1,3,1)
+BrFqPlot=[cell2mat(BrFqA)',cell2mat(BrFqK)'];
+bar(nanmean(BrFqPlot),'facecolor',[.8 .8 .8],'edgecolor','k');
+hold on
+errorb(nanmean(BrFqPlot),nanstd(BrFqPlot)/sqrt(size(BrFqPlot,1)),'top','linewidth',.8);
+ylabel('R\gamma Ratio')
+set(gca,'YTick',get(gca,'YLim'))
+set(gca,'XTickLabel',{'Awake','KX'})
+set(gca,'XLim',[0 3])
+title('BrFq')
+ box off
+ 
+ subplot(1,3,2)
+CVHwdPlot=[cell2mat(CVHwdA)',cell2mat(CVHwdK)'];
+bar(nanmean(CVHwdPlot),'facecolor',[.8 .8 .8],'edgecolor','k');
+hold on
+errorb(nanmean(CVHwdPlot),nanstd(CVHwdPlot)/sqrt(size(CVHwdPlot,1)),'top','linewidth',.8);
+ylabel('R\gamma Ratio')
+set(gca,'YTick',get(gca,'YLim'))
+set(gca,'XTickLabel',{'Awake','KX'})
+set(gca,'XLim',[0 3])
+title('CVHwd')
+ box off
+ 
+ subplot(1,3,3)
+CVWwdPlot=[cell2mat(CVWwdA)',cell2mat(CVWwdK)'];
+bar(nanmean(CVWwdPlot),'facecolor',[.8 .8 .8],'edgecolor','k');
+hold on
+errorb(nanmean(CVWwdPlot),nanstd(CVWwdPlot)/sqrt(size(CVWwdPlot,1)),'top','linewidth',.8);
+ylabel('R\gamma Ratio')
+set(gca,'YTick',get(gca,'YLim'))
+set(gca,'XTickLabel',{'Awake','KX'})
+set(gca,'XLim',[0 3])
+title('CVWwd')
+ box off
+ 
+%%
+% figure(2)
+% positions = [900 200 300 600];
+% set(gcf,'Position',positions)
+% set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
+% 
+% 
+% subplot(5,1,1);
+% plot(0:0.0005:20,RRR(580000*4:590000*4),'k'); xlim([0.5 3.5])
+% ylim([-200 200])
+% subplot(5,1,2)
+% plot(0:0.002:20,DDL(580000:590000),'k'); xlim([0.5 3.5])
+% ylim([-5000 5000])
+% subplot(5,1,3);
+% plot(0:0.0005:8,RRR(1691500*4:1695500*4),'k'); xlim([0 3])
+% ylim([-200 200])
+% subplot(5,1,4)
+% plot(0:0.002:8,DDL(1691500:1695500),'k'); xlim([0  3])
+% ylim([-5000 5000])
+% subplot(5,1,5)
+% plot([.5 1],[500 500],'k')
+% hold on
+% plot([1 1],[500 2500],'k')
+% xlim([0  3])
+% ylim([-5000 5000])
 
         
 % 
 % subplot(5,1,5)
-% imagesc(t,f(lowfreq),(CLR{RecordSet}{Record}(:,lowfreq))'); axis xy
+% imagesc(t,f(lowfreq),(CLR{RecordSet}(:,lowfreq))'); axis xy
 % % title('LFP')
 % ylabel('Freq (Hz)')
 % set(gca,'YTick',[min(f(lowfreq)),(max(f(lowfreq)))],'YTickLabel',round([min(f(lowfreq)),(max(f(lowfreq)))]))
@@ -299,7 +358,7 @@ ylim([-5000 5000])
 
 %         
 %         h3 = axes('Units','Points','Position',[100 30 TotSamples/3000 50]);
-%         imagesc(t,f,CLR{RecordSet}{Record}'.^10); axis xy
+%         imagesc(t,f,CLR{RecordSet}'.^10); axis xy
 %         ylabel('Freq (Hz)')
 %         title('Coherence')
 %         set(gca,'YTick',(max(f)),'YTickLabel',round(max(f)))
