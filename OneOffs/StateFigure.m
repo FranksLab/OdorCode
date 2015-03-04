@@ -4,7 +4,7 @@ close all
 clc
 
 %% KX injection changes the regularity of respiration
-load 'z:\RESPfiles\recordset015com.mat'
+load 'z:\RESPfiles\recordset009com.mat'
  %% Windowing.
         % Use 180 second windows with 90 second overlap. Value at any given point
         % will reflect the 90 seconds before and after. First and last windows will
@@ -105,14 +105,14 @@ ylabel('Breath CV')
         
 %%
 load BatchProcessing\ExperimentCatalog_AWKX.mat
-RecordSet = 15; Record = 1;
+RecordSet = 9; Record = 1;
 Fs = 500;
 [B,A] = butter(3, [.1/(Fs/2) 40/(Fs/2) ]);
 [BR,AR] = butter(3, [.1/(Fs/2) 40/(Fs/2) ]);
 
  Raw = ['Y:\',Date{RecordSet},'-',Raws{RecordSet}{Record}];
         AIP = ['Y:\',Date{RecordSet},'-',AIPs{RecordSet}{Record}];
-        LFPchan = 33:34;
+        LFPchan = 33:64;
         
         %% Get some LFP data
         LFPdata = openNSx(Raw,'channels',LFPchan,'skipfactor',60);
