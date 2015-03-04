@@ -66,6 +66,10 @@ AIPs{8} = {'001.ns3','002.ns3','003.ns3'};
 States{8} = {'A','AK','K'};
 PBank{8} = '1';
 OBank{8} =  [];
+%
+layer{8} = 11;
+ATW{8}= [1 40];
+KTW{8}= [42 73];
 
 %% Record Set 9
 Date{9} = '03-Sep-2014';
@@ -76,6 +80,10 @@ PBank{9} = '1';
 OBank{9} =  [];
 TSETS{9} = {1:20,23:33};
 VOIpanel{9} = [4,8];
+%
+layer{9} = 11;
+ATW{9}= [1 43];
+KTW{9}= [45 68];
 
 %% Record Set 10
 Date{10} = '28-Oct-2014';
@@ -98,6 +106,10 @@ PBank{12} = '1';
 OBank{12} = [];
 TSETS{12} = {1:12,15:30};
 VOIpanel{12} = [4,7,8,12,15,16];
+%
+layer{12} = 18;
+ATW{12}= [3 48];
+KTW{12}= [49 121];
 
 %% Record Set 13
 Date{13} = '05-Nov-2014';
@@ -107,6 +119,10 @@ States{13} = {'AK'};
 PBank{13} = '1';
 OBank{13} = [];
 VOIpanel{12} = [4,7,8,12,15,16];
+%
+layer{13} = 21;
+ATW{13}= [5 47];
+KTW{13}= [48 102];
 
 %% Record Set 14
 Date{14} = '19-Nov-2014';
@@ -116,6 +132,10 @@ States{14} = {'AK'};
 PBank{14} = '2';
 OBank{14} = '1';
 VOIpanel{12} = [4,7,8,12,15,16];
+%
+layer{14} = 21;
+ATW{14}= [32 51];
+KTW{14}= [53 113];
 
 %% Record Set 15
 Date{15} = '08-Dec-2014';
@@ -126,6 +146,10 @@ PBank{15} = '2';
 OBank{15} = '1';
 TSETS{15} = {1:10,21:30};
 VOIpanel{15} = [4,7,8,12,15,16];
+%
+layer{15} = 21;
+ATW{15}= [1 32];
+KTW{15}= [36 62];
 
 %% Record Set 16
 Date{16} = '08-Dec-2014';
@@ -136,6 +160,10 @@ PBank{16} = '2';
 OBank{16} = '1';
 TSETS{16} = {1:10,21:30};
 VOIpanel{16} = [4,7,8,12,15,16];
+%
+layer{16} = 22;
+ATW{16}= [2 39];
+KTW{16}= [40 81];
 
 %% Record Set 17
 Date{17} = '09-Dec-2014';
@@ -146,6 +174,11 @@ PBank{17} = '2';
 OBank{17} = '1';
 TSETS{17} = {11:20,21:30};
 VOIpanel{17} = [4,7,8,12,15,16];
+%
+layer{17} = 21;
+ATW{17}= [28 54];
+KTW{17}= [1 27];
 
 %%
-save BatchProcessing\ExperimentCatalog_AWKX.mat
+save C:\Users\eric\Documents\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
+%save BatchProcessing\ExperimentCatalog_AWKX.mat
