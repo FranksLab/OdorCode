@@ -2,16 +2,22 @@ function DownsampledChunk = Downsampler(data,ChannelCount,Bloc)
 %% make a data matrix
  data = reshape(data,[ChannelCount length(data)/ChannelCount]); % to get back to linearized just use (:) on a matrix this shape
  data = double(data);
+ DF=30000/1000; %downsampling factor = original freq/desired freq
  
-DF=30000/1000; %downsampling factor = original freq/desired freq
-    dataS{1} = data(1:Bloc-1,:)';
-        dataS{2} = data(Bloc:end,:)';
-for count=1:2
-    DownsampledChunk{count}=downsample(dataS{count},DF);
-     DownsampledChunk{count}= DownsampledChunk{count}';
-    DownsampledChunk{count}=int16(DownsampledChunk{count}(:));
-end
-
+ if isempty(Bloc)
+     DownsampledChunk{1}=downsample(data',DF);
+     DownsampledChunk{1}= DownsampledChunk{1}';
+     DownsampledChunk{1}=int16(DownsampledChunk{1}(:));
+     
+ else
+     dataS{1} = data(1:Bloc-1,:)';
+     dataS{2} = data(Bloc:end,:)';
+     for count=1:2
+         DownsampledChunk{count}=downsample(dataS{count},DF);
+         DownsampledChunk{count}= DownsampledChunk{count}';
+         DownsampledChunk{count}=int16(DownsampledChunk{count}(:));
+     end
+ end
 
 % for count=1:length(dataS)
 % %     if(count==2 && ~exist('data2')) hldr2=[]; break; end
