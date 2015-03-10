@@ -4,7 +4,7 @@ clc
 
 load BatchProcessing\ExperimentCatalog_AWKX.mat
 
-for RecordSet = [9,12,15:17]
+for RecordSet = [8:9,12:17]
     
     KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
     TrialSets = TSETS{RecordSet};
@@ -73,7 +73,18 @@ SparseTop = 1-(((nansum(SparseVar).^2)./(nansum(SparseVar.^2)))./sum(~isnan(Spar
 SparseBtm = 1-(1/sum(~isnan(SparseVar)));
 Scores.vSparseP = squeeze(SparseTop./SparseBtm);
 
+%% Best odor for each cell
+[~,g] = max(Scores.auROC);
+g = squeeze(g(1,:,1,:));
+[~,w] = min(Scores.auROC);
+w = squeeze(w(1,:,1,:));
 
+for c = 1:size(g,1)
+    for d = 1:size(g,2)
+        Scores.BstOC(c,d) = Scores.SMPSTH.Align(g(c,d),c,d);
+        Scores.WstOC(c,d) = Scores.SMPSTH.Align(w(c,d),c,d);
+    end
+end
 
 %%
 
@@ -96,6 +107,7 @@ for k = 1:length(SCR)
             OMNI.mSparseP{k,tset} = squeeze(SCR{k}.mSparseP(:,tset));
             OMNI.vSparseL{k,tset} = squeeze(SCR{k}.vSparseL(:,tset));
             OMNI.vSparseP{k,tset} = squeeze(SCR{k}.vSparseP(:,tset));
+            OMNI.SMPSTH{k,tset} = reshape(squeeze(SCR{k}.SMPSTH.Align(:,:,tset)),[],1);
         end
     end
 end
@@ -107,72 +119,72 @@ omUK = cat(1,OMNI.auROC{:,2})>.5;
 omDK = cat(1,OMNI.auROC{:,2})<.5;
 omRK = cat(1,OMNI.AURp{:,2})<.05;
 %%
-figure(50)
-positions = [200 100 500 600];
-set(gcf,'Position',positions)
-set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
-marksize = 4;
-
-subplot(3,2,1); 
-omnix1 = cat(1,OMNI.vSparseL{:,1});
-omnix2 = cat(1,OMNI.vSparseL{:,2});
-axedgeH = 1;
-axedgeL = 0;
-xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
-plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
-hold on
-scatter(omnix1,omnix2,marksize,'k')
-scatter (nanmean(omnix1),nanmean(omnix2),marksize*4,'MarkerFaceColor','r','MarkerEdgeColor','r')
-axis square
-title('Lifetime - Rate')
-xlabel('Awake Sparseness'); ylabel('KX Sparseness');
-set(gca,'XTick',[0 1],'YTick',[0 1])
-
-subplot(3,2,2)
-omnix1 = cat(1,OMNI.vSparseP{:,1});
-omnix2 = cat(1,OMNI.vSparseP{:,2});
-xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
-plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
-hold on
-scatter(omnix1,omnix2,marksize,'k')
-scatter (nanmean(omnix1),nanmean(omnix2),marksize*4,'MarkerFaceColor','r','MarkerEdgeColor','r')
-axis square
-title('Population - Rate')
-xlabel('Awake Sparseness'); ylabel('KX Sparseness');
-set(gca,'XTick',[0 1],'YTick',[0 1])
-
-subplot(3,2,3); 
-omnix1 = cat(1,OMNI.mSparseL{:,1});
-omnix2 = cat(1,OMNI.mSparseL{:,2});
-axedgeH = 1;
-axedgeL = 0;
-plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
-hold on
-scatter(omnix1,omnix2,marksize,'k')
-scatter (nanmean(omnix1),nanmean(omnix2),marksize*4,'MarkerFaceColor','r','MarkerEdgeColor','r')
-axis square
-title('Lifetime - abs Z')
-xlabel('Awake Sparseness'); ylabel('KX Sparseness');
-xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
-set(gca,'XTick',[0 1],'YTick',[0 1])
-
-subplot(3,2,4)
-omnix1 = cat(1,OMNI.mSparseP{:,1});
-omnix2 = cat(1,OMNI.mSparseP{:,2});
-xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
-plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
-hold on
-scatter(omnix1,omnix2,marksize,'k')
-scatter (nanmean(omnix1),nanmean(omnix2),marksize*4,'MarkerFaceColor','r','MarkerEdgeColor','r')
-axis square
-title('Population - abs Z')
-xlabel('Awake Sparseness'); ylabel('KX Sparseness');
-set(gca,'XTick',[0 1],'YTick',[0 1])
-
-subplot(3,2,[5 6])
-xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
-axis off
-text(0,1,{'Values near 0 indicate a dense code,'; 'and values near 1 indicate a sparse code.'}) 
+% figure(50)
+% positions = [200 100 500 600];
+% set(gcf,'Position',positions)
+% set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
+% marksize = 4;
+% 
+% subplot(3,2,1); 
+% omnix1 = cat(1,OMNI.vSparseL{:,1});
+% omnix2 = cat(1,OMNI.vSparseL{:,2});
+% axedgeH = 1;
+% axedgeL = 0;
+% xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
+% plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
+% hold on
+% scatter(omnix1,omnix2,marksize,'k')
+% scatter (nanmean(omnix1),nanmean(omnix2),marksize*4,'MarkerFaceColor','r','MarkerEdgeColor','r')
+% axis square
+% title('Lifetime - Rate')
+% xlabel('Awake Sparseness'); ylabel('KX Sparseness');
+% set(gca,'XTick',[0 1],'YTick',[0 1])
+% 
+% subplot(3,2,2)
+% omnix1 = cat(1,OMNI.vSparseP{:,1});
+% omnix2 = cat(1,OMNI.vSparseP{:,2});
+% xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
+% plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
+% hold on
+% scatter(omnix1,omnix2,marksize,'k')
+% scatter (nanmean(omnix1),nanmean(omnix2),marksize*4,'MarkerFaceColor','r','MarkerEdgeColor','r')
+% axis square
+% title('Population - Rate')
+% xlabel('Awake Sparseness'); ylabel('KX Sparseness');
+% set(gca,'XTick',[0 1],'YTick',[0 1])
+% 
+% subplot(3,2,3); 
+% omnix1 = cat(1,OMNI.mSparseL{:,1});
+% omnix2 = cat(1,OMNI.mSparseL{:,2});
+% axedgeH = 1;
+% axedgeL = 0;
+% plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
+% hold on
+% scatter(omnix1,omnix2,marksize,'k')
+% scatter (nanmean(omnix1),nanmean(omnix2),marksize*4,'MarkerFaceColor','r','MarkerEdgeColor','r')
+% axis square
+% title('Lifetime - abs Z')
+% xlabel('Awake Sparseness'); ylabel('KX Sparseness');
+% xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
+% set(gca,'XTick',[0 1],'YTick',[0 1])
+% 
+% subplot(3,2,4)
+% omnix1 = cat(1,OMNI.mSparseP{:,1});
+% omnix2 = cat(1,OMNI.mSparseP{:,2});
+% xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
+% plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
+% hold on
+% scatter(omnix1,omnix2,marksize,'k')
+% scatter (nanmean(omnix1),nanmean(omnix2),marksize*4,'MarkerFaceColor','r','MarkerEdgeColor','r')
+% axis square
+% title('Population - abs Z')
+% xlabel('Awake Sparseness'); ylabel('KX Sparseness');
+% set(gca,'XTick',[0 1],'YTick',[0 1])
+% 
+% subplot(3,2,[5 6])
+% xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
+% axis off
+% text(0,1,{'Values near 0 indicate a dense code,'; 'and values near 1 indicate a sparse code.'}) 
 
 
 %%
@@ -202,14 +214,22 @@ for k = 1:length(SCR)
         PctNegB{k} = 100* sum(Responders{k}(:,2) & Downers{k}(:,2) & Responders{k}(:,1) & Downers{k}(:,1))/length(Responders{k});
     end
 end
-values = ([mean(cell2mat(PctPosA)) mean(cell2mat(PctPosK)) mean(cell2mat(PctPosB)); mean(cell2mat(PctNegA)) mean(cell2mat(PctNegK)) mean(cell2mat(PctNegB))]);
-erros = ([std(cell2mat(PctPosA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctPosK))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctPosB))/sqrt(length(cell2mat(PctPosA))); std(cell2mat(PctNegA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctNegK))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctNegB))/sqrt(length(cell2mat(PctPosA)))]);
-bar(values); errorb(values,erros,'linewidth',.8);
-shading flat
+values = ([mean(cell2mat(PctPosA)) mean(cell2mat(PctPosK)) mean(cell2mat(PctPosB))]); 
+hold on
+erros = ([std(cell2mat(PctPosA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctPosK))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctPosB))/sqrt(length(cell2mat(PctPosA)))]);
+bar(values); errorb(values,erros,'linewidth',.8,'top');
+% shading flat
+% colormap([.3 .3 .7; .7 .3 .3; .6 .6 .6])
+hold on
+values = -([mean(cell2mat(PctNegA)) mean(cell2mat(PctNegK)) mean(cell2mat(PctNegB))]);
+erros = ([std(cell2mat(PctNegA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctNegK))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctNegB))/sqrt(length(cell2mat(PctPosA)))]);
+bar(values); errorb(values,erros,'linewidth',.8,'top');
+% shading flat
 colormap([.3 .3 .7; .7 .3 .3; .6 .6 .6])
+
 axis square
-xlim([0 3])
-set(gca,'XTickLabel',{'Pos','Neg'})
+xlim([0 4])
+% set(gca,'XTickLabel',{'Pos','Neg'})
 ylabel('Percent Reponsive')
 %
 
@@ -227,27 +247,78 @@ subplot(4,3,2)
 marksize = 3;
 omnix1 = cat(1,OMNI.auROC{:,1});
 omnix2 = cat(1,OMNI.auROC{:,2});
+[cdf,cdx] = ecdf(omnix1);
+plot(cdx,cdf,'Color',[[.2 .2 .5]]);
+hold on
+[cdf,cdx] = ecdf(omnix2);
+plot(cdx,cdf,'Color',[[.5 .2 .2]]);
+axis square
+[h,p] = kstest2(omnix1,omnix2);
+title (['kstest, p = ',num2str(p,'%1.2ef')])
+xlabel('auROC')
+
+subplot(4,3,3)
+b = [];
+hold on 
+for m = 1:length(SCR)
+    if ~isempty(SCR{m})
+  
+           a = mean(cell2mat(SCR{m}.MUA.SMPSTH.Align(:,1,1)))/size(SCR{m}.BlankRate,1);
+%            plot(Edges,a,'Color',[.6 .6 1-m/length(SCR)/2])
+           b = [b; mean(cell2mat(SCR{m}.MUA.SMPSTH.Align(:,1,1)))/size(SCR{m}.BlankRate,1)];
+    end
+end
+ba = b;
+b = [];
+for m = 1:length(SCR)
+    if ~isempty(SCR{m})
+        
+           a = mean(cell2mat(SCR{m}.MUA.SMPSTH.Align(:,1,2)))/size(SCR{m}.BlankRate,1);
+%            plot(Edges,a,'Color',[ 1-m/length(SCR)/2 .6 .6])
+            b = [b; mean(cell2mat(SCR{m}.MUA.SMPSTH.Align(:,1,2)))/size(SCR{m}.BlankRate,1)];
+    end
+end
+bk = b;
+lineprops.col = {[.2 .2 .5];[.5 .2 .2]};
+    lineprops.width = .8;
+    
+    y = cat(1,OMNI.SMPSTH{:,1});
+    ba = cat(1,y{:});
+    x = cat(1,OMNI.SMPSTH{:,2});
+    bk = cat(1,x{:});
+    
+    liim = find(Edges>=-.5 & Edges<=1.5);
+    mseb(Edges(liim),[mean(ba(:,liim));mean(bk(:,liim))],[std(ba(:,liim))/sqrt(length(ba));std(bk(:,liim))/sqrt(length(bk))],lineprops);
+% plot(Edges,mean(b),'LineWidth',1.2,'Color',[.2 .2 .5])
+xlim([-0.5 1.5])
+ylim([0 6])
+axis square
+xlabel('Seconds')
+ylabel('MUA Hz/Unit')
+
+
+
 % omnix1 = abs(omnix1-.5);
 % omnix2 = abs(omnix2-.5);
 
-[h,p] = ttest2(omnix1(omRA | omRK),omnix2(omRA | omRK));
-scatter(omnix1(~omRA & ~omRK),omnix2(~omRA & ~omRK),marksize,[.9 .9 .9],'MarkerFaceColor',[.9 .9 .9])
-hold on
-%ups
-scatter(omnix1(omUA & omRA & omUK & omRK),omnix2(omUA & omRA & omUK & omRK),marksize,[0,.6,.6])
-scatter(omnix1(omUA & omRA & ~omRK),omnix2(omUA & omRA & ~omRK),marksize,[0,0,.6])
-scatter(omnix1(omUK & omRK & ~omRA),omnix2(omUK & omRK & ~omRA),marksize,[0,.6,0])
-%downs
-scatter(omnix1(omDA & omRA & omDK & omRK),omnix2(omDA & omRA & omDK & omRK),marksize,[.6,0,0])
-scatter(omnix1(omDA & omRA & ~omRK),omnix2(omDA & omRA & ~omRK),marksize,[.6,.6,0])
-scatter(omnix1(omDK & omRK & ~omRA),omnix2(omDK & omRK & ~omRA),marksize,[.6,0,.6])
-axedgeH = 1;
-axedgeL = 0;
-xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
-plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
-xlabel('Awake auROC'); ylabel('KX auROC');
-axis square
-title (['Responsive ttest, p = ',num2str(p,'%0.3f')])
+% [h,p] = ttest2(omnix1(omRA | omRK),omnix2(omRA | omRK));
+% scatter(omnix1(~omRA & ~omRK),omnix2(~omRA & ~omRK),marksize,[.9 .9 .9],'MarkerFaceColor',[.9 .9 .9])
+% hold on
+% %ups
+% scatter(omnix1(omUA & omRA & omUK & omRK),omnix2(omUA & omRA & omUK & omRK),marksize,[0,.6,.6])
+% scatter(omnix1(omUA & omRA & ~omRK),omnix2(omUA & omRA & ~omRK),marksize,[0,0,.6])
+% scatter(omnix1(omUK & omRK & ~omRA),omnix2(omUK & omRK & ~omRA),marksize,[0,.6,0])
+% %downs
+% scatter(omnix1(omDA & omRA & omDK & omRK),omnix2(omDA & omRA & omDK & omRK),marksize,[.6,0,0])
+% scatter(omnix1(omDA & omRA & ~omRK),omnix2(omDA & omRA & ~omRK),marksize,[.6,.6,0])
+% scatter(omnix1(omDK & omRK & ~omRA),omnix2(omDK & omRK & ~omRA),marksize,[.6,0,.6])
+% axedgeH = 1;
+% axedgeL = 0;
+% xlim([axedgeL axedgeH]); ylim([axedgeL axedgeH]);
+% plot ([axedgeL axedgeH],[axedgeL axedgeH],'k')
+% xlabel('Awake auROC'); ylabel('KX auROC');
+% axis square
+% title (['Responsive ttest, p = ',num2str(p,'%0.3f')])
 
 
 % Latency
@@ -288,122 +359,90 @@ h2 = text(0,.6,['Reponds only in Awake, n = ',num2str(sum(omUA & omRA & ~omRK))]
 h3 = text(0,.4,['Reponds only in  KX, n = ',num2str(sum(omUK & omRK & ~omRA))]); set(h3,'Color',[0,.6,0]);
 axis off
 
-% Duration
-omnix1 = cat(1,OMNI.MTDuration{:,1});
-omnix2 = cat(1,OMNI.MTDuration{:,2});
+% % Duration
+% omnix1 = cat(1,OMNI.MTDuration{:,1});
+% omnix2 = cat(1,OMNI.MTDuration{:,2});
+% 
+% subplot(4,3,7)
+% [cdf,cdx] = ecdf(omnix1(omUA & omRA));
+% plot(cdx,cdf,'Color',[0,0,0]);
+% hold on
+% [cdf,cdx] = ecdf(omnix2(omUK & omRK));
+% plot(cdx,cdf,'Color',[.9,0,0]);
+% [h,p] = kstest2(omnix1(omUA & omRA),omnix2(omUK & omRK));
+% title (['Awake vs KX: kstest, p = ',num2str(p,'%0.3f')])
+% xlabel('Duration (s)')
+% xlim([0 0.75])
+% axis square
 
-subplot(4,3,7)
-[cdf,cdx] = ecdf(omnix1(omUA & omRA));
-plot(cdx,cdf,'Color',[0,0,0]);
-hold on
-[cdf,cdx] = ecdf(omnix2(omUK & omRK));
-plot(cdx,cdf,'Color',[.9,0,0]);
-[h,p] = kstest2(omnix1(omUA & omRA),omnix2(omUK & omRK));
-title (['Awake vs KX: kstest, p = ',num2str(p,'%0.3f')])
-xlabel('Duration (s)')
-xlim([0 0.75])
-axis square
 
-subplot(4,3,8)
-b = [];
-hold on 
-for m = 1:length(SCR)
-    if ~isempty(SCR{m})
-  
-           a = mean(cell2mat(SCR{m}.MUA.SMPSTH.Align(:,1,1)))/size(SCR{m}.BlankRate,1);
-           plot(Edges,a,'Color',[.6 .6 1-m/length(SCR)/2])
-           b = [b; mean(cell2mat(SCR{m}.MUA.SMPSTH.Align(:,1,1)))/size(SCR{m}.BlankRate,1)];
-    end
-end
-plot(Edges,mean(b),'LineWidth',1.2,'Color',[.2 .2 .5])
-xlim([-0.5 1.5])
-axis square
-xlabel('Seconds')
-ylabel('MUA Hz/Unit')
 
-subplot(4,3,9)
-b = [];
-hold on 
-for m = 1:length(SCR)
-    if ~isempty(SCR{m})
-        
-           a = mean(cell2mat(SCR{m}.MUA.SMPSTH.Align(:,1,2)))/size(SCR{m}.BlankRate,1);
-           plot(Edges,a,'Color',[ 1-m/length(SCR)/2 .6 .6])
-            b = [b; mean(cell2mat(SCR{m}.MUA.SMPSTH.Align(:,1,2)))/size(SCR{m}.BlankRate,1)];
-    end
-end
-plot(Edges,mean(b),'LineWidth',1.2,'Color',[.5 .2 .2])
-xlim([-0.5 1.5])
-axis square
-xlabel('Seconds')
-ylabel('MUA Hz/Unit')
-
-% Reliability
-subplot(4,3,10)
-marksize = 3;
-omnix1 = cell2mat(cat(1,OMNI.Reliable{:,1}));
-omnix2 = cell2mat(cat(1,OMNI.Reliable{:,2}));
-
-[cdf,cdx] = ecdf(omnix1(omUA & omRA));
-plot(cdx,cdf,'Color',[0,0,0]);
-hold on
-[cdf,cdx] = ecdf(omnix2(omUK & omRK));
-plot(cdx,cdf,'Color',[.9,0,0]);
-[h,p] = kstest2(omnix1(omUA & omRA),omnix2(omUK & omRK));
-title (['Awake vs KX: kstest, p = ',num2str(p,'%0.3f')])
-xlabel('Reliability')
-xlim([0 1])
-axis square
-
-% Reliability vs Latency
-subplot(4,3,11)
-marksize = 3;
-omnix1R = cell2mat(cat(1,OMNI.Reliable{:,1}));
-omnix2R = cell2mat(cat(1,OMNI.Reliable{:,2}));
-omnix1L = cat(1,OMNI.MTLatency{:,1});
-omnix2L = cat(1,OMNI.MTLatency{:,2});
-omnix1RP = omnix1R(omUA & omRA); omnix1LP = omnix1L(omUA & omRA); 
-omnix2RP = omnix2R(omUK & omRK); omnix2LP = omnix2L(omUK & omRK);
-scatter(omnix1L(omUA & omRA),omnix1R(omUA & omRA),marksize,[0,0,.6])
-hold on
-scatter(omnix2L(omUK & omRK),omnix2R(omUK & omRK),marksize,[0,.6,0])
-axis square
-xlim([0 .75])
-xlabel('Latency (s)')
-ylabel('Reliability')
-
-for k = 1:11;
-    reli = (k-1)/10;
-     meanline(1,k) = nanmean(omnix1LP(omnix1RP == reli));
-     meanline(2,k) = nanmean(omnix2LP(omnix2RP == reli));
-end
-plot(meanline(1,:),0:.1:1,'Color',[0,0,.6])
-plot(meanline(2,:),0:.1:1,'Color',[0,.6,0])
-
-% Fano vs Latency
-subplot(4,3,12)
-marksize = 3;
-omnix1R = (cat(1,OMNI.Fano{:,1}));
-omnix2R = (cat(1,OMNI.Fano{:,2}));
-omnix1L = cat(1,OMNI.MTLatency{:,1});
-omnix2L = cat(1,OMNI.MTLatency{:,2});
-omnix1RP = omnix1R(omUA & omRA); omnix1LP = omnix1L(omUA & omRA); 
-omnix2RP = omnix2R(omUK & omRK); omnix2LP = omnix2L(omUK & omRK);
-scatter(omnix1L(omUA & omRA),omnix1R(omUA & omRA),marksize,[0,0,.6])
-hold on
-scatter(omnix2L(omUK & omRK),omnix2R(omUK & omRK),marksize,[0,.6,0])
-axis square
-xlim([0 .75])
-xlabel('Latency (s)')
-ylabel('Fano')
-ylim([0 6])
-[P1,~] = polyfit(omnix1LP(~isnan(omnix1LP) & ~isnan(omnix1RP)),omnix1RP(~isnan(omnix1LP) & ~isnan(omnix1RP)),1);
-[P2,~] = polyfit(omnix2LP(~isnan(omnix2LP) & ~isnan(omnix2RP)),omnix2RP(~isnan(omnix2LP) & ~isnan(omnix2RP)),1);
-XX = [0.05 0.7];
-Y1 = polyval(P1,XX);
-plot(XX,Y1,'Color',[0 0 .6]);
-Y2 = polyval(P2,XX);
-plot(XX,Y2,'Color',[0 .6 0]);
+% % Reliability
+% subplot(4,3,10)
+% marksize = 3;
+% omnix1 = cell2mat(cat(1,OMNI.Reliable{:,1}));
+% omnix2 = cell2mat(cat(1,OMNI.Reliable{:,2}));
+% 
+% [cdf,cdx] = ecdf(omnix1(omUA & omRA));
+% plot(cdx,cdf,'Color',[0,0,0]);
+% hold on
+% [cdf,cdx] = ecdf(omnix2(omUK & omRK));
+% plot(cdx,cdf,'Color',[.9,0,0]);
+% [h,p] = kstest2(omnix1(omUA & omRA),omnix2(omUK & omRK));
+% title (['Awake vs KX: kstest, p = ',num2str(p,'%0.3f')])
+% xlabel('Reliability')
+% xlim([0 1])
+% axis square
+% 
+% % Reliability vs Latency
+% subplot(4,3,11)
+% marksize = 3;
+% omnix1R = cell2mat(cat(1,OMNI.Reliable{:,1}));
+% omnix2R = cell2mat(cat(1,OMNI.Reliable{:,2}));
+% omnix1L = cat(1,OMNI.MTLatency{:,1});
+% omnix2L = cat(1,OMNI.MTLatency{:,2});
+% omnix1RP = omnix1R(omUA & omRA); omnix1LP = omnix1L(omUA & omRA); 
+% omnix2RP = omnix2R(omUK & omRK); omnix2LP = omnix2L(omUK & omRK);
+% scatter(omnix1L(omUA & omRA),omnix1R(omUA & omRA),marksize,[0,0,.6])
+% hold on
+% scatter(omnix2L(omUK & omRK),omnix2R(omUK & omRK),marksize,[0,.6,0])
+% axis square
+% xlim([0 .75])
+% xlabel('Latency (s)')
+% ylabel('Reliability')
+% 
+% for k = 1:11;
+%     reli = (k-1)/10;
+%      meanline(1,k) = nanmean(omnix1LP(omnix1RP == reli));
+%      meanline(2,k) = nanmean(omnix2LP(omnix2RP == reli));
+% end
+% plot(meanline(1,:),0:.1:1,'Color',[0,0,.6])
+% plot(meanline(2,:),0:.1:1,'Color',[0,.6,0])
+% 
+% % Fano vs Latency
+% subplot(4,3,12)
+% marksize = 3;
+% omnix1R = (cat(1,OMNI.Fano{:,1}));
+% omnix2R = (cat(1,OMNI.Fano{:,2}));
+% omnix1L = cat(1,OMNI.MTLatency{:,1});
+% omnix2L = cat(1,OMNI.MTLatency{:,2});
+% omnix1RP = omnix1R(omUA & omRA); omnix1LP = omnix1L(omUA & omRA); 
+% omnix2RP = omnix2R(omUK & omRK); omnix2LP = omnix2L(omUK & omRK);
+% scatter(omnix1L(omUA & omRA),omnix1R(omUA & omRA),marksize,[0,0,.6])
+% hold on
+% scatter(omnix2L(omUK & omRK),omnix2R(omUK & omRK),marksize,[0,.6,0])
+% axis square
+% xlim([0 .75])
+% xlabel('Latency (s)')
+% ylabel('Fano')
+% ylim([0 6])
+% [P1,~] = polyfit(omnix1LP(~isnan(omnix1LP) & ~isnan(omnix1RP)),omnix1RP(~isnan(omnix1LP) & ~isnan(omnix1RP)),1);
+% [P2,~] = polyfit(omnix2LP(~isnan(omnix2LP) & ~isnan(omnix2RP)),omnix2RP(~isnan(omnix2LP) & ~isnan(omnix2RP)),1);
+% XX = [0.05 0.7];
+% Y1 = polyval(P1,XX);
+% plot(XX,Y1,'Color',[0 0 .6]);
+% Y2 = polyval(P2,XX);
+% plot(XX,Y2,'Color',[0 .6 0]);
 
 % %%
 % % close all
@@ -422,7 +461,7 @@ plot(XX,Y2,'Color',[0 .6 0]);
 % Responders = Scores.AURp<.05;
 % Re1 = find(squeeze(Responders(:,:,1,1) & ~Responders(:,:,1,2)));
 % Re2 = find(squeeze(Responders(:,:,1,2) & ~Responders(:,:,1,1)));
-% 
+% % 
 % Uppers = Scores.auROC>.5;
 % Downers = Scores.auROC<.5;
 % ReDownX = find(squeeze(Responders(:,:,1,2) & Responders(:,:,1,1) & Downers(:,:,1,2) & Downers(:,:,1,1)));
@@ -548,7 +587,7 @@ plot(XX,Y2,'Color',[0 .6 0]);
 % nhist({x(RePosA);y(RePosK);x(ReUpX);y(ReUpX)},'fsize',8,'box','samebins','noerror','binfactor',15,'smooth','color','sequential','numbers','linewidth',1)
 % title('PSTH MT Latency')
 % 
-% % Subplot - Avg PSTH Double responders, single responders - awake
+% Subplot - Avg PSTH Double responders, single responders - awake
 % subplot(3,5,8)
 % PAL = Scores.SMPSTH.Align;
 % [a,b] = ind2sub([size(Scores.auROC,1) size(Scores.auROC,2)],ReUpX);
@@ -565,9 +604,9 @@ plot(XX,Y2,'Color',[0 .6 0]);
 % xlim([-.5 1])
 % ylim([0 45])
 % title('Avg PSTH - Dbl vs Sgl - Awk')
-% 
-% 
-% % Subplot - Avg PSTH Double responders, single responders - KX
+
+
+% Subplot - Avg PSTH Double responders, single responders - KX
 % subplot(3,5,9)
 % PAL = Scores.SMPSTH.Align;
 % [a,b] = ind2sub([size(Scores.auROC,1) size(Scores.auROC,2)],ReUpX);

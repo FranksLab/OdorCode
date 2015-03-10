@@ -13,11 +13,12 @@ for Unit = 1:size(SpikeTimes.tsec,1)
     for Valve = 1:size(ValveTimes.PREXIndex,2)
         
         for Cycle = 1:CyclestoCheck
-            try
+            
                 Adder = Cycle-1;
                 Beginning = PREX(ValveTimes.PREXIndex{Valve}(:)+Adder);
                 EndofCycle = PREX(ValveTimes.PREXIndex{Valve}(:)+1+Adder);
-                x = bsxfun(@gt,st,Beginning);
+             try
+                ux = bsxfun(@gt,st,Beginning);
                 x2 = bsxfun(@lt,st,EndofCycle);
                 x3 = x+x2-1;
                 
@@ -29,7 +30,13 @@ for Unit = 1:size(SpikeTimes.tsec,1)
                     % Loop through the trials and if the cycle is too far
                     % ... or just use PREX and CyclestoCheck to figure it
                     % out.. Then make those NaNs.
+                    MultiCycleSpikeCount{Valve,Unit,Cycle}(Trial) = sum(st>Beginning(Trial) & st<EndofCycle(Trial));
+                    MultiCycleSpikeRate{Valve,Unit,Cycle}(Trial) = sum(st>Beginning(Trial) & st<EndofCycle(Trial))/(EndofCycle(Trial)-Beginning(Trial));
+
                 end
+                MultiCycleSpikeCount{Valve,Unit,Cycle}(maxa+(a(Valve)-maxa+1):maxa) = NaN;
+                MultiCycleSpikeRate{Valve,Unit,Cycle}(maxa+(a(Valve)-maxa+1):maxa) = NaN;
+
             end
         end
         

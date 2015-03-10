@@ -19,6 +19,7 @@ else
     efd.StateIndex = ValveTimes.StateIndex;
     efd.Sniff = ValveTimes.Sniff;
     efd.SniffDiff = ValveTimes.SniffDiff;
+    efd.ValveTimes = ValveTimes;
     
     save(EFDfile,'efd','Edges')
 end

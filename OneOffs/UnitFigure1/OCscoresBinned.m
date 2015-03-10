@@ -84,8 +84,8 @@ end
 % PSedges = find(Edges>-.1 & Edges<.18);
 origbinsize = mode(diff(Edges));
 
-winstart = 0.04;
-winsize = .12; winstep = .02;
+winstart = -0.5;
+winsize = .04; winstep = .02;
 PSstart = find(Edges >= winstart,1);
 PSend = find(Edges>=1,1);
 
