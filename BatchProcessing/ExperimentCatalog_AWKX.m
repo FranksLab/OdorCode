@@ -80,15 +80,15 @@ PBank{9} = '1';
 OBank{9} =  [];
 TSETS{9} = {1:20,23:33};
 VOIpanel{9} = [4,8];
-<<<<<<< HEAD
+
 %
 layer{9} = 11;
 ATW{9}= [1 43];
 KTW{9}= [45 68];
-=======
+
 VCpanel{9} = [2,3,4;6,7,8];
 
->>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
+
 
 %% Record Set 10
 Date{10} = '28-Oct-2014';
@@ -121,15 +121,15 @@ PBank{12} = '1';
 OBank{12} = [];
 TSETS{12} = {1:12,15:30};
 VOIpanel{12} = [4,7,8,12,15,16];
-<<<<<<< HEAD
+
 %
 layer{12} = 18;
 ATW{12}= [3 48];
 KTW{12}= [49 121];
-=======
+
 VCpanel{12} = [2,3,4,5;10,11,12,13];
 
->>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
+
 
 %% Record Set 13
 Date{13} = '05-Nov-2014';
@@ -138,17 +138,16 @@ AIPs{13} = {'001.ns3'};
 States{13} = {'AK'};
 PBank{13} = '1';
 OBank{13} = [];
-<<<<<<< HEAD
-VOIpanel{12} = [4,7,8,12,15,16];
+
 %
 layer{13} = 21;
 ATW{13}= [5 47];
 KTW{13}= [48 102];
-=======
+
 VOIpanel{13} = [4,7,8,12,15,16];
 VCpanel{13} = [2,3,4,5;10,11,12,13];
 
->>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
+
 
 %% Record Set 14
 Date{14} = '19-Nov-2014';
@@ -157,17 +156,16 @@ AIPs{14} = {'004.ns3'};
 States{14} = {'AK'};
 PBank{14} = '2';
 OBank{14} = '1';
-<<<<<<< HEAD
-VOIpanel{12} = [4,7,8,12,15,16];
+
 %
 layer{14} = 21;
 ATW{14}= [32 51];
 KTW{14}= [53 113];
-=======
+
 VOIpanel{14} = [4,7,8,12,15,16];
 VCpanel{14} = [2,3,4,5;10,11,12,13];
 
->>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
+
 
 %% Record Set 15
 Date{15} = '08-Dec-2014';
@@ -178,14 +176,13 @@ PBank{15} = '2';
 OBank{15} = '1';
 TSETS{15} = {1:10,21:30};
 VOIpanel{15} = [4,7,8,12,15,16];
-<<<<<<< HEAD
-%
+
 layer{15} = 21;
 ATW{15}= [1 32];
 KTW{15}= [36 62];
-=======
+
 VCpanel{15} = [2,3,4,5;10,11,12,13];
->>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
+
 
 %% Record Set 16
 Date{16} = '08-Dec-2014';
@@ -196,15 +193,15 @@ PBank{16} = '2';
 OBank{16} = '1';
 TSETS{16} = {1:10,21:30};
 VOIpanel{16} = [4,7,8,12,15,16];
-<<<<<<< HEAD
+
 %
 layer{16} = 22;
 ATW{16}= [2 39];
 KTW{16}= [40 81];
-=======
+
 VCpanel{16} = [2,3,4,5;10,11,12,13];
 
->>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
+
 
 %% Record Set 17
 Date{17} = '09-Dec-2014';
@@ -215,16 +212,16 @@ PBank{17} = '2';
 OBank{17} = '1';
 TSETS{17} = {11:20,21:30};
 VOIpanel{17} = [4,7,8,12,15,16];
-<<<<<<< HEAD
+
 %
 layer{17} = 21;
 ATW{17}= [28 54];
 KTW{17}= [1 27];
-=======
+
 VCpanel{17} = [2,3,4,5;10,11,12,13];
 
->>>>>>> fdba49bf2fb33c73d2dd38d87b915fccc00f61fb
+
 
 %%
-save C:\Users\eric\Documents\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
-%save BatchProcessing\ExperimentCatalog_AWKX.mat
+% save C:\Users\eric\Documents\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
+save BatchProcessing\ExperimentCatalog_AWKX.mat
