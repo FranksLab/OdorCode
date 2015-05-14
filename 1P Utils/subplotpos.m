@@ -3,7 +3,7 @@ function [ ] = subplotpos( spwidth, spheight, spgridx, spgridy )
 %   sppos = subplotpos( spwidth, spheight, spgridx, spgridy )
 % also makes subplots 20% bigger
 
-margin = 0.02;
+margin = 0.01;
 
 plotsizex = (1-(margin*(spwidth+2)))/spwidth;
 plotsizey = (1-(margin*(spheight+2)))/spheight;

@@ -6,12 +6,12 @@ load BatchProcessing\ExperimentCatalog_AWKX.mat
 RecordSet = 16;
 KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
 [ValveTimes,LaserTimes,LVTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix] = GatherInfo1(KWIKfile);
-load(['z:\RESPfiles\recordset',num2str(RecordSet,'%03.0f'),'com.mat']);
-[ATW,KTW]=StateWindowFinder(RRR,PREX,BbyB);
-matATW=cell2mat(ATW);
-matKTW=cell2mat(KTW);
-maxATW=find(max(matATW(2:2:end)-matATW(1:2:end)));
-maxKTW=find(max(matKTW(2:2:end)-matKTW(1:2:end)));
+% load(['z:\RESPfiles\recordset',num2str(RecordSet,'%03.0f'),'com.mat']);
+% [ATW,KTW]=StateWindowFinder(RRR,PREX,BbyB);
+% matATW=cell2mat(ATW);
+% matKTW=cell2mat(KTW);
+% maxATW=find(max(matATW(2:2:end)-matATW(1:2:end)));
+% maxKTW=find(max(matKTW(2:2:end)-matKTW(1:2:end)));
 
 %% Windowing
 MaxTime = round(length(RRR)/2000);
@@ -112,20 +112,23 @@ set(gca,'XTick',[0 4800])
 
 
 %% OMNI stuff
-for RecordSet = [8:9,12,15:17]
+load BatchProcessing\ExperimentCatalog_AWKX.mat
+
+for RecordSet = 12:17
     KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
+%    
     [ValveTimes,LaserTimes,LVTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix] = GatherInfo1(KWIKfile);
-    load(['z:\RESPfiles\recordset',num2str(RecordSet,'%03.0f'),'com.mat']);
-    [ATW,KTW]=StateWindowFinder(RRR,PREX,BbyB);
-    matATW=cell2mat(ATW);
-    matKTW=cell2mat(KTW);
-    maxATW=find(max(matATW(2:2:end)-matATW(1:2:end)));
-    maxKTW=find(max(matKTW(2:2:end)-matKTW(1:2:end)));
+%     load(['z:\RESPfiles\recordset',num2str(RecordSet,'%03.0f'),'com.mat']);
+%     [ATW,KTW]=StateWindowFinder(RRR,PREX,BbyB);
+%     matATW=cell2mat(ATW);
+%     matKTW=cell2mat(KTW);
+%     maxATW=find(max(matATW(2:2:end)-matATW(1:2:end)));
+%     maxKTW=find(max(matKTW(2:2:end)-matKTW(1:2:end)));
     
     CycleEdges = -180:10:180;
     for k = 1:length(SpikeTimes.tsec)
-        Awarp = (360*mod(SpikeTimes.stwarped{k}(SpikeTimes.tsec{k}>ATW{1}(1)*60 & SpikeTimes.tsec{k}<ATW{1}(2)*60),BreathStats.AvgPeriod)/BreathStats.AvgPeriod);
-        Kwarp = (360*mod(SpikeTimes.stwarped{k}(SpikeTimes.tsec{k}>KTW{1}(1)*60 & SpikeTimes.tsec{k}<KTW{1}(2)*60),BreathStats.AvgPeriod)/BreathStats.AvgPeriod);
+        Awarp = (360*mod(SpikeTimes.stwarped{k}(SpikeTimes.tsec{k}>ATW{RecordSet}(1)*60 & SpikeTimes.tsec{k}<ATW{RecordSet}(2)*60),BreathStats.AvgPeriod)/BreathStats.AvgPeriod);
+        Kwarp = (360*mod(SpikeTimes.stwarped{k}(SpikeTimes.tsec{k}>KTW{RecordSet}(1)*60 & SpikeTimes.tsec{k}<KTW{RecordSet}(2)*60),BreathStats.AvgPeriod)/BreathStats.AvgPeriod);
         Awarp(Awarp>180) = Awarp(Awarp>180)-360;
         Kwarp(Kwarp>180) = Kwarp(Kwarp>180)-360;
         
@@ -135,8 +138,8 @@ for RecordSet = [8:9,12,15:17]
             Kappa{RecordSet}{1,k} = circ_kappa(deg2rad(awrp{RecordSet}{k}));
             Kappa{RecordSet}{2,k} = circ_kappa(deg2rad(kwrp{RecordSet}{k}));
             
-            Rate{RecordSet}{1,k} = length(awrp{RecordSet}{k})/(ATW{1}(2)-ATW{1}(1))/60;
-            Rate{RecordSet}{2,k} = length(kwrp{RecordSet}{k})/(KTW{1}(2)-KTW{1}(1))/60;
+            Rate{RecordSet}{1,k} = length(awrp{RecordSet}{k})/(ATW{RecordSet}(2)-ATW{RecordSet}(1))/60;
+            Rate{RecordSet}{2,k} = length(kwrp{RecordSet}{k})/(KTW{RecordSet}(2)-KTW{RecordSet}(1))/60;
             
             cmean{RecordSet}{1,k} = circ_mean(deg2rad(awrp{RecordSet}{k}));
             cmean{RecordSet}{2,k} = circ_mean(deg2rad(kwrp{RecordSet}{k}));
@@ -144,8 +147,8 @@ for RecordSet = [8:9,12,15:17]
             MKappa{RecordSet}{1,k} = circ_kappa(deg2rad(awrp{RecordSet}{k}));
             MKappa{RecordSet}{2,k} = circ_kappa(deg2rad(kwrp{RecordSet}{k}));
             
-            MRate{RecordSet}{1,k} = length(awrp{RecordSet}{k})/(ATW{1}(2)-ATW{1}(1))/60;
-            MRate{RecordSet}{2,k} = length(kwrp{RecordSet}{k})/(KTW{1}(2)-KTW{1}(1))/60;
+            MRate{RecordSet}{1,k} = length(awrp{RecordSet}{k})/(ATW{RecordSet}(2)-ATW{RecordSet}(1))/60;
+            MRate{RecordSet}{2,k} = length(kwrp{RecordSet}{k})/(KTW{RecordSet}(2)-KTW{RecordSet}(1))/60;
             
         end
     end
@@ -168,6 +171,7 @@ set(gca,'YTick',[],'XTick',[-175,0,175],'XTickLabel',{'-180','0','+180'})
 
 %%
 subplot(7,2,10)
+cla(gca)
 cms = rad2deg(cell2mat(cat(2,cmean{:})));
 [n,~] = histc(cms(1,:),CycleEdges);
 % n = n/sum(n);
@@ -183,40 +187,60 @@ set(gca,'YTick',[],'XTick',[-175,0,175],'XTickLabel',{'-180','0','+180'})
 
 
 %%
+for R = 12:17
+    for state = 1:2
+   MMRate{R}{state,1} = MRate{R}{state}/size(Rate{R},2);
+    end
+end
+%%
 subplot(7,2,11)
-plot(1:2,cell2mat(cat(2,MRate{:})),'s','Color',[0, 0, .4],'MarkerFaceColor',[0,0,.4],'MarkerSize',5)
+cla(gca)
+
+% plot(1:2,cell2mat(cat(2,MRate{:})),'s','Color',[0, 0, .4],'MarkerFaceColor',[0,0,.4],'MarkerSize',5)
+% hold on
+% plot(1:2,cell2mat(cat(2,MRate{:})),'Color',[0, 0, .4])
+% plot(1:2,cell2mat(cat(2,MRate{16})),'s','Color',[0, .6, 0],'MarkerFaceColor',[0,.6,0],'MarkerSize',5)
+% plot(1:2,cell2mat(cat(2,MRate{16})),'Color',[0, 0.6, 0])
+h = bar(1:2,nanmean(cell2mat(cat(2,MMRate{:}))'));
 hold on
-plot(1:2,cell2mat(cat(2,MRate{:})),'Color',[0, 0, .4])
-plot(1:2,cell2mat(cat(2,MRate{16})),'s','Color',[0, .6, 0],'MarkerFaceColor',[0,.6,0],'MarkerSize',5)
-plot(1:2,cell2mat(cat(2,MRate{16})),'Color',[0, 0.6, 0])
+set(h,'FaceColor',[.6 .6 .6])
+errorb(1:2,nanmean(cell2mat(cat(2,MMRate{:}))'),nanstd(cell2mat(cat(2,MMRate{:}))')./sqrt(size(cell2mat(cat(2,MMRate{:})),2)),'top')
 xlim([0 3])
 set(gca,'XTick',[1,2],'XTickLabel',{'A','K'})
 
 %
 subplot(7,2,12)
-plot(1:2,cell2mat(cat(2,MKappa{:})),'s','Color',[0, 0, .4],'MarkerFaceColor',[0,0,.4],'MarkerSize',5)
+cla(gca)
+
+% plot(1:2,cell2mat(cat(2,MKappa{:})),'s','Color',[0, 0, .4],'MarkerFaceColor',[0,0,.4],'MarkerSize',5)
+% hold on
+% plot(1:2,cell2mat(cat(2,MKappa{:})),'Color',[0, 0, .4])
+% plot(1:2,cell2mat(cat(2,MKappa{16})),'s','Color',[0, .6, 0],'MarkerFaceColor',[0,.6,0],'MarkerSize',5)
+% plot(1:2,cell2mat(cat(2,MKappa{16})),'Color',[0, 0.6, 0])
+h = bar(1:2,nanmean(cell2mat(cat(2,MKappa{:}))'));
 hold on
-plot(1:2,cell2mat(cat(2,MKappa{:})),'Color',[0, 0, .4])
-plot(1:2,cell2mat(cat(2,MKappa{16})),'s','Color',[0, .6, 0],'MarkerFaceColor',[0,.6,0],'MarkerSize',5)
-plot(1:2,cell2mat(cat(2,MKappa{16})),'Color',[0, 0.6, 0])
+set(h,'FaceColor',[.6 .6 .6])
+errorb(1:2,nanmean(cell2mat(cat(2,MKappa{:}))'),nanstd(cell2mat(cat(2,MKappa{:}))')./sqrt(size(cell2mat(cat(2,MKappa{:})),2)),'top')
+xlim([0 3])
+set(gca,'XTick',[1,2],'XTickLabel',{'A','K'})
 xlim([0 3])
 set(gca,'XTick',[1,2],'XTickLabel',{'A','K'})
 
-%%
-subplot(7,2,13)
-plot(1:2,cell2mat(cat(2,Rate{:})),'s','Color',[0, 0, .4],'MarkerFaceColor',[0,0,.4],'MarkerSize',5)
-hold on
-plot(1:2,cell2mat(cat(2,Rate{:})),'Color',[0, 0, .4])
-% plot(1:2,cell2mat(cat(2,Rate{16})),'s','Color',[0, .6, 0],'MarkerFaceColor',[0,.6,0],'MarkerSize',5)
-plot(1:2,cell2mat(cat(2,Rate{16})),'Color',[0, 0.6, 0])
-xlim([0 3])
-set(gca,'XTick',[1,2],'XTickLabel',{'A','K'})
-
-subplot(7,2,14)
-plot(1:2,cell2mat(cat(2,Kappa{:})),'s','Color',[0, 0, .4],'MarkerFaceColor',[0,0,.4],'MarkerSize',5)
-hold on
-plot(1:2,cell2mat(cat(2,Kappa{:})),'Color',[0, 0, .4])
-% plot(1:2,cell2mat(cat(2,Kappa{16})),'s','Color',[0, .6, 0],'MarkerFaceColor',[0,.6,0],'MarkerSize',5)
-plot(1:2,cell2mat(cat(2,Kappa{16})),'Color',[0, 0.6, 0])
-xlim([0 3])
-set(gca,'XTick',[1,2],'XTickLabel',{'A','K'})
+% %%
+% subplot(7,2,13)
+% plot(1:2,cell2mat(cat(2,Rate{:})),'s','Color',[0, 0, .4],'MarkerFaceColor',[0,0,.4],'MarkerSize',5)
+% hold on
+% plot(1:2,cell2mat(cat(2,Rate{:})),'Color',[0, 0, .4])
+% % plot(1:2,cell2mat(cat(2,Rate{16})),'s','Color',[0, .6, 0],'MarkerFaceColor',[0,.6,0],'MarkerSize',5)
+% plot(1:2,cell2mat(cat(2,Rate{16})),'Color',[0, 0.6, 0])
+% xlim([0 3])
+% set(gca,'XTick',[1,2],'XTickLabel',{'A','K'})
+% 
+% subplot(7,2,14)
+% plot(1:2,cell2mat(cat(2,Kappa{:})),'s','Color',[0, 0, .4],'MarkerFaceColor',[0,0,.4],'MarkerSize',5)
+% hold on
+% plot(1:2,cell2mat(cat(2,Kappa{:})),'Color',[0, 0, .4])
+% % plot(1:2,cell2mat(cat(2,Kappa{16})),'s','Color',[0, .6, 0],'MarkerFaceColor',[0,.6,0],'MarkerSize',5)
+% plot(1:2,cell2mat(cat(2,Kappa{16})),'Color',[0, 0.6, 0])
+% xlim([0 3])
+% set(gca,'XTick',[1,2],'XTickLabel',{'A','K'})

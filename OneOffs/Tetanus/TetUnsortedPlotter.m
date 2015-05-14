@@ -5,6 +5,9 @@ clc
 RelevantFiles = {'19-Feb-2015-002', '20-Feb-2015-003', '21-Feb-2015-001', '23-Feb-2015-001', '23-Feb-2015-004'};
 % Day 7, Day 10, Day 14, Day 13, Day 13 bulb
 kxtrials = [1,1;14,24;14,24;14,24];
+
+RelevantFiles = {[],'20-Mar-2015-002'};
+kxtrials = [1,1;14,24];
 %%
 
 BinSize = 0.01; % in seconds
@@ -14,7 +17,7 @@ ChannelSet{1} = 1:32;
 ChannelSet{2} = 33:64;
 %%
 clear SpikeTimes
-for k = [2:4];
+for k = 2%[2:4];
     
     k
     FilesKK.AIP = ['Z:\NS3files\COM\',RelevantFiles{k},'.ns3'];
@@ -34,8 +37,8 @@ for k = [2:4];
 %     stt{k,ccset} = SpikeTimes.tsec{1};
     FirstCycleSpikeCount{ccset,k} = VSFirstCycleCount(ValveTimes,SpikeTimes,PREX);
     SpikesDuringOdor{ccset,k} = VSDuringOdor(ValveTimes,SpikeTimes);
-%     [ValveSpikes.HistAligned, ValveSpikes.HistAlignSumRate, ValveSpikes.HistAlignSmoothRate,ValveSpikes.RasterAlign] = VSHistAligned(ValveTimes,SpikeTimes,Edges,BinSize);
-%     RA{ccset,k} = ValveSpikes.RasterAlign;
+    [ValveSpikes.HistAligned, ValveSpikes.HistAlignSumRate, ValveSpikes.HistAlignSmoothRate,ValveSpikes.RasterAlign] = VSHistAligned(ValveTimes,SpikeTimes,Edges,BinSize);
+    RA{ccset,k} = ValveSpikes.RasterAlign;
     fcsc{ccset,k} = cell2mat(FirstCycleSpikeCount{ccset,k});
     duod{ccset,k} = cell2mat(SpikesDuringOdor{ccset,k});
     end

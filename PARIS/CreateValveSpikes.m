@@ -20,4 +20,6 @@ ValveSpikes.FirstCycleSpikeCount = VSFirstCycleCount(ValveTimes,SpikeTimes,PREX)
 %% Spikes During Odor
 ValveSpikes.SpikesDuringOdor = VSDuringOdor(ValveTimes,SpikeTimes);
 
+%% Latency to First Spike
+ValveSpikes.LTFS = VSLatencytoSpike(ValveSpikes.RasterAlign);
 end

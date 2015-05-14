@@ -66,6 +66,8 @@ AIPs{8} = {'001.ns3','002.ns3','003.ns3'};
 States{8} = {'A','AK','K'};
 PBank{8} = '1';
 OBank{8} =  [];
+TSETS{8} = {1:20,23:33};
+VOIpanel{8} = [4,8];
 %
 layer{8} = 11;
 ATW{8}= [1 40];
@@ -138,7 +140,7 @@ AIPs{13} = {'001.ns3'};
 States{13} = {'AK'};
 PBank{13} = '1';
 OBank{13} = [];
-
+TSETS{13} = {1:12,15:30};
 %
 layer{13} = 21;
 ATW{13}= [5 47];
@@ -159,8 +161,9 @@ OBank{14} = '1';
 
 %
 layer{14} = 21;
-ATW{14}= [32 51];
+ATW{14}= [5 51];
 KTW{14}= [53 113];
+TSETS{14} = {1:10,16:25};
 
 VOIpanel{14} = [4,7,8,12,15,16];
 VCpanel{14} = [2,3,4,5;10,11,12,13];
@@ -216,7 +219,7 @@ VOIpanel{17} = [4,7,8,12,15,16];
 %
 layer{17} = 21;
 ATW{17}= [28 54];
-KTW{17}= [1 27];
+KTW{17}= [55 80];
 
 VCpanel{17} = [2,3,4,5;10,11,12,13];
 
@@ -224,4 +227,4 @@ VCpanel{17} = [2,3,4,5;10,11,12,13];
 
 %%
 % save C:\Users\eric\Documents\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
-save BatchProcessing\ExperimentCatalog_AWKX.mat
+save C:\Users\kevinbolding\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat

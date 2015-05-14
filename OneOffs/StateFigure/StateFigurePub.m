@@ -3,7 +3,7 @@ clear all
 close all
 clc
 %% KX injection changes the regularity of respiration
-RecordSetList = [8 9 12 13 14 15 16 17];
+RecordSetList = [12 13 14 15 16 17];
 
 for RecordSet = RecordSetList
     clearvars -except rgammaA rgammaK RecordSetList RecordSet BrFqA BrFqK CVHwdA CVHwdK CVWwdA CVWwdK
@@ -273,52 +273,63 @@ set(gca,'XTick',[max(t)/2,max(t)]);%,'XTickLabel',['40';'80'])
 print(gcf, '-dpdf','-painters', ['z:\StateFig',num2str(RecordSet)])
 end
 %%
+close all
 figure(3)
+ positions = [200 200 300 200];
+        set(gcf,'Position',positions)
+        set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
+               
 rgammaAK=[cell2mat(rgammaA)',cell2mat(rgammaK)'];
-bar(nanmean(rgammaAK),'facecolor',[.8 .8 .8],'edgecolor','k');
+bar(nanmean(rgammaAK),'facecolor',[.6 .6 .6],'edgecolor','k');
 hold on
 errorb(nanmean(rgammaAK),nanstd(rgammaAK)/sqrt(size(rgammaAK,1)),'top','linewidth',.8);
 ylabel('R\gamma Ratio')
+ylim([0 0.6])
 set(gca,'YTick',get(gca,'YLim'))
 set(gca,'XTickLabel',{'Awake','KX'})
 set(gca,'XLim',[0 3])
  box off
 
 figure(4)
+positions = [200 200 300 200];
+        set(gcf,'Position',positions)
+        set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
 subplot(1,3,1)
 BrFqPlot=[cell2mat(BrFqA)',cell2mat(BrFqK)'];
-bar(nanmean(BrFqPlot),'facecolor',[.8 .8 .8],'edgecolor','k');
+bar(nanmean(BrFqPlot),'facecolor',[.6 .6 .6],'edgecolor','k');
 hold on
 errorb(nanmean(BrFqPlot),nanstd(BrFqPlot)/sqrt(size(BrFqPlot,1)),'top','linewidth',.8);
-ylabel('R\gamma Ratio')
+% ylabel('R\gamma Ratio')
 set(gca,'YTick',get(gca,'YLim'))
 set(gca,'XTickLabel',{'Awake','KX'})
 set(gca,'XLim',[0 3])
-title('BrFq')
+ylabel('BrFq')
  box off
  
  subplot(1,3,2)
 CVHwdPlot=[cell2mat(CVHwdA)',cell2mat(CVHwdK)'];
-bar(nanmean(CVHwdPlot),'facecolor',[.8 .8 .8],'edgecolor','k');
+bar(nanmean(CVHwdPlot),'facecolor',[.6 .6 .6],'edgecolor','k');
 hold on
 errorb(nanmean(CVHwdPlot),nanstd(CVHwdPlot)/sqrt(size(CVHwdPlot,1)),'top','linewidth',.8);
 ylabel('R\gamma Ratio')
+ylim([0 .5])
 set(gca,'YTick',get(gca,'YLim'))
 set(gca,'XTickLabel',{'Awake','KX'})
 set(gca,'XLim',[0 3])
-title('CVHwd')
+ylabel('CVHwd')
  box off
  
  subplot(1,3,3)
 CVWwdPlot=[cell2mat(CVWwdA)',cell2mat(CVWwdK)'];
-bar(nanmean(CVWwdPlot),'facecolor',[.8 .8 .8],'edgecolor','k');
+bar(nanmean(CVWwdPlot),'facecolor',[.6 .6 .6],'edgecolor','k');
 hold on
 errorb(nanmean(CVWwdPlot),nanstd(CVWwdPlot)/sqrt(size(CVWwdPlot,1)),'top','linewidth',.8);
+ylim([0 .5])
 ylabel('R\gamma Ratio')
 set(gca,'YTick',get(gca,'YLim'))
 set(gca,'XTickLabel',{'Awake','KX'})
 set(gca,'XLim',[0 3])
-title('CVWwd')
+ylabel('CVWwd')
  box off
  
 %%

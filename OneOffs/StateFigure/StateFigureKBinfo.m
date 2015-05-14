@@ -6,8 +6,8 @@ clc
 load BatchProcessing\ExperimentCatalog_AWKX.mat
 %% KX injection changes the regularity of respiration
 
-RecordSetList = 17;
-%RecordSetList = 15;
+% RecordSetList = [9,12:17];
+RecordSetList = 14;
 ChannelCount=32;
 PSpectrumA=cell(3,length(Date)); %row 1 center, row 2 deep, row 3 superficial
 PSpectrumK=cell(3,length(Date));
@@ -54,11 +54,11 @@ end
 RF = BrFq(6:end-5);
 
 
-[ATW,KTW,sWDt,U]=StateWindowFinder(RRR,PREX,BbyB);
-matATW=cell2mat(ATW)
-matKTW=cell2mat(KTW)
-maxATW=find(max(matATW(2:2:end)-matATW(1:2:end))==matATW(2:2:end)-matATW(1:2:end))
-maxKTW=find(max(matKTW(2:2:end)-matKTW(1:2:end))==matKTW(2:2:end)-matKTW(1:2:end))
+% [ATW,KTW,sWDt,U]=StateWindowFinder(RRR,PREX,BbyB);
+% matATW=cell2mat(ATW);
+% matKTW=cell2mat(KTW);
+% maxATW=find(max(matATW(2:2:end)-matATW(1:2:end))==matATW(2:2:end)-matATW(1:2:end));
+% maxKTW=find(max(matKTW(2:2:end)-matKTW(1:2:end))==matKTW(2:2:end)-matKTW(1:2:end));
 
 [ATW,KTW]=StateWindowFinder(RRR,PREX,BbyB);
 matATW=cell2mat(ATW);
@@ -101,14 +101,14 @@ coeffvarA=std(rowsA)./mean(rowsA);
 rowavgA=mean(rowsA);
 layerpkA=find(rowavgA==max(rowavgA(:,find(coeffvarA<0.1))));
 %[~,layerpkA] = max(aA(poly3col{2}));
-
-poly3col{1} = [17,14,20,11,21,10,31,0,29,9]'+1;
-poly3col{2} = [16,15,1,8,2,7,3,6,13,5,4,12]'+1;
-poly3col{3} = [30,18,28,19,27,25,26,23,24,22]'+1;
+% 
+% poly3col{1} = [17,14,20,11,21,10,31,0,29,9]'+1;
+% poly3col{2} = [16,15,1,8,2,7,3,6,13,5,4,12]'+1;
+% poly3col{3} = [30,18,28,19,27,25,26,23,24,22]'+1;
 
 % PxLA(18,:) = nan(size(PxLA(18,:)));
 
-aA = mean(PxLA(:,F>100),2);
+aA = mean(PxLA(:,F>300),2);
 [~,layerpkA] = max(aA(poly3col{2}));
 
 layerA = poly3col{2}(layerpkA);
@@ -150,8 +150,8 @@ if numel(poly3col{2})>=layerpkK+3
 layerspK = poly3col{2}(layerpkK+3);
 end
 
+close(1)
 figure(1)
-
 positions = [200 200 600 400];
 set(gcf,'Position',positions)
 set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
@@ -242,6 +242,8 @@ if exist('layerspK')
 PSpectrumK{3,RecordSet}=log10(PxLK(layerspK,:));
 end
 
+% print(gcf,'-dpdf','-painters',['Z:/ProbeMap',num2str(RecordSet)])
+
 end
 
 
@@ -275,6 +277,28 @@ DDR = DDR(1:TotSamples);
 %
 % %% Get the Coherence between LFP and Respiration
 % [CxLR,F] = mscohere(DDR,DDL,[2^12],[],2^14,500);
+%% pretty plot of probemap
+% clear all
+% close all
+% load('probemap14.mat')
+% % xuv = x/double(1000/152590);
+% positions = [500 200 100 400];
+% set(gcf,'Position',positions)
+% set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
+% % xuvsq = xuv.^.5;
+% % xuvsq(isnan(xuvsq)) = 0;
+% rsxuvsq = imresize(xuvsq,8);
+% imagesc(rsxuvsq)
+% CT=cbrewer('seq', 'Reds',64);
+% colormap(CT.^1)
+% imagesc(rsxuvsq)
+% caxis([70 130])
+% imagesc(rsxuvsq)
+% axis off
+% h = colorbar
+% set(h,'location','southoutside')
+% caxis([70 130])
+% print( gcf, '-dpdf','-painters', ['Z:/scaledprobemap14']);
 
 %% Get the spectrograms and coherogram
 %%
@@ -605,18 +629,19 @@ positions = [900 200 300 600];
 set(gcf,'Position',positions)
 set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
 
+rlim = [-400 400];
 
 subplot(5,1,1);
-plot(0:0.0005:20,RRR(580000*4:590000*4),'k'); xlim([0.5 3.5])
-ylim([-200 200])
+plot(0:0.0005:20,RRR(580000:590000),'k'); xlim([0.5 3.5])
+ylim(rlim)
 subplot(5,1,2)
-plot(0:0.002:20,DDL(580000:590000),'k'); xlim([0.5 3.5])
+plot(0:0.002:20,DDL(580000*2:590000*2),'k'); xlim([0.5 3.5])
 ylim([-5000 5000])
 subplot(5,1,3);
-plot(0:0.0005:8,RRR(1691500*4:1695500*4),'k'); xlim([0 3])
-ylim([-200 200])
+plot(0:0.0005:8,RRR(1691500:1695500),'k'); xlim([0 3])
+ylim(rlim)
 subplot(5,1,4)
-plot(0:0.002:8,DDL(1691500:1695500),'k'); xlim([0  3])
+plot(0:0.002:8,DDL(1691500*2:1695500*2),'k'); xlim([0  3])
 ylim([-5000 5000])
 subplot(5,1,5)
 plot([.5 1],[500 500],'k')
@@ -626,8 +651,7 @@ xlim([0  3])
 ylim([-5000 5000])
 
 
-
-%
+%%
 % subplot(5,1,5)
 % imagesc(t,f(lowfreq),(CLR{RecordSet}(:,lowfreq))'); axis xy
 % % title('LFP')
@@ -642,3 +666,20 @@ ylim([-5000 5000])
 %         title('Coherence')
 %         set(gca,'YTick',(max(f)),'YTickLabel',round(max(f)))
 %         set(gca,'XTick',(max(t)),'XTickLabel',round(max(t)))
+
+%% example LFP and 
+figure(4)
+clf
+timerange = [613 615];
+for chan = 1:length(poly3col{1})
+    subplotpos(1,length(poly3col{1})+1,1,chan)
+    plot(timerange(1):1/1000:timerange(2),double(LFPdata(poly3col{1}(chan),1+timerange(1)*1000:1+timerange(2)*1000)),'Color',.5-(chan/length(poly3col{1})/2)*[1 1 1])
+    ylim([-1500 1500])
+    axis off
+    set(get(gca,'children'),'clipping','off')
+end
+subplotpos(1,length(poly3col{1})+1,1,length(poly3col{1})+1)
+plot(timerange(1):1/2000:timerange(2),RRR(1+timerange(1)*2000:1+timerange(2)*2000),'k')
+ylim([-1200 1200])
+axis off
+set(get(gca,'children'),'clipping','off')

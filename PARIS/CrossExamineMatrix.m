@@ -1,5 +1,5 @@
 function [CEM,AssignedValues,AssignIndex,AssignDist] = CrossExamineMatrix(AssignedTo,AssignedFrom,nextorprevious)
-
+% if used for CCG the refspikes are the "Assigned To"
 AFM = repmat(AssignedFrom,length(AssignedTo),1);
 ATM = repmat(AssignedTo',1,length(AssignedFrom));
 

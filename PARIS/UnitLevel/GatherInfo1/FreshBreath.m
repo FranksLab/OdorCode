@@ -38,6 +38,7 @@ else
             FVCsamples = FVCsamples(FVCsamples<length(RESP));
             astRESP(FVCsamples) = smooth(RESP(FVCsamples),99);
             FVsamples = (round((FVOpens(i)-1)*Fs):round((FVCloses(i)+1)*Fs));
+            FVsamples = FVsamples(FVsamples<length(astRESP));
             [pk,lc] = findpeaks(abs(RESP(FVsamples)-astRESP(FVsamples)),'minpeakdistance',1800);
             
             if length(lc)>1
@@ -236,5 +237,5 @@ else
     
     save(RESPfile,'InhTimes','PREX','POSTX','RRR','BbyB')
 end
-end
+% end
 

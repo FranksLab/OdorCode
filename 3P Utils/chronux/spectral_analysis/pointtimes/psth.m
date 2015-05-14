@@ -65,7 +65,7 @@ end
 
 NT = length(data(:,1));
 if NT < 4 && err == 2
-  disp('Using Poisson errorbars as number of trials is too small for bootstrap')
+%   disp('Using Poisson errorbars as number of trials is too small for bootstrap')
   err = 1;
 end    
     
