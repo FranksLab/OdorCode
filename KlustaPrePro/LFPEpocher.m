@@ -9,11 +9,12 @@ EL6 = 15*30000;
 EL3 = 15*2000;
 
 %%
-for RecordSet = 8%:size(Raws,2);
+for RecordSet = 18%:size(Raws,2);
     for Record = 1:size(Raws{RecordSet},2)
-        Raw = ['Y:\',Date{RecordSet},'-',Raws{RecordSet}{Record}];
-        AIP = ['Y:\',Date{RecordSet},'-',AIPs{RecordSet}{Record}];
         path = ['Z:\UnitSortingAnalysis\',Date{RecordSet},'_Analysis\'];
+        Raw = [path,Date{RecordSet},'-',Raws{RecordSet}{Record}];
+        AIP = [path,Date{RecordSet},'-',AIPs{RecordSet}{Record}];
+        
         
         %% Get Analog Input Info
         [Fs,t,VLOs,FVO,resp,LASER] = NS3Unpacker(AIP);

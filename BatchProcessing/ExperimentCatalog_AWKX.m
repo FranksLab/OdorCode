@@ -223,8 +223,20 @@ KTW{17}= [55 80];
 
 VCpanel{17} = [2,3,4,5;10,11,12,13];
 
+%% Record Set 18
+Date{18} = '16-Apr-2015';
+Raws{18} = {'003.ns6','004.ns6'};
+AIPs{18} = {'003.ns3','004.ns3'};
+%% Record Set 20
+Date{20} = '18-Apr-2015';
+Raws{20} = {'001.ns6'};
+AIPs{20} = {'001.ns3'};
+%% Record Set 22
+Date{22} = '24-Apr-2015';
+Raws{22} = {'002.ns6'};
+AIPs{22} = {'002.ns3'};
 
 
 %%
-% save C:\Users\eric\Documents\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
-save C:\Users\kevinbolding\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
+save C:\Users\eric\Documents\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
+%save C:\Users\kevinbolding\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
