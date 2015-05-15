@@ -238,5 +238,5 @@ AIPs{22} = {'002.ns3'};
 
 
 %%
-save C:\Users\eric\Documents\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
-%save C:\Users\kevinbolding\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
+% save C:\Users\eric\Documents\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
+save C:\Users\kevinbolding\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat

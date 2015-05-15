@@ -4,12 +4,12 @@ clc
 
 load BatchProcessing\ExperimentCatalog_AWKX.mat
 
-ES = -5; % Epoch Window
-EL6 = 15*30000;
-EL3 = 15*2000;
+ES = -4; % Epoch Window
+EL6 = 9*30000;
+EL3 = 9*2000;
 
 %%
-for RecordSet = 18%:size(Raws,2);
+for RecordSet = 22%:size(Raws,2);
     for Record = 1:size(Raws{RecordSet},2)
         path = ['Z:\UnitSortingAnalysis\',Date{RecordSet},'_Analysis\'];
         Raw = [path,Date{RecordSet},'-',Raws{RecordSet}{Record}];
