@@ -236,7 +236,4 @@ Date{22} = '24-Apr-2015';
 Raws{22} = {'002.ns6'};
 AIPs{22} = {'002.ns3'};
 
-
-%%
-% save C:\Users\eric\Documents\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
-save C:\Users\kevinbolding\OdorCode\BatchProcessing\ExperimentCatalog_AWKX.mat
+save Z:\ExperimentCatalog_AWKX.mat
