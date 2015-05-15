@@ -3,8 +3,8 @@ close all
 clc
 
 load BatchProcessing\ExperimentCatalog_AWKX.mat
-RecordSet = 14;
-tset = 2;
+RecordSet = 17;
+tset = 1;
 
 TrialSets = TSETS{RecordSet};
 KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
