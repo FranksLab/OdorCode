@@ -47,7 +47,25 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % allow GatherInfo1 to continue if there are no FV switches.
 [ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,tWarpLinear,Fs);
 
-% Create StateIndex
+% 5/14/15 - Finally admitting that automated detection of breath cycles may
+% not be worth it. A new step will check for a "manual" file in
+% the RESPfiles folder. If it does not exist we will run a function that
+% displays all trial-associated respiration traces and allows the user to
+% edit the onset of the first and second inhalations after FV switching.
+
+manualfile = ['Z:\RESPfiles\',FilesKK.AIP(17:31),'manual.mat'];
+RESPfile = ['Z:\RESPfiles\',FilesKK.AIP(17:31),'.mat'];
+if exist(manualfile,'file')
+    load(manualfile)
+else
+    [ValveTimes,PREX] = BreathAdjustGUI(ValveTimes,PREX,RRR);
+    save(manualfile,'ValveTimes')
+    save(RESPfile,'InhTimes','PREX','POSTX','RRR','BbyB')
+end
+
+    
+
+%% Create StateIndex
 if ~ischar(ValveTimes)
     for Valve = 1:length(ValveTimes.PREXIndex)
         for Trial = 1:length(ValveTimes.PREXIndex{Valve})
