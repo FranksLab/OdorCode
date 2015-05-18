@@ -45,7 +45,7 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % 10/22/14 - It's possible I want to analyze spikes on their own or
 % with respect to Laser when no Valves were switched. Modify CreateValveTimes to
 % allow GatherInfo1 to continue if there are no FV switches.
-[ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,tWarpLinear,Fs);
+[ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,Fs);
 
 % 5/14/15 - Finally admitting that automated detection of breath cycles may
 % not be worth it. A new step will check for a "manual" file in
