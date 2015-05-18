@@ -99,7 +99,7 @@ end
 
 
 %%
-figure(f+1)
+figure(100)
 clf
 positions = [200 100 800 600];
 set(gcf,'Position',positions)
@@ -126,4 +126,4 @@ for VVV = 1:length(VOI)
         end
 end
 %%
-                print( f+1, '-dpdf','-painters', ['Z:/VizRS',num2str(RecordSet),'_resp']);
+%                 print( f+1, '-dpdf','-painters', ['Z:/VizRS',num2str(RecordSet),'_resp']);

@@ -8,8 +8,8 @@ Edges = PST(1):BinSize:PST(2); % Keep "Edges" around for plotting
 %% Create Trial by Trial and Summed Aligned Histograms
 [ValveSpikes.HistAligned, ValveSpikes.HistAlignSumRate, ValveSpikes.HistAlignSmoothRate,ValveSpikes.RasterAlign] = VSHistAligned(ValveTimes,SpikeTimes,Edges,BinSize);
 
-%% Create Trial by Trial and Summed Warped Histograms
-[ValveSpikes.HistWarped, ValveSpikes.HistWarpSumRate, ValveSpikes.HistWarpSmoothRate,ValveSpikes.RasterWarp] = VSHistWarped(ValveTimes,SpikeTimes,Edges,BinSize);
+% %% Create Trial by Trial and Summed Warped Histograms
+% [ValveSpikes.HistWarped, ValveSpikes.HistWarpSumRate, ValveSpikes.HistWarpSmoothRate,ValveSpikes.RasterWarp] = VSHistWarped(ValveTimes,SpikeTimes,Edges,BinSize);
 
 %% Spikes In First Cycle
 ValveSpikes.FirstCycleSpikeCount = VSFirstCycleCount(ValveTimes,SpikeTimes,PREX);
