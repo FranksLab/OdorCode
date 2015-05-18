@@ -9,7 +9,7 @@ EL6 = 9*30000;
 EL3 = 9*2000;
 
 %%
-for RecordSet = 22%:size(Raws,2);
+for RecordSet = 20%:size(Raws,2);
     for Record = 1:size(Raws{RecordSet},2)
         path = ['Z:\UnitSortingAnalysis\',Date{RecordSet},'_Analysis\'];
         Raw = [path,Date{RecordSet},'-',Raws{RecordSet}{Record}];
