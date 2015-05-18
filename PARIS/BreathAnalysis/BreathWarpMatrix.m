@@ -2,6 +2,18 @@ function  [warpFmatrix,tFmatrix] = BreathWarpMatrix(RRR,InhTimes,PREX,POSTX,Fs)
 inhperiod = mean(POSTX-PREX);
 fullperiod = mean(diff(PREX));
 exhperiod = fullperiod-inhperiod;
+POSTX(PREX>POSTX) = PREX(PREX>POSTX)+inhperiod;
+
+trouble = find(PREX>POSTX);
+PREX(trouble) = [];
+POSTX(trouble) = [];
+InhTimes(trouble) = [];
+
+trouble = find(POSTX(1:end-1)>PREX(2:end));
+PREX(trouble) = [];
+POSTX(trouble) = [];
+InhTimes(trouble) = [];
+
 for i = 1:length(InhTimes)-1
     inhsamples = round((PREX(i)')*Fs):round((POSTX(i)')*Fs);
     exhsamples = round((POSTX(i)')*Fs):round((PREX(i+1)')*Fs);
