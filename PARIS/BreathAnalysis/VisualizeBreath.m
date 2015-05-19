@@ -40,7 +40,7 @@ for VVV = 1:length(VOI)
             axis off
             hold on
             plot([0 RStimes1(TrialSets{tset}(tr))],[mean(ryl) mean(ryl)],'r.')
-            plot([0 0], ryl, 'b')
+            plot([FVtimes(tr) FVtimes(tr)], ryl, 'b')
         end
 end
 %% Identify problems (Valve,Trial; Valve,Trial; etc...)
@@ -49,7 +49,7 @@ problems = [1,12];
 [VT,PX] = BreathAdjustGUI(efd.ValveTimes,PREX,RRR,problems);
 %% Revisualize
 %%
-figure(100)
+figure(101)
 clf
 positions = [200 100 800 600];
 set(gcf,'Position',positions)
@@ -57,11 +57,12 @@ set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[
 Fs = 2000;
 for VVV = 1:length(VOI)
         
-        FVtimes = efd.ValveTimes.FVSwitchTimesOn{VOI(VVV)}-efd.ValveTimes.PREXTimes{VOI(VVV)};
-        RStimes1 = PREX(efd.ValveTimes.PREXIndex{VOI(VVV)}+1)-PREX(efd.ValveTimes.PREXIndex{VOI(VVV)});
+        FVtimes = VT.FVSwitchTimesOn{VOI(VVV)}-VT.PREXTimes{VOI(VVV)};
+        RStimes1 = PX(VT.PREXIndex{VOI(VVV)}+1)-PX(VT.PREXIndex{VOI(VVV)});
+
         
         for tr = 1:length(TrialSets{tset})
-            respplotsamp = round(efd.ValveTimes.PREXTimes{VOI(VVV)}(TrialSets{tset}(tr))*Fs-1*Fs:efd.ValveTimes.PREXTimes{VOI(VVV)}(TrialSets{tset}(tr))*Fs+2*Fs);
+            respplotsamp = round(VT.PREXTimes{VOI(VVV)}(TrialSets{tset}(tr))*Fs-1*Fs:VT.PREXTimes{VOI(VVV)}(TrialSets{tset}(tr))*Fs+2*Fs);
             
              ryl = [min(RRR(respplotsamp)) max(RRR(respplotsamp))];
             
@@ -71,6 +72,6 @@ for VVV = 1:length(VOI)
             axis off
             hold on
             plot([0 RStimes1(TrialSets{tset}(tr))],[mean(ryl) mean(ryl)],'r.')
-            plot([0 0], ryl, 'b')
+            plot([FVtimes(tr) FVtimes(tr)], ryl, 'b')
         end
 end
