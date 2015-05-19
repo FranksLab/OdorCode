@@ -8,7 +8,7 @@ for o = obsindex
     clslist = unique(trl);
     
     for cls = 1:length(clslist)
-        clsmean(cls,:) = nanmean(trd(trl == clslist(cls),:));
+        clsmean(cls,:) = nanmean(trd(trl == clslist(cls),:),1);
     end
     
     distances = pdist([traindata(o,:);clsmean]);

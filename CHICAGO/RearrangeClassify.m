@@ -3,7 +3,7 @@ close all
 clc
 load Z:\ExperimentCatalog_AWKX.mat
 
-minTrials=2;
+minTrials=1000;
 RecordSetList=[14,15,16];
 for RecordSet=RecordSetList
     currentlength=length(TSETS{RecordSet}{1});
