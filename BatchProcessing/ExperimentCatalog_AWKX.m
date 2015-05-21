@@ -227,13 +227,36 @@ VCpanel{17} = [2,3,4,5;10,11,12,13];
 Date{18} = '16-Apr-2015';
 Raws{18} = {'003.ns6','004.ns6'};
 AIPs{18} = {'003.ns3','004.ns3'};
+States{17} = {'K','A','K'};
+PBank{18} = '1';
+TSETS{17} = {11:20,21:30};
+VOIpanel{17} = [2,3,4,5,7,8];
+
+ATW{18}=[1 16];
+KTW{18}=[17 110];
+
+%% Record 19
+
+PBank{19} = '1';
+ATW{19}=[1 16];
+KTW{19}=[17 110];
 %% Record Set 20
 Date{20} = '18-Apr-2015';
 Raws{20} = {'001.ns6'};
 AIPs{20} = {'001.ns3'};
+PBank{20} = '1';
+ATW{20}=[1 13];
+KTW{20}=[18 72];
+
+%% 21
+PBank{21} = '1';
 %% Record Set 22
 Date{22} = '24-Apr-2015';
 Raws{22} = {'002.ns6'};
 AIPs{22} = {'002.ns3'};
+PBank{22} = '1';
+
+%% 23
+PBank{23} = '1';
 
 save Z:\ExperimentCatalog_AWKX.mat

@@ -2,9 +2,9 @@
 clear all
 close all
 clc
-load BatchProcessing\ExperimentCatalog_AWKX.mat
+load Z:\ExperimentCatalog_AWKX.mat
 %% KX injection changes the regularity of respiration
-RecordSet = input('Which record set? ');
+RecordSet = 18;
 load(['z:\RESPfiles\recordset',num2str(RecordSet,'%03.0f'),'com.mat']);
 ChannelCount=32;
  %% Windowing.
@@ -18,8 +18,8 @@ ChannelCount=32;
         
         
         MaxTime = round(length(RRR)/2000);
-        WW = 120;
-        OL = 60;
+        WW = 30;
+        OL = 3;
         WDt = 0:OL:MaxTime;
         
         WindowFronts = [zeros(1,(WW/OL)/2+1) , OL:OL:MaxTime-WW/2];
@@ -61,22 +61,23 @@ ChannelCount=32;
         %% plotting
         close all
         figure(1)
-        set(0,'defaultlinelinewidth',1.2)
+        set(0,'defaultlinelinewidth',0.4)
         set(0,'defaultaxeslinewidth',0.8)
+        set(gca,'ticklength',[0,0])
 %         set(0,'DefaultAxesColorOrder',[0.1,0.3,0.3])
-        positions = [100 100 MaxTime/10 400];
+        positions = [100 100 220 400];
         set(gcf,'Position',positions)
         set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
         
-        
+        %%
         subplot(4,1,1) 
         hold on
         x = BrFq; 
-        plot(WDt,x,'Color',[.8 .8 .8])
-        x([SetT,SetK]) = NaN;
-        plot(WDt,x,'Color',[.5 .1 .1])
-        x = BrFq; x([SetT,SetA]) = NaN;
-        plot(WDt,x,'Color',[.5 .1 .1],'LineStyle',':')
+        plot(WDt,x,'Color',[.1 .5 .1])
+        %x([SetT,SetK]) = NaN;
+        %plot(WDt,x,'Color',[.5 .1 .1])
+        %x = BrFq; x([SetT,SetA]) = NaN;
+        %plot(WDt,x,'Color',[.5 .1 .1])
         ylim([0 5])
         xlim([0 MaxTime])
         set(gca,'XTick',[],'YTick',get(gca,'YLim'))
@@ -85,17 +86,17 @@ ChannelCount=32;
         subplot(4,1,2)
         hold on      
         x = CVHwd; 
-        plot(WDt,x,'Color',[.8 .8 .8])
-        x([SetT,SetK]) = NaN;
         plot(WDt,x,'Color',[.1 .5 .1])
-        x = CVHwd; x([SetT,SetA]) = NaN;
-        plot(WDt,x,'Color',[.1 .5 .1],'LineStyle',':')
+        %x([SetT,SetK]) = NaN;
+        %plot(WDt,x,'Color',[.1 .5 .1])
+        %x = CVHwd; x([SetT,SetA]) = NaN;
+        %plot(WDt,x,'Color',[.1 .5 .1],'LineStyle',':')
         x = CVWwd; 
-        plot(WDt,x,'Color',[.8 .8 .8])
-        x([SetT,SetK]) = NaN;
         plot(WDt,x,'Color',[.1 .1 .5])
-        x = CVWwd; x([SetT,SetA]) = NaN;
-        plot(WDt,x,'Color',[.1 .1 .5],'LineStyle',':')
+        %x([SetT,SetK]) = NaN;
+        %plot(WDt,x,'Color',[.1 .1 .5])
+        %x = CVWwd; x([SetT,SetA]) = NaN;
+        %plot(WDt,x,'Color',[.1 .1 .5],'LineStyle',':')
         ylim([0 .5])
         xlim([0 MaxTime])
         set(gca,'XTick',[],'YTick',get(gca,'YLim'))     
@@ -106,7 +107,7 @@ ylabel('Breath CV')
 
         
 %%
-load BatchProcessing\ExperimentCatalog_AWKX.mat
+
 Record = 1;
 Fs = 1000;
 [B,A] = butter(3, [.1/(Fs/2) 40/(Fs/2) ]);
@@ -114,7 +115,7 @@ Fs = 1000;
 
         AIP = ['Z:\NS3files\COM\RecordSet', num2str(RecordSet,'%03.0f'),'com.ns3'];      
         %% Get some LFP data
-        Channels=1:2;
+        Channels=1;32;
         path=['Z:\LFPfiles\'];
         fdata=fopen([path, 'RecordSet', num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.lfp']);
         LFPdata=fread(fdata,'*int16');
@@ -125,7 +126,7 @@ Fs = 1000;
 %         DDL = filtfilt(B,A,double(LFPdata.Data'));
         DDL = LFPdata';
         DDL = mean(DDL,2);
-        DDL = double(LFPdata');
+        DDL = double(DDL');
 %         DDR = filtfilt(BR,AR,double(RESdata.Data'));
         DDR = double(RESdata.Data);
         TotSamples =  min(length(DDL),length(DDR));
@@ -170,6 +171,7 @@ Fs = 1000;
 highfreq = find(f>20);
 lowfreq = find(f<10);
 subplot(4,1,3)
+hi=log10(SL{RecordSet}{Record}(:,highfreq))';
 imagesc(t,f(highfreq),log10(SL{RecordSet}{Record}(:,highfreq))'); axis xy
 title('LFP')
 ylabel('Freq (Hz)')

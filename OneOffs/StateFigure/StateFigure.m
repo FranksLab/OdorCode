@@ -4,7 +4,7 @@ close all
 clc
 
 %% KX injection changes the regularity of respiration
-load 'z:\RESPfiles\recordset009com.mat'
+load 'z:\RESPfiles\recordset018com.mat'
  %% Windowing.
         % Use 180 second windows with 90 second overlap. Value at any given point
         % will reflect the 90 seconds before and after. First and last windows will
