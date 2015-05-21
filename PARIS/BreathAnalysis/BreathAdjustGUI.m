@@ -18,16 +18,16 @@ if isempty(problems)
         FVtimes = ValveTimes.FVSwitchTimesOn{VVV}-ValveTimes.PREXTimes{VVV};
         RStimes1 = PREX(ValveTimes.PREXIndex{VVV}+1)-PREX(ValveTimes.PREXIndex{VVV});
         for tr = 1:size(ValveTimes.PREXTimes{VVV},2)
-            respplotsamp = round(ValveTimes.PREXTimes{VVV}(tr)*Fs-1*Fs:ValveTimes.PREXTimes{VVV}(tr)*Fs+2*Fs);
+            respplotsamp = round(ValveTimes.PREXTimes{VVV}(tr)*Fs-2*Fs:ValveTimes.PREXTimes{VVV}(tr)*Fs+2*Fs);
             ryl = [min(RRR(respplotsamp)) max(RRR(respplotsamp))];
             clf
-            h1 = plot(-1:1/Fs:2,(RRR(respplotsamp)-min(RRR(respplotsamp)))*range(ryl)/range(RRR(respplotsamp))+ryl(1),'Color',[.2 .2 .2],'LineWidth',.3);
-            xlim([-1 2])
+            h1 = plot(-2:1/Fs:2,(RRR(respplotsamp)-min(RRR(respplotsamp)))*range(ryl)/range(RRR(respplotsamp))+ryl(1),'Color',[.2 .2 .2],'LineWidth',.3);
+            xlim([-2 2])
             axis off
             hold on
             h2 = plot([0 RStimes1(tr)],[mean(RRR(respplotsamp)) mean(RRR(respplotsamp))],'r.');
             h3 = plot([0 0], ryl, 'b');
-            h4 = plot(-1:1/Fs:2,zeros(1,length(respplotsamp)));
+            h4 = plot(-2:1/Fs:2,zeros(1,length(respplotsamp)));
             h5 = plot([FVtimes(tr) FVtimes(tr)] , ryl, 'k');
             title(['Select First Inhalation ', num2str(VVV), ',' num2str(tr)])
             [pl,xs,ys] = selectdata('sel','rect','ignore',[h2 h3 h4 h5],'Verify','on');
@@ -73,16 +73,16 @@ else
         RStimes1 = PREX(ValveTimes.PREXIndex{VVV}+1)-PREX(ValveTimes.PREXIndex{VVV});
         %         for tr = 1:size(ValveTimes.PREXTimes{VVV},2)
         tr = problems(k,2);
-        respplotsamp = round(ValveTimes.PREXTimes{VVV}(tr)*Fs-1*Fs:ValveTimes.PREXTimes{VVV}(tr)*Fs+2*Fs);
+        respplotsamp = round(ValveTimes.PREXTimes{VVV}(tr)*Fs-2*Fs:ValveTimes.PREXTimes{VVV}(tr)*Fs+2*Fs);
         ryl = [min(RRR(respplotsamp)) max(RRR(respplotsamp))];
         clf
-        h1 = plot(-1:1/Fs:2,(RRR(respplotsamp)-min(RRR(respplotsamp)))*range(ryl)/range(RRR(respplotsamp))+ryl(1),'Color',[.2 .2 .2],'LineWidth',.3);
-        xlim([-1 2])
+        h1 = plot(-2:1/Fs:2,(RRR(respplotsamp)-min(RRR(respplotsamp)))*range(ryl)/range(RRR(respplotsamp))+ryl(1),'Color',[.2 .2 .2],'LineWidth',.3);
+        xlim([-2 2])
         axis off
         hold on
         h2 = plot([0 RStimes1(tr)],[mean(RRR(respplotsamp)) mean(RRR(respplotsamp))],'r.');
         h3 = plot([0 0], ryl, 'b');
-        h4 = plot(-1:1/Fs:2,zeros(1,length(respplotsamp)));
+        h4 = plot(-2:1/Fs:2,zeros(1,length(respplotsamp)));
         h5 = plot([FVtimes(tr) FVtimes(tr)] , ryl, 'k');
         title(['Select First Inhalation ', num2str(VVV), ',' num2str(tr)])
         [pl,xs,ys] = selectdata('sel','rect','ignore',[h2 h3 h4 h5],'Verify','on');

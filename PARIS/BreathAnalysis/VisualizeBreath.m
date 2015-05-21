@@ -17,10 +17,11 @@ load(RESPfile)
 [efd,Edges] = GatherResponses(KWIKfile);
     VOI = [1 VOIpanel{RecordSet}];
 
+    TrialSets{1} = 1:30;
 %%
 figure(100)
 clf
-positions = [200 100 800 600];
+positions = [200 100 800 800];
 set(gcf,'Position',positions)
 set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
 Fs = 2000;
@@ -43,8 +44,11 @@ for VVV = 1:length(VOI)
             plot([FVtimes(tr) FVtimes(tr)], ryl, 'b')
         end
 end
+
 %% Identify problems (Valve,Trial; Valve,Trial; etc...)
-problems = [1,12];
+% problems = [1,2;1,9;1,12;1,17;1,22;4,11;4,15;7,8;7,9;7,13;8,8;8,12;8,16;8,17;8,22;12,8;12,14;15,16;15,17;15,30;16,7;16,23];
+
+
 %% Adjust with the GUI
 [VT,PX] = BreathAdjustGUI(efd.ValveTimes,PREX,RRR,problems);
 %% Revisualize
@@ -75,3 +79,11 @@ for VVV = 1:length(VOI)
             plot([FVtimes(tr) FVtimes(tr)], ryl, 'b')
         end
 end
+%%
+efd.ValveTimes = VT;
+PREX = PX;
+%%
+EFDfile = ['Z:\EFDfiles\',KWIKfile(15:31),'efd.mat'];
+save(EFDfile,'efd','Edges')
+save(RESPfile,'InhTimes','PREX','POSTX','RRR','BbyB')
+

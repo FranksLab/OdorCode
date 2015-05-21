@@ -3,6 +3,19 @@ function [tWarp,tWarpLinear,fullperiod] = ZXwarp (InhTimes,PREX,POSTX,t,Fs)
 fullperiod = mean(diff(InhTimes));
 inhperiod = mean(POSTX-PREX);
 
+% the problems created by manually adjusting breaths are managed here:
+
+trouble = find(PREX>POSTX);
+PREX(trouble) = [];
+POSTX(trouble) = [];
+InhTimes(trouble) = [];
+
+trouble = find(POSTX(1:end-1)>PREX(2:end));
+PREX(trouble) = [];
+POSTX(trouble) = [];
+InhTimes(trouble) = [];
+
+
 % We have a spotty low Fs sampling of the breath phase. We
 % can only detect it at the zero crossings before and after inhalation. The
 % value is zero at the beginning of inhalation. At the end of the
