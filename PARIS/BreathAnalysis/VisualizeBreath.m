@@ -47,7 +47,7 @@ end
 
 %% Identify problems (Valve,Trial; Valve,Trial; etc...)
 % problems = [1,2;1,9;1,12;1,17;1,22;4,11;4,15;7,8;7,9;7,13;8,8;8,12;8,16;8,17;8,22;12,8;12,14;15,16;15,17;15,30;16,7;16,23];
-
+problems=[15,17];
 
 %% Adjust with the GUI
 [VT,PX] = BreathAdjustGUI(efd.ValveTimes,PREX,RRR,problems);
