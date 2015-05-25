@@ -11,7 +11,6 @@ for Unit = 1:size(SpikeTimes.tsec,1)
     st = SpikeTimes.tsec{Unit};
     
     for Valve = 1:size(ValveTimes.PREXIndex,2)
-        Valve
         Beginning = PREX(ValveTimes.PREXIndex{Valve}(ValveTimes.PREXIndex{Valve}<(length(PREX)-1)));
         EndofCycle = PREX(ValveTimes.PREXIndex{Valve}(ValveTimes.PREXIndex{Valve}<(length(PREX)-1))+1);
         x = bsxfun(@gt,st,Beginning);
