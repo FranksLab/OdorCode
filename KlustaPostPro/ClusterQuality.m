@@ -3,7 +3,7 @@ close all
 clc
 
 %%
-KWIKfile = 'Z:\SortedKWIK\RecordSet018com_1.kwik';
+KWIKfile = 'Z:\SortedKWIK\RecordSet020com_1.kwik';
 FilesKK = FindFilesKK(KWIKfile);
 
 %% Get all detected spiketimes

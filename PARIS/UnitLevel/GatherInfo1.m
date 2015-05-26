@@ -22,7 +22,7 @@ BreathStats.AvgRate = 1/BreathStats.AvgPeriod;
 BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 
 % % Get Warped breath example
-[warpFmatrix,tFmatrix] = BreathWarpMatrix(RRR,InhTimes,PREX,POSTX,Fs);
+% [warpFmatrix,tFmatrix] = BreathWarpMatrix(RRR,InhTimes,PREX,POSTX,Fs);
 
 %% SpikeProcessing (FilesKK)
 % SpikeTimes is a structure with three fields: tsec, stwarped, and units. units contains
@@ -53,15 +53,15 @@ BreathStats.CV = std(diff(InhTimes))/BreathStats.AvgPeriod;
 % displays all trial-associated respiration traces and allows the user to
 % edit the onset of the first and second inhalations after FV switching.
 
-manualfile = ['Z:\RESPfiles\',FilesKK.AIP(17:31),'manual.mat'];
-RESPfile = ['Z:\RESPfiles\',FilesKK.AIP(17:31),'.mat'];
-if exist(manualfile,'file')
-    load(manualfile)
-else
-    [ValveTimes,PREX] = BreathAdjustGUI(ValveTimes,PREX,RRR);
-    save(manualfile,'ValveTimes')
-    save(RESPfile,'InhTimes','PREX','POSTX','RRR','BbyB')
-end
+% manualfile = ['Z:\RESPfiles\',FilesKK.AIP(17:31),'manual.mat'];
+% RESPfile = ['Z:\RESPfiles\',FilesKK.AIP(17:31),'.mat'];
+% if exist(manualfile,'file')
+%     load(manualfile)
+% else
+%     [ValveTimes,PREX] = BreathAdjustGUI(ValveTimes,PREX,RRR);
+%     save(manualfile,'ValveTimes')
+%     save(RESPfile,'InhTimes','PREX','POSTX','RRR','BbyB')
+% end
 
     
 

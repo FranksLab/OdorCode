@@ -20,13 +20,17 @@ for VL = 1:NVLs
     if ~isempty(O)
         VLPks = VLO(O+10)-VLO(O+100); % What's the VL signal a few samples after it turns on?
         [n,b] = hist(VLPks,32);
-        vidx = b(n>0);
+        vidx = b(n>1); % Changing this criterion to 1 in anticipation that there will be no experiments with one presentation per valve. 
+                       % Otherwise have to do recordings correctly and not
+                       % let extra valve switches into the mix.
         NV(VL) = length(vidx);
         
-        % NV is the number of valves that switched for the current VL
-        % Put the Valve Openings into their bins (b)
-        for i = 2:NV
-            VLOpens{i+8*(VL-1)} = t(O(abs(VLPks-vidx(i))<diff(b(1:2))));
+        if ~isempty(vidx)
+            % NV is the number of valves that switched for the current VL
+            % Put the Valve Openings into their bins (b)
+            for i = 2:NV
+                VLOpens{i+8*(VL-1)} = t(O(abs(VLPks-vidx(i))<diff(b(1:2))));
+            end
         end
     end
 end
