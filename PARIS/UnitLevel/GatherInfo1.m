@@ -72,7 +72,7 @@ if ~ischar(ValveTimes)
             PreBreathH = BbyB.Height(ValveTimes.PREXIndex{Valve}(Trial)-5:min(ValveTimes.PREXIndex{Valve}(Trial)+10,length(ValveTimes.PREXIndex{Valve})));
             ValveTimes.StateIndex{Valve}(Trial) = std(PreBreathH)/abs(mean(PreBreathH));
             ThreeAfter = BbyB.Width(ValveTimes.PREXIndex{Valve}(Trial):ValveTimes.PREXIndex{Valve}(Trial)+2);
-            SixBefore = BbyB.Width(ValveTimes.PREXIndex{Valve}(Trial)-7:ValveTimes.PREXIndex{Valve}(Trial)-1);
+            SixBefore = BbyB.Width(ValveTimes.PREXIndex{Valve}(Trial)-1:ValveTimes.PREXIndex{Valve}(Trial)-1);
             ValveTimes.Sniff{Valve}(Trial) = 1/mean(ThreeAfter);
             ValveTimes.SniffDiff{Valve}(Trial) = 1/(mean(ThreeAfter))-1/mean(SixBefore);
         end

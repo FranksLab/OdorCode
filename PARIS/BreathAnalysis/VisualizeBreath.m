@@ -16,9 +16,8 @@ RESPfile = ['Z:\RESPfiles\',FilesKK.AIP(17:31),'.mat'];
 load(RESPfile)
 [efd,Edges] = GatherResponses(KWIKfile);
 VOI = [1 VOIpanel{RecordSet}];
-% VOI = [1:8];
 %%
-    TrialSets{1} = 16:30;
+    TrialSets{1} =31:57;
 
 figure(100)
 clf
@@ -44,14 +43,12 @@ for VVV = 1:length(VOI)
             axis off
             hold on
             plot([0 RStimes1(TrialSets{tset}(tr))],[mean(ryl) mean(ryl)],'r.')
-            plot([FVtimes(tr) FVtimes(tr)], ryl, 'b')
+            plot([FVtimes(TrialSets{tset}(tr)) FVtimes(TrialSets{tset}(tr))], ryl, 'b')
         end
 end
 
 %% Identify problems (Valve,Trial; Valve,Trial; etc...)
-% problems = [1,2;1,9;1,12;1,17;1,22;4,11;4,15;7,8;7,9;7,13;8,8;8,12;8,16;8,17;8,22;12,8;12,14;15,16;15,17;15,30;16,7;16,23];
-problems=[3,20; 5,16; 7,20; 8,19; 4,21; 2,113; 3,114; 4,103; 6,103; 6,111; 7,103];
-
+problems = [4,36;7,56;8,36;8,38];
 %% Adjust with the GUI
 [VT,PX] = BreathAdjustGUI(efd.ValveTimes,PREX,RRR,problems);
 %% Revisualize

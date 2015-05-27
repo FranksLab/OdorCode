@@ -15,7 +15,7 @@ Edges = PST(1):BinSize:PST(2); % Keep "Edges" around for plotting
 ValveSpikes.FirstCycleSpikeCount = VSFirstCycleCount(ValveTimes,SpikeTimes,PREX);
 
 %% Spikes in Multi Cycles
-[ValveSpikes.MultiCycleSpikeCount,ValveSpikes.MultiCycleSpikeRate] = VSMultiCycleCount(ValveTimes,SpikeTimes,PREX,5);
+[ValveSpikes.MultiCycleSpikeCount,ValveSpikes.MultiCycleSpikeRate] = VSMultiCycleCount(ValveTimes,SpikeTimes,PREX,2);
 
 %% Spikes During Odor
 ValveSpikes.SpikesDuringOdor = VSDuringOdor(ValveTimes,SpikeTimes);

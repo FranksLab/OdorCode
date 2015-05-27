@@ -109,7 +109,7 @@ else
         %         end
         
         PREX(ValveTimes.PREXIndex{VVV}(tr)) = PREX(ValveTimes.PREXIndex{VVV}(tr))+updatePREX(tr);
-        PREX(ValveTimes.PREXIndex{VVV}(tr)+1) = PREX(ValveTimes.PREXIndex{VVV}(tr)+1)+updatePREXnext(tr);
+        PREX(ValveTimes.PREXIndex{VVV}(tr)+1) = PREX(ValveTimes.PREXIndex{VVV}(tr))+updatePREXnext(tr);
         
         ValveTimes.PREXTimes{VVV}(tr) = ValveTimes.PREXTimes{VVV}(tr)+updatePREX(tr);
         
