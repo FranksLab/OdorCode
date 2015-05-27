@@ -1,4 +1,4 @@
-function [PREXIndex,PREXTimes,PREXTimeWarp,FVTimeWarp] = PREXAssigner (FVSwitchTimesOn,PREX,Fs)
+function [PREXIndex,PREXTimes,PREXTimeWarp,FVTimeWarp] = PREXAssigner (FVSwitchTimesOn,PREX,tWarpLinear,Fs)
 
 % PREXTimeWarp = cell(size(FVSwitchTimesOn));
 PREXTimes = cell(size(FVSwitchTimesOn));

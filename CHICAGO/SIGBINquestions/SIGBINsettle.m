@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-load BatchProcessing\ExperimentCatalog_AWKX.mat
+load Z:\ExperimentCatalog_AWKX.mat
 
 
 RecordList = [12:17];

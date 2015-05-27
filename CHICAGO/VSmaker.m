@@ -4,7 +4,7 @@ function [ValveSpikes] = VSmaker(ValveTimes,SpikeTimes,PREX)
 [ValveSpikes.RasterAlign] = VSRasterAlign(ValveTimes,SpikeTimes);
 
 %% Spikes in Multi Cycles
-[ValveSpikes.MultiCycleSpikeCount,ValveSpikes.MultiCycleSpikeRate,ValveSpikes.MultiCycleBreathPeriod] = VSMultiCycleCount(ValveTimes,SpikeTimes,PREX,5);
+[ValveSpikes.MultiCycleSpikeCount,ValveSpikes.MultiCycleSpikeRate,ValveSpikes.MultiCycleBreathPeriod] = VSMultiCycleCount(ValveTimes,SpikeTimes,PREX,2);
 
 %% Spikes During Odor
 ValveSpikes.SpikesDuringOdor = VSDuringOdor(ValveTimes,SpikeTimes);

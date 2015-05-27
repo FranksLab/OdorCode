@@ -14,7 +14,7 @@ if ~isempty(LaserOn)
     LaserTimes.LaserOff{1} = LaserOff;
     
     % Assign PREX times (i.e. inhalation starts) to Laser pulses
-    [LaserTimes.PREXIndex,LaserTimes.PREXTimes,LaserTimes.PREXTimeWarp,LaserTimes.LTimeWarp] = PREXAssigner (LaserTimes.LaserOn,PREX,tWarpLinear,Fs);
+    [LaserTimes.PREXIndex,LaserTimes.PREXTimes] = PREXAssigner (LaserTimes.LaserOn,PREX,tWarpLinear,Fs);
 else
     LaserTimes = 'NoLaser';
 end

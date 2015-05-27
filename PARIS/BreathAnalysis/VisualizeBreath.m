@@ -3,7 +3,7 @@ close all
 clc
 
 load Z:\ExperimentCatalog_AWKX.mat
-RecordSet = 16;
+RecordSet = 23;
 tset = 1;
 
 % TrialSets = TSETS{RecordSet};
