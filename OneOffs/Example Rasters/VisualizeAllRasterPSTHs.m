@@ -2,16 +2,16 @@ clear all
 close all
 clc
 
-load BatchProcessing\ExperimentCatalog_AWKX.mat
-RecordSet = 17;
+load Z:\ExperimentCatalog_AWKX.mat
+RecordSet = 23;
 tset = 1;
 
 TrialSets = TSETS{RecordSet};
 KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
 FilesKK=FindFilesKK(KWIKfile);
 
-SCRfile = ['Z:\SCRfiles\',KWIKfile(15:31),'scr.mat'];
-load(SCRfile)
+% SCRfile = ['Z:\SCRfiles\',KWIKfile(15:31),'scr.mat'];
+% load(SCRfile)
 RESPfile = ['Z:\RESPfiles\',FilesKK.AIP(17:31),'.mat'];
 load(RESPfile)
 STWfile = ['Z:\STWfiles\',FilesKK.KWIK(15:31),'stw.mat'];
@@ -26,11 +26,11 @@ load(STWfile)
 % VOI = [1,2:5,7:8,10:13,15:16];
 % VOI = [4,7,8];
 %%
-    VOI = [1 VOIpanel{RecordSet}];
+    VOI = [1 6 VOIpanel{RecordSet}];
 
 %%
 close all
-for f = 1:ceil(size(Scores.AURp,2)/10)
+for f = 1:ceil(size(efd.ValveSpikes.RasterAlign,2)/10)
     figure(f)
     positions = [200 100 800 700];
     set(gcf,'Position',positions)
@@ -39,7 +39,7 @@ end
 %
 %
 for VVV = 1:length(VOI)
-    for j = 2:size(Scores.AURp,2)
+    for j = 2:size(efd.ValveSpikes.RasterAlign,2)
         figure(ceil(j/10))
         LineFormat.Color = [0 0 0];
         LineFormat.LineWidth = 0.1;
