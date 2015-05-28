@@ -3,7 +3,7 @@ close all
 clc
 
 load Z:\ExperimentCatalog_AWKX.mat
-RecordSet = 23;
+RecordSet = 15;
 tset = 1;
 
 % TrialSets = TSETS{RecordSet};
@@ -17,7 +17,7 @@ load(RESPfile)
 [efd,Edges] = GatherResponses(KWIKfile);
 VOI = [1 VOIpanel{RecordSet}];
 %%
-    TrialSets{1} =31:57;
+    TrialSets{1} =1:30;
 
 figure(100)
 clf
@@ -48,7 +48,7 @@ for VVV = 1:length(VOI)
 end
 
 %% Identify problems (Valve,Trial; Valve,Trial; etc...)
-problems = [4,36;7,56;8,36;8,38];
+problems = [12,24;15,25;15,26;16,16;16,21];
 %% Adjust with the GUI
 [VT,PX] = BreathAdjustGUI(efd.ValveTimes,PREX,RRR,problems);
 %% Revisualize
