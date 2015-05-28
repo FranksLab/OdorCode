@@ -101,10 +101,10 @@ else
         [pl,xs,ys] = selectdata('sel','rect','ignore',[h2 h3 h4 h5 h7],'Verify','on');
         xs
         if ~isempty(pl)
-            updatePREXnext(tr) = nanmean(xs)
+            updatePREXnext(tr) = nanmean(xs);
             
         else
-            updatePREXnext(tr) = 0;
+            updatePREXnext(tr) = PREX(ValveTimes.PREXIndex{VVV}(tr)+1);
         end
         %         end
         
