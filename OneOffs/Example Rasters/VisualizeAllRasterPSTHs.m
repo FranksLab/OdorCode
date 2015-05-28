@@ -3,8 +3,8 @@ close all
 clc
 
 load Z:\ExperimentCatalog_AWKX.mat
-RecordSet = 23;
-tset = 1;
+RecordSet = 14;
+tset = 2;
 
 TrialSets = TSETS{RecordSet};
 KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
@@ -93,7 +93,7 @@ for VVV = 1:length(VOI)
 end
 %%
 for fi = 1:f
-                print(fi, '-dpdf','-painters', ['Z:/VizRS',num2str(RecordSet),'_page',num2str(fi)]);
+                print(fi, '-dpdf','-painters', ['Z:/VizRS',num2str(RecordSet),'_page',num2str(fi),'KX']);
 end
 
 
