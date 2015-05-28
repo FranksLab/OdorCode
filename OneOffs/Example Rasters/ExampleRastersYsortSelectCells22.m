@@ -1,9 +1,9 @@
 load Z:\ExperimentCatalog_AWKX.mat
 
 tset = 2;
-SelectCells = [2,5,22,35,50,71];
-ylimlist = [110,70,110,50,50,110];
-for RecordSet = [14]
+SelectCells = [4,20,25];
+ylimlist = [110,110,110];
+for RecordSet = [22]
     
     KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
     FilesKK=FindFilesKK(KWIKfile);
@@ -26,10 +26,9 @@ for RecordSet = [14]
     pos = cell2mat(UnitID.Wave.Position');
     ypos = pos(:,2);
     %     ypos = ypos - mean(ypos);
-    [sortpos,posdex] = sort(ypos,'descend');
+%     [sortpos,posdex] = sort(ypos,'descend');
     
-    VOI = [1,4,6,8,15,16];
-    VOI = 12;
+    VOI = [1,2:5,7:8];
     %     VOI = VOIpanel{RecordSet};
     close all
     for VVV = VOI
@@ -38,7 +37,7 @@ for RecordSet = [14]
         set(gcf,'Position',positions)
         set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
         count = 0;
-        for j = (posdex(SelectCells)+1)'%2%:size(Scores.AURp,2)
+        for j = SelectCells%2%:size(Scores.AURp,2)
             count = count+1;
             k = length(SelectCells)+1-count;
             LineFormat.Color = [0 0 0];
