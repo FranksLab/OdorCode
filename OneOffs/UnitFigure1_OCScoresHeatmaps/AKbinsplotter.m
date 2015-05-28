@@ -2,9 +2,9 @@ clear all
 close all
 clc
 
-load BatchProcessing\ExperimentCatalog_AWKX.mat
+load Z:\ExperimentCatalog_AWKX.mat
 
-for RecordSet = [14:17]
+for RecordSet = [15:17,18,22:23]
     
     KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
     TrialSets = TSETS{RecordSet};
@@ -51,7 +51,7 @@ Scores.ROCLatency = Scores.ROCLatency(VOI,2:end,:);
 Scores.ROCDuration = Scores.ROCDuration(VOI,2:end,:);
 % Scores.LatencyRank = Scores.LatencyRank(VOI,2:end,:);
 Scores.SMPSTH.Align = Scores.SMPSTH.Align(VOI,2:end,:);
-Scores.SMPSTH.Warp = Scores.SMPSTH.Warp(VOI,2:end,:);
+% Scores.SMPSTH.Warp = Scores.SMPSTH.Warp(VOI,2:end,:);
 
 %% Miura's way
 SparseVar = abs(squeeze(Scores.ZScore(:,:,1,:)));
