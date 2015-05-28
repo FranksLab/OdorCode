@@ -169,14 +169,14 @@ for tset = 1:length(TrialSets)
                 
                 for k = 1:size(efd.ValveSpikes.RasterAlign{Valve,Unit})
                     RA(k).Times = efd.ValveSpikes.RasterAlign{Valve,Unit}{k}(efd.ValveSpikes.RasterAlign{Valve,Unit}{k}>min(Edges) & efd.ValveSpikes.RasterAlign{Valve,Unit}{k} < max(Edges));
-                    RW(k).Times = efd.ValveSpikes.RasterWarp{Valve,Unit}{k}(efd.ValveSpikes.RasterWarp{Valve,Unit}{k}>min(Edges) & efd.ValveSpikes.RasterWarp{Valve,Unit}{k} < max(Edges));
-                    RS(k).Times = efd.ValveSpikes.RasterSwitch{Valve,Unit}{k}(efd.ValveSpikes.RasterSwitch{Valve,Unit}{k}>min(Edges) & efd.ValveSpikes.RasterSwitch{Valve,Unit}{k} < max(Edges));
+%                     RW(k).Times = efd.ValveSpikes.RasterWarp{Valve,Unit}{k}(efd.ValveSpikes.RasterWarp{Valve,Unit}{k}>min(Edges) & efd.ValveSpikes.RasterWarp{Valve,Unit}{k} < max(Edges));
+%                     RS(k).Times = efd.ValveSpikes.RasterSwitch{Valve,Unit}{k}(efd.ValveSpikes.RasterSwitch{Valve,Unit}{k}>min(Edges) & efd.ValveSpikes.RasterSwitch{Valve,Unit}{k} < max(Edges));
                     
                 end
                 
                 [Scores.SMPSTH.Align{Valve,Unit,tset},t] = psth(RA(TrialSets{tset}),.01,'n',[min(Edges),max(Edges)],[],Edges);
-                [Scores.SMPSTH.Warp{Valve,Unit,tset},t] = psth(RW(TrialSets{tset}),.002,'n',[min(Edges),max(Edges)],[],Edges);
-                [Scores.SMPSTH.Switch{Valve,Unit,tset},t] = psth(RS(TrialSets{tset}),.002,'n',[min(Edges),max(Edges)],[],Edges);
+%                 [Scores.SMPSTH.Warp{Valve,Unit,tset},t] = psth(RW(TrialSets{tset}),.002,'n',[min(Edges),max(Edges)],[],Edges);
+%                 [Scores.SMPSTH.Switch{Valve,Unit,tset},t] = psth(RS(TrialSets{tset}),.002,'n',[min(Edges),max(Edges)],[],Edges);
                 
                 PSTHOI = Scores.SMPSTH.Align{Valve,Unit,tset};
                 
