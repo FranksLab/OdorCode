@@ -2,9 +2,9 @@ clear all
 close all
 clc
 
-load BatchProcessing\ExperimentCatalog_AWKX.mat
+load Z:\ExperimentCatalog_AWKX.mat
 
-for RecordSet = [12,14:17]
+for RecordSet = [15:18,22:23]
     
     KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
     TrialSets = TSETS{RecordSet};
@@ -51,7 +51,6 @@ Scores.ROCLatency = Scores.ROCLatency(VOI,2:end,:);
 Scores.ROCDuration = Scores.ROCDuration(VOI,2:end,:);
 % Scores.LatencyRank = Scores.LatencyRank(VOI,2:end,:);
 Scores.SMPSTH.Align = Scores.SMPSTH.Align(VOI,2:end,:);
-Scores.SMPSTH.Warp = Scores.SMPSTH.Warp(VOI,2:end,:);
 
 %% Miura's way
 SparseVar = abs(squeeze(Scores.ZScore(:,:,1,:)));
@@ -117,7 +116,7 @@ Fraction(3,3) = sum(AUR1<.5 & AUR2<.5 & P1<.05 & P2<.05); % Awake Down, KX Down
 
 %%
 
-for R = 12:17
+for R = 18:23
     % Population Sparseness
     PS(R-11) = nanmean(OMNI.vSparseP{R,1});
     % Lifetime Sparseness
@@ -141,7 +140,7 @@ plot(2.15,nanmean(cat(1,OMNI.vSparseL{:,1})),'or','MarkerFaceColor','r')
 title('Awake')
 
 
-for R = 12:17
+for R = 18:23
     % Population Sparseness
     PS(R-11) = nanmean(OMNI.vSparseP{R,2});
     % Lifetime Sparseness

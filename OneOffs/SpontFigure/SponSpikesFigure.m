@@ -2,8 +2,8 @@ clear all
 close all
 clc
 
-load BatchProcessing\ExperimentCatalog_AWKX.mat
-RecordSet = 16;
+load z:\ExperimentCatalog_AWKX.mat
+RecordSet = 18;
 KWIKfile = ['Z:\SortedKWIK\recordset',num2str(RecordSet,'%03.0f'),'com_',PBank{RecordSet},'.kwik'];
 [ValveTimes,LaserTimes,LVTimes,SpikeTimes,PREX,Fs,t,BreathStats,tWarp,warpFmatrix,tFmatrix] = GatherInfo1(KWIKfile);
 % load(['z:\RESPfiles\recordset',num2str(RecordSet,'%03.0f'),'com.mat']);

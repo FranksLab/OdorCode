@@ -100,7 +100,15 @@ cbfreeze(h)
 
 
 subplot(1,3,3)
-imagesc(Scores.auROC(VOI,posdex+1,1,tset)')
+THRESH = 'Y';
+if THRESH == 'Y'
+    v = Scores.auROC(VOI,posdex(goodies)+1,1,tset);
+    sigp = Scores.AURp(VOI,posdex(goodies)+1,1,tset)>.05;
+    v(sigp) = .5;
+    imagesc(v')
+else
+imagesc(Scores.auROC(VOI,posdex(goodies)+1,1,tset)')
+end
 set(gca,'XTick',[],'YTick',[])
 colormap(CT)
 % axis off
@@ -112,17 +120,20 @@ title('auROC')
 freezeColors
 cbfreeze(h)
 
+
+
+
 % position MO Rate image
-arlim = get(gca,'CLim');
-arpos = get(gca,'position');
-morrpos = [arpos(1)+arpos(3)+.02 arpos(2) arpos(3)/4 arpos(4)];
-axes('position',morrpos)
-ypedges = [0:20:280];
-[n,bin] = histc(ypos(goodies),ypedges);
-hh = barh(ypedges+10,n);
-set(hh,'edgecolor','none','facecolor','k')
-ylim([0 275])
-set(gca,'YTick',[0 275])
+% arlim = get(gca,'CLim');
+% arpos = get(gca,'position');
+% morrpos = [arpos(1)+arpos(3)+.02 arpos(2) arpos(3)/4 arpos(4)];
+% axes('position',morrpos)
+% ypedges = [0:20:280];
+% [n,bin] = histc(ypos(goodies),ypedges);
+% hh = barh(ypedges+10,n);
+% set(hh,'edgecolor','none','facecolor','k')
+% ylim([0 275])
+% set(gca,'YTick',[0 275])
 
 % axis off
 % axis off

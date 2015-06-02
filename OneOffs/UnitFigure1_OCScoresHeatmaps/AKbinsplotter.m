@@ -118,67 +118,71 @@ omRA = cat(1,OMNI.AURp{:,1})<.05;
 omUK = cat(1,OMNI.auROC{:,2})>.5;
 omDK = cat(1,OMNI.auROC{:,2})<.5;
 omRK = cat(1,OMNI.AURp{:,2})<.05;
-% % %% number responding to each odorant
-% % close all
-% % figure
-% % positions = [200 100 800 400];
-% % set(gcf,'Position',positions)
-% % set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
-% % 
-% % for R = 12:17
-% %     NUMRU = (sum(SCR{R}.AURp(:,:,1,1)<.05 & SCR{R}.auROC(:,:,1,1)>.5))';
-% %     NUMRD = (sum(SCR{R}.AURp(:,:,1,1)<.05 & SCR{R}.auROC(:,:,1,1)<.5))';
-% %     NUMRT = (sum(SCR{R}.AURp(:,:,1,1)<.05))';
-% %     for histbin = 0:6
-% %         onlyup(R-11,histbin+1) = sum(NUMRT==histbin & NUMRU==histbin & NUMRD==0);
-% %         onlydown(R-11,histbin+1) = sum(NUMRT==histbin & NUMRD==histbin & NUMRU==0);
-% %         mixed(R-11,histbin+1) = sum(NUMRT==histbin & NUMRU>0 & NUMRD>0);
-% %         total(R-11,histbin+1) = sum(NUMRT==histbin);
-% %     end
-% % end
-% % onlyup = 100*bsxfun(@rdivide,onlyup',sum(total'))';
-% % onlydown = 100*bsxfun(@rdivide,onlydown',sum(total'))';
-% % mixed = 100*bsxfun(@rdivide,mixed',sum(total'))';
-% % total = 100*bsxfun(@rdivide,total',sum(total'))';
-% % 
-% % subplot(1,2,1)
-% % % plot zero column, then everything else separately, then errobars for
-% % % total
-% % stacknums = [nanmean(onlydown(:,2:end));nanmean(mixed(:,2:end));nanmean(onlyup(:,2:end))];
-% % bar(1:6,stacknums','stacked')
-% % colormap([.3 .3 .7;.65 .3 .65; .7 .3 .3])
-% % hold on
-% % bar(0,nanmean(total(:,1)),'k')
-% % totalerrors = nanstd(total)./sqrt(size(total,1));
-% % totalmeans = nanmean(total);
-% % errorb(0:6,totalmeans,totalerrors,'top')
-% % xlim([-1 7]); ylim([0 60])
-% % set(gca,'XTick',0:6,'YTick',[0 30 60])
-% % axis square
-% % ylabel('Neurons (%)'); xlabel('Odors responsive')
-% % 
-% % for R = 12:17
-% %     % Population Sparseness
-% %     PS(R-11) = nanmean(OMNI.vSparseP{R,1});
-% %     % Lifetime Sparseness
-% %     LS(R-11) = nanmean(OMNI.vSparseL{R,1});
-% % end
-% % 
-% % subplot(1,2,2)
-% % plot(1+rand(size(PS))/10-.05,PS,'o','MarkerEdgeColor',[.6 .6 .6])
-% % hold on
-% % errorbar(1,mean(PS),std(PS)/sqrt(length(PS)),'ok','MarkerFaceColor','k')
-% % plot(1.15,nanmean(cat(1,OMNI.vSparseP{:,1})),'or','MarkerFaceColor','r')
-% % 
-% % plot(2+rand(size(LS))/10-.05,LS,'o','MarkerEdgeColor',[.6 .6 .6])
-% % errorbar(2,mean(LS),std(LS)/sqrt(length(LS)),'ok','MarkerFaceColor','k')
-% % ylim([0 1])
-% % xlim([0 3])
-% % axis square
-% % ylabel('Sparesness')
-% % set(gca,'YTick',[0 0.5 1],'XTick',[1 2],'XTickLabel',{'Pop','LfTm'})
-% % plot(2.15,nanmean(cat(1,OMNI.vSparseL{:,1})),'or','MarkerFaceColor','r')
-% % 
+%% number responding to each odorant
+close all
+figure
+positions = [200 100 800 400];
+set(gcf,'Position',positions)
+set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
+
+tset = 1;
+
+Rlist = [15:17,18,22:23];
+for R = 1:length(Rlist);
+    NUMRU = (sum(SCR{Rlist(R)}.AURp(:,:,1,tset)<.05 & SCR{Rlist(R)}.auROC(:,:,1,tset)>.5))';
+    NUMRD = (sum(SCR{Rlist(R)}.AURp(:,:,1,tset)<.05 & SCR{Rlist(R)}.auROC(:,:,1,tset)<.5))';
+    NUMRT = (sum(SCR{Rlist(R)}.AURp(:,:,1,tset)<.05))';
+    for histbin = 0:6
+        onlyup(R,histbin+1) = sum(NUMRT==histbin & NUMRU==histbin & NUMRD==0);
+        onlydown(R,histbin+1) = sum(NUMRT==histbin & NUMRD==histbin & NUMRU==0);
+        mixed(R,histbin+1) = sum(NUMRT==histbin & NUMRU>0 & NUMRD>0);
+        total(R,histbin+1) = sum(NUMRT==histbin);
+    end
+end
+onlyup = 100*bsxfun(@rdivide,onlyup',sum(total'))';
+onlydown = 100*bsxfun(@rdivide,onlydown',sum(total'))';
+mixed = 100*bsxfun(@rdivide,mixed',sum(total'))';
+total = 100*bsxfun(@rdivide,total',sum(total'))';
+
+subplot(1,2,1)
+% plot zero column, then everything else separately, then errobars for
+% total
+stacknums = [nanmean(onlydown(:,2:end));nanmean(mixed(:,2:end));nanmean(onlyup(:,2:end))];
+bar(1:6,stacknums','stacked')
+colormap([.3 .3 .7;.65 .3 .65; .7 .3 .3])
+hold on
+bar(0,nanmean(total(:,1)),'k')
+totalerrors = nanstd(total)./sqrt(size(total,1));
+totalmeans = nanmean(total);
+errorb(0:6,totalmeans,totalerrors,'top')
+xlim([-1 7]); ylim([0 60])
+set(gca,'XTick',0:6,'YTick',[0 30 60])
+axis square
+ylabel('Neurons (%)'); xlabel('Odors responsive')
+
+Rlist = [15:17,18,22:23];
+for R = 1:length(Rlist)
+    % Population Sparseness
+    PS(R) = nanmean(OMNI.vSparseP{Rlist(R),tset});
+    % Lifetime Sparseness
+    LS(R) = nanmean(OMNI.vSparseL{Rlist(R),tset});
+end
+
+subplot(1,2,2)
+plot(1+rand(size(PS))/10-.05,PS,'o','MarkerEdgeColor',[.6 .6 .6])
+hold on
+errorbar(1,mean(PS),std(PS)/sqrt(length(PS)),'ok','MarkerFaceColor','k')
+plot(1.15,nanmean(cat(1,OMNI.vSparseP{:,tset})),'or','MarkerFaceColor','r')
+
+plot(2+rand(size(LS))/10-.05,LS,'o','MarkerEdgeColor',[.6 .6 .6])
+errorbar(2,mean(LS),std(LS)/sqrt(length(LS)),'ok','MarkerFaceColor','k')
+ylim([0 1])
+xlim([0 3])
+axis square
+ylabel('Sparesness')
+set(gca,'YTick',[0 0.5 1],'XTick',[1 2],'XTickLabel',{'Pop','LfTm'})
+plot(2.15,nanmean(cat(1,OMNI.vSparseL{:,tset})),'or','MarkerFaceColor','r')
+
 
 %%
 
@@ -280,21 +284,27 @@ for k = 1:length(SCR)
         PctNegB{k} = 100* sum(Responders{k}(:,2) & Downers{k}(:,2) & Responders{k}(:,1) & Downers{k}(:,1))/length(Responders{k});
     end
 end
-values = ([mean(cell2mat(PctPosA)) mean(cell2mat(PctPosK)) mean(cell2mat(PctPosB))]); 
+% values = ([mean(cell2mat(PctPosA)) mean(cell2mat(PctPosK)) mean(cell2mat(PctPosB))]); 
+values = ([mean(cell2mat(PctPosA)) mean(cell2mat(PctPosK))]); 
+
 hold on
-erros = ([std(cell2mat(PctPosA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctPosK))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctPosB))/sqrt(length(cell2mat(PctPosA)))]);
+% erros = ([std(cell2mat(PctPosA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctPosK))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctPosB))/sqrt(length(cell2mat(PctPosA)))]);
+erros = ([std(cell2mat(PctPosA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctPosK))/sqrt(length(cell2mat(PctPosA)))]);
+
+bar(values); errorb(values,erros,'linewidth',.8,'top');
+hold on
+% values = -([mean(cell2mat(PctNegA)) mean(cell2mat(PctNegK)) mean(cell2mat(PctNegB))]);
+values = -([mean(cell2mat(PctNegA)) mean(cell2mat(PctNegK))]);
+
+% erros = ([std(cell2mat(PctNegA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctNegK))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctNegB))/sqrt(length(cell2mat(PctPosA)))]);
+erros = ([std(cell2mat(PctNegA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctNegK))/sqrt(length(cell2mat(PctPosA)))]);
+
 bar(values); errorb(values,erros,'linewidth',.8,'top');
 % shading flat
-% colormap([.3 .3 .7; .7 .3 .3; .6 .6 .6])
-hold on
-values = -([mean(cell2mat(PctNegA)) mean(cell2mat(PctNegK)) mean(cell2mat(PctNegB))]);
-erros = ([std(cell2mat(PctNegA))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctNegK))/sqrt(length(cell2mat(PctPosA))) std(cell2mat(PctNegB))/sqrt(length(cell2mat(PctPosA)))]);
-bar(values); errorb(values,erros,'linewidth',.8,'top');
-% shading flat
-colormap([.3 .3 .7; .7 .3 .3; .6 .6 .6])
+colormap([.3 .3 .7; .7 .3 .3])
 
 axis square
-xlim([0 4])
+xlim([0 3])
 % set(gca,'XTickLabel',{'Pos','Neg'})
 ylabel('Percent Reponsive')
 %
@@ -304,9 +314,9 @@ ylabel('Percent Reponsive')
 % ylim([0 1])
 ymax = get(gca,'YLim');
 ymax = ymax(2);
-h1 = text(2.1,.9*ymax,['Awake']); set(h1,'Color',[.3 .3 .7]);
-h2 = text(2.1,.8*ymax,['KX']); set(h2,'Color',[.7 .3 .3]);
-h3 = text(2.1,.7*ymax,['Both']); set(h3,'Color',[.6 .6 .6]);
+% h1 = text(2.1,.9*ymax,['Awake']); set(h1,'Color',[.3 .3 .7]);
+% h2 = text(2.1,.8*ymax,['KX']); set(h2,'Color',[.7 .3 .3]);
+% h3 = text(2.1,.7*ymax,['Both']); set(h3,'Color',[.6 .6 .6]);
 % axis off
 
 subplot(4,3,2)

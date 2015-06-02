@@ -101,7 +101,7 @@ end
 origbinsize = mode(diff(Edges));
 
 winstart = -0.5;
-winsize = .02; winstep = .02;
+winsize = .08; winstep = .04;
 PSstart = find(Edges >= winstart,1);
 PSend = find(Edges>=1,1);
 

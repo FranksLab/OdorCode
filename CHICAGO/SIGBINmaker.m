@@ -1,4 +1,4 @@
-function [SBu,SBd] =  SIGBINmaker(Raster,Trials,WinSize,StepSize,WinStart,MaxTime,ConsBin)
+function [SBu,SBd,PSTHt] =  SIGBINmaker(Raster,Trials,WinSize,StepSize,WinStart,MaxTime,ConsBin)
 % Use this for full cycle by replacing MaxTime with
 % efd.ValveSpikes.MultiCycleBreathPeriod
 % SBu.sig (Valve,Unit) and SBd.sig (Valve,Unit)
@@ -63,6 +63,8 @@ else
                 end
             end
             
+            SBu.bins{V,U} = utest;
+            
             % The same for suppression
             if sum(dtest(1:end-1))>0
                 a0 = [1; 0; dtest(:)]; % input vector
@@ -86,6 +88,8 @@ else
                     SBd.dur{V,U} = StepSize;
                 end
             end
+            
+            SBd.bins{V,U} = dtest;
             
         end
     end
