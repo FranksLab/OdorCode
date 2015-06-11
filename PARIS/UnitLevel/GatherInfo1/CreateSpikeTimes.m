@@ -1,7 +1,11 @@
-function [SpikeTimes] = CreateSpikeTimes(FilesKK,Fs,tWarpLinear)
+function [SpikeTimes] = CreateSpikeTimes(FilesKK,Fs,tWarpLinear,SpikeType)
 
 % Retrieve SpikeTimes from cluster file
-[SpikeTimes] = SpikeTimesKK(FilesKK);
+if nargin<4
+    [SpikeTimes] = SpikeTimesKK(FilesKK);
+else
+    [SpikeTimes] = SpikeTimesKK(FilesKK,SpikeType);
+end
 
 % Warp SpikeTimes by tWarp
 SpikeTimes.stwarped = cell(length(SpikeTimes.tsec),1);
