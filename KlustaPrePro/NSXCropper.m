@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-load BatchProcessing\ExperimentCatalog_TET.mat
+load Z:\ExperimentCatalog_TET.mat
 
 ES = -2; % Time before FV switch to keep
 EL6 = 6*30000; % time of an epoch
@@ -11,13 +11,13 @@ EL3 = 6*2000;
 nvalves = 16;
 
 %%
-RecordSet = 15;
+RecordSet = 3;
 for Record = 1:size(Raws{RecordSet},2)
     for trialset = 1:2
         
         Raw = ['Y:\',Date{RecordSet},'-',Raws{RecordSet}{Record}];
         AIP = ['Y:\',Date{RecordSet},'-',AIPs{RecordSet}{Record}];
-        path = ['Z:\UnitSortingAnalysis\',Date{RecordSet},'_Analysis\'];
+        path = ['Z:\UnitSortingAnalysis\',Date{RecordSet},'_Analysis\Raw\'];
         Raw = [path,Date{RecordSet},'-',Raws{RecordSet}{Record}];
         AIP = [path,Date{RecordSet},'-',AIPs{RecordSet}{Record}];
         
