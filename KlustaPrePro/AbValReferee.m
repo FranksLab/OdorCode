@@ -2,34 +2,16 @@ function [hldr,badchan] = AbValReferee(data,ChannelCount,Bloc)
 %% make a data matrix
  data = reshape(data,[ChannelCount length(data)/ChannelCount]); % to get back to linearized just use (:) on a matrix this shape
  data = double(data);
-%  dataS = {data};
 if ~isempty(Bloc)
-%     data = reshape(data,[ChannelCount length(data)/ChannelCount]); % to get back to linearized just use (:) on a matrix this shape
-%     data = double(data);
-% else
     dataS{1} = data(1:Bloc-1,:);
     dataS{2} = data(Bloc:end,:);
 
 else
     dataS{1} = data;
-%     for j=0:(length(data)/ChannelCount)-1 %Split 48 or 64 channel data into two separate matrices
-%         data1((1+j*(Bloc-1)):(Bloc-1+j*(Bloc-1)))=data((1+j*ChannelCount):(Bloc-1+j*ChannelCount));
-%         data2((1+j*(ChannelCount-Bloc+1)):((ChannelCount-Bloc+1)+j*(ChannelCount-Bloc+1)))=data((Bloc+j*ChannelCount):(ChannelCount+j*ChannelCount));
-%     end
-%     data1=data1';
-%     data2=data2';
-%     data1 = reshape(data1,[(Bloc-1) length(data1)/(Bloc-1)]);
-%     data1 = double(data1);
-%     data2 = reshape(data2,[(ChannelCount-Bloc+1) length(data2)/(ChannelCount-Bloc+1)]);
-%     data2 = double(data2);
-
 end
 
 
 for count=1:length(dataS)
-%     if(count==2 && ~exist('data2')) hldr2=[]; break; end
-%     if(count==1 && exist('data1')) data=data1; end
-%     if(count==2 && exist('data2')) data=data2; end
     
     data = dataS{count};
     
@@ -55,13 +37,17 @@ for count=1:length(dataS)
     b = abs((a-mean(a))/std(a));
     
     Excludos = b>2.5;
+    if count == 1
+        Excludos([9,23]) = 1;
+    end
+    
     
     %% Find the absolute value of the data.
     abdata = abs(data);
     abdata(Excludos,:) = NaN;  % get rid of bad channels
     
     %% now sort the magnitude of abdata matrix
-    [y,idx] = sort(abdata);
+    [~,idx] = sort(abdata);
     
     %% average some number (~20%) of channels with low absolute values
     chavnumb = floor(.2*size(data,1));
