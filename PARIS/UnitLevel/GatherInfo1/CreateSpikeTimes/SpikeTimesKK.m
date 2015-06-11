@@ -20,7 +20,9 @@ else
     %%
     spiketimes = double(hdf5read(FilesKK.KWIK, ['/channel_groups/',probe,'/spikes/time_samples']));
     clusternumbers = double(hdf5read(FilesKK.KWIK, ['/channel_groups/',probe,'/spikes/clusters/main']));
-    allwaveforms = hdf5read(FilesKK.KWX, ['/channel_groups/',probe,'/waveforms_filtered']);
+%     allwaveforms = hdf5read(FilesKK.KWX, ['/channel_groups/',probe,'/waveforms_filtered']);
+    allwaveforms = hdf5read(FilesKK.KWX, ['/channel_groups/',probe,'/waveforms_raw']);
+
     realchannelstruct = h5info(FilesKK.KWIK, ['/channel_groups/',probe,'/channels']);
     for k = 1:size(realchannelstruct.Groups,1)
         namey = realchannelstruct.Groups(k).Name;
@@ -73,7 +75,7 @@ else
 %     UnitID.Wave.ISVD=ISVD;
 %     UnitID.Wave.realchannellist = realchannellist;
     UnitID.Wave.Position=position;
-    
+    UnitID.Spiketimes=spiketimes;
     %%
     save(STWfile,'UnitID')
 end
