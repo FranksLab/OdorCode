@@ -2,10 +2,10 @@ clear all
 close all
 clc
 
-path = 'Z:\TetSDAnalysis\';
+path = 'Z:\TSDAnalysis\';
 RecordSetList = [2,3,4,5,6,7,10,11];
 
-RecordSetList = 6;
+RecordSetList = 2;
 
 KWIKfiles = cell(max(RecordSetList),2,2);
 
