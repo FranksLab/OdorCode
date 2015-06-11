@@ -7,8 +7,8 @@ addpath sort-tools/
 
 % CHANGE THESE FOR YOUR DATASET
 sdat.ne = 32; % number of electrodes
-sdat.ncell = 38; % number of neurons
-sdat.nsecs = 120;  % number of total seconds in the recording
+sdat.ncell = 37; % number of neurons
+sdat.nsecs = 900;  % number of total seconds in the recording
 sdat.samprate = 30e3; % sample rate
 sdat.nsamps = sdat.nsecs*sdat.samprate;  % number of total samples
 
@@ -19,7 +19,7 @@ sdat.nsamps = sdat.nsecs*sdat.samprate;  % number of total samples
 
 % CAN LEAVE THESE FIXED, BUT CHANGE TO OPTIMIZE PERFORMANCE
 sdat.nsampsPerFile= 20000; % num samples per saved (processed) electrode-data file
-sdat.nsecsPerW = 60; % number of seconds' data to use for each estimate of spike waveform
+sdat.nsecsPerW = 180; % number of seconds' data to use for each estimate of spike waveform
 sdat.nsampsPerW = sdat.nsecsPerW*sdat.samprate; % num samples per waveform estimate 
 sdat.nw = 30; % number time bins in spike waveform (MUST BE EVEN)
 sdat.nsampsPerBPchunk = 10000; % number samples in a chunk for binary pursuit sorting
@@ -32,10 +32,10 @@ sdat.minISIsamps = round(sdat.minISIms*sdat.samprate/1000);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Directory where raw data to be loaded from
-dirlist.rawdat = sprintf('Z:/BPSSData/');  % CHANGE THIS FOR YOUR DATASET
+dirlist.rawdat = sprintf('Z:/BPSSData/rawdat/');  % CHANGE THIS FOR YOUR DATASET
 
 % Directories where intermediate processing data to be stored
-dirlist.procdat = 'dat/procdat/'; % directory for processed data (to be created)
+dirlist.procdat = 'Z:/BPSSData/procdat/'; % directory for processed data (to be created)
 dirlist.W = [dirlist.procdat 'Wraw/'];  % raw waveform estimates (pre-whitening)
 dirlist.Wwht = [dirlist.procdat 'Wwht/'];  % waveform estimates after whitening
 dirlist.Ywht = [dirlist.procdat 'Ywht/'];  % sparsified waveform estimates

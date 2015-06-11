@@ -3,7 +3,7 @@
 %  Estimate spike waveforms from initial subset of spikes  (after whitening)
 
 % Set path and loads relevant data structures: 'sdat', 'dirlist', 'filelist'
-setSpikeSortParams;  
+ourSetSpikeSortParams;  
 
 % ---- Load initial estimate of spike times (sparse nsamps x ncell array) ------------
 Xsp = struct2array(load(filelist.initspikes));  % loads variable 'Xsp_init'

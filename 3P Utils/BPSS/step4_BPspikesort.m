@@ -3,7 +3,7 @@
 %  Estimate spike times on whitened data using Binary Pursuit
 
 % Set path and loads relevant data structures: 'sdat', 'dirlist', 'filelist'
-setSpikeSortParams;  
+ourSetSpikeSortParams;  
 fprintf('Step 4: running Binary Pursuit to estimate spike times\n');
 
 % ---- Load initial estimate of spike times (sparse nsamps x ncell array) ------------
@@ -16,22 +16,27 @@ nWblocks = ceil(nsamps/nsampsPerW);  % number of blocks for estimating waveforms
 blksize = sdat.nsampsPerBPchunk; % number of samples to process at once for BP. (default 10K)
 
 % Set prior probability of a spike for each neuron (using base rate in initial sort)
-pspike0 = mean(X0); % prior probability of a spike for each neuron 
-
+pspike0 = mean(X0); % prior probability of a spike for each neuron
+plist=[1 5 10 20 50 75 100];
+for k=1:7
+pspike1=pspike0*plist(k);
 % -- Do sorting ----
 [Xhat,nrefviols] = estimSps_BinaryPursuit(loadwhitenedY,filelist.Wwht,...
-    nsampsPerW,X0,pspike0,blksize,sdat.minISIsamps);
+    nsampsPerW,X0,pspike1,blksize,sdat.minISIsamps);
 
 % -- Report refractory period violations (if necessary) ----
-if sum(nrefviols) == 0
-    fprintf('No refractory period violations (%.1fms)\n',sdat.minISIms);
-else
-    fprintf('Number spikes pruned due to refractory violations (%.1fms)\n',sdat.minISIms);
-    for j = 1:sdat.ncell
-        if nrefviols(j)>0
-            fprintf('cell %d: %d\n', j, nrefviols(j));
-        end
-    end
+% if sum(nrefviols) == 0
+%     fprintf('No refractory period violations (%.1fms)\n',sdat.minISIms);
+% else
+%     fprintf('Number spikes pruned due to refractory violations (%.1fms)\n',sdat.minISIms);
+%     for j = 1:sdat.ncell
+%         if nrefviols(j)>0
+%             fprintf('cell %d: %d\n', j, nrefviols(j));
+%         end
+%     end
+% end
+
+loopXhat(k)=sum(sum(Xhat,1));
 end
 
 % -- Save out ------

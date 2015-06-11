@@ -3,10 +3,10 @@
 %  Estimate spike waveforms from initial subset of spikes found (before whitening)
 
 % Set path and loads relevant data structures: 'sdat', 'dirlist', 'filelist'
-setSpikeSortParams;  
+ourSetSpikeSortParams;  
 
 % Is simulation?  (for comparisons to ground truth)
-isSIM = 1; % Set to true only when running demo code with simulation data 
+isSIM = 0; % Set to true only when running demo code with simulation data 
 
 % ---- Load initial estimate of spike times (sparse nsamps x ncell array) -----
 Xsp = struct2array(load(filelist.initspikes));  % loads variable 'Xsp_init'
@@ -14,6 +14,7 @@ Xsp = struct2array(load(filelist.initspikes));  % loads variable 'Xsp_init'
 % ---  Set some params governing block size for estimating waveforms ------
 nsamps = sdat.nsamps; % Number of total samples
 nsampsPerW = sdat.nsampsPerW;  % number of samples to use for each estimate
+
 nWblocks = ceil(nsamps/nsampsPerW);  % number of blocks for estimating waveforms
 
 
@@ -24,7 +25,7 @@ for blocknum = 1:nWblocks
     % --- Set time window and load electrode data ---
     twin = [(blocknum-1)*nsampsPerW, min(blocknum*nsampsPerW,nsamps)]; % time window
     Ydat = loadrawY(twin); % load the relevant block of electrode data
-    
+   
     % --- Estimate spike waveform ----
     W = estimWaveforms(Xsp(twin(1)+1:twin(2),:),Ydat,sdat.nw); 
     
