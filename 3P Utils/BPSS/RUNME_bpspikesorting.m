@@ -2,8 +2,8 @@
 % spike sorting algorithm.
 
 % 0. Generate a simulated dataset
-script0_simulateDataForTesting;
-
+%script0_simulateDataForTesting;
+DataSetup
 %% 1. Estimate spike waveforms for each neuron using spike times provided
 step1_estimWaveforms
 
@@ -17,7 +17,7 @@ step3_reestimWaveforms;
 step4_BPspikesort;
 
 %% 5. Compare simulated and estimated spike trains (ONLY RELEVANT FOR SIMULATED DATA)
-step5_analyzePerformance_simData;
+%step5_analyzePerformance_simData;
 
 
 % ===============================================================================

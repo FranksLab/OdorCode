@@ -6,10 +6,10 @@ addpath sort-tools/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % CHANGE THESE FOR YOUR DATASET
-sdat.ne = 6; % number of electrodes
-sdat.ncell = 4; % number of neurons
+sdat.ne = 32; % number of electrodes
+sdat.ncell = 38; % number of neurons
 sdat.nsecs = 120;  % number of total seconds in the recording
-sdat.samprate = 20e3; % sample rate
+sdat.samprate = 30e3; % sample rate
 sdat.nsamps = sdat.nsecs*sdat.samprate;  % number of total samples
 
 
@@ -32,7 +32,7 @@ sdat.minISIsamps = round(sdat.minISIms*sdat.samprate/1000);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Directory where raw data to be loaded from
-dirlist.rawdat = sprintf('dat/simdata/');  % CHANGE THIS FOR YOUR DATASET
+dirlist.rawdat = sprintf('Z:/BPSSData/');  % CHANGE THIS FOR YOUR DATASET
 
 % Directories where intermediate processing data to be stored
 dirlist.procdat = 'dat/procdat/'; % directory for processed data (to be created)
@@ -58,7 +58,7 @@ end
 
 % NAMES FOR RAW DAT FILES (CHANGE THESE)
 filelist.initspikes = [dirlist.rawdat, 'Xsp_init.mat']; % initial spike train estimate (sparse nsamps x ncell array)
-filelist.Ydat = [dirlist.rawdat, 'Y.mat']; % initial spike train estimate (sparse nsamps x ncell array)
+filelist.Ydat = [dirlist.rawdat, 'LFPdata.mat']; % initial spike train estimate (sparse nsamps x ncell array)
 
 % NAMES FOR PROCESSED DATA FILES (can leave)
 filelist.Ywht = [dirlist.Ywht, 'Y_chunk%d.mat']; % initial spike train estimate (sparse nsamps x ncell array)

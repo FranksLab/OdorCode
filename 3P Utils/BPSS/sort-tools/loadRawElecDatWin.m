@@ -10,6 +10,5 @@ function Ydat = loadRawElecDatWin(twin,filenamestring)
 % Note: this simple version loads a single file, but for longer experiments, users should
 % write their own function so that the user passes in the desired time index range, and the function is
 % clever about loading the relevant data files and stitching them together (if needed).
-
 Ydat = struct2array(load(filenamestring));
 Ydat = Ydat(twin(1)+1:twin(2),:);

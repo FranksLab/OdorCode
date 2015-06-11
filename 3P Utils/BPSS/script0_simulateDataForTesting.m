@@ -3,7 +3,7 @@
 fprintf('script0_simulateDataForTesting: generating dataset for spike sorting...\n');
 
 % Set params for simulated dataset using those in the 'setSpikeSortParams.m' script
-setSpikeSortParams;  % (LOOK HERE FOR DETAILS).
+DefaultSetSpikeSortParams;  % (LOOK HERE FOR DETAILS).
 
 % Set parameters governing the simulated spike trains
 nwt = 30;  % # time samples in spike waveforms
