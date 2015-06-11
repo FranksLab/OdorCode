@@ -1,9 +1,5 @@
 %% Experiment Catalog : AW-KX
 clear all
-% There are 17 record sets as of 12/11/14 that are relevant to these
-% experiments. Let's get together some basic information so other scripts
-% can work with this stuff. And standardize the file naming system for dual
-% site or concatenated files. 
 
 %%
 % Date{Set}
@@ -105,4 +101,4 @@ TSETS{15} = {1:11;13:30;35:48}; %
 
 
 %%
-save C:\Users\kevinbolding\OdorCode\BatchProcessing\ExperimentCatalog_TET.mat
+save Z:\ExperimentCatalog_TET.mat
