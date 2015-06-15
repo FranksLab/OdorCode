@@ -11,7 +11,7 @@ EL3 = 6*2000;
 nvalves = 16;
 
 %%
-RecordSet = 3;
+RecordSet = 2;
 for Record = 1:size(Raws{RecordSet},2)
     for trialset = 1:2
         
