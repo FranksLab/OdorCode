@@ -27,7 +27,7 @@ for count=1:length(dataS)
     %% high pass filter the data
     low = 100;
     Fs = 30000;
-    [D,C] = butter(2,low/(Fs/2),'high');
+    [D,C] = butter(4,low/(Fs/2),'high');
     data = filtfilt(D,C,dataline');
     data = data';
     
