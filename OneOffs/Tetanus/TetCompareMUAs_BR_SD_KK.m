@@ -11,7 +11,7 @@ ChannelSet{2} = 33:64;
 %%
 clear SpikeTimes
 
-FilesKK.AIP = ['Z:\NS3files\COM\RecordSet002tef.ns3'];
+FilesKK.AIP = ['Z:\NS3files\COM\RecordSet002te_F.ns3'];
 RelNEV = ['Y:\20-Feb-2015-003.nev'];
 
 %% Stuff that normally happens in Gather Info 1
@@ -21,7 +21,7 @@ FVs = min(length(FVOpens),length(FVCloses));
 FVOpens = FVOpens(1:FVs); FVCloses = FVCloses(1:FVs);
 [InhTimes,PREX,POSTX,RRR,BbyB] = FreshBreath(resp,Fs,t,FVOpens,FVCloses,FilesKK);
 [tWarp,tWarpLinear,BreathStats.AvgPeriod] = ZXwarp(InhTimes,PREX,POSTX,t,Fs);
-[ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,tWarpLinear,Fs);
+[ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,Fs);
 
 %% Getting spikes and assigning to channels
 openNEV(RelNEV);
