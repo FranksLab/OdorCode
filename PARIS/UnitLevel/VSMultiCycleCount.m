@@ -1,4 +1,11 @@
 function [MultiCycleSpikeCount,MultiCycleSpikeRate,MultiCycleBreathPeriod] = VSMultiCycleCount(ValveTimes,SpikeTimes,PREX,CyclestoCheck)
+if ~iscell(CyclestoCheck) == 1
+    CycleList = 1:CyclestoCheck;
+else
+    CycleList = cell2mat(CyclestoCheck);
+    CyclestoCheck = length(CycleList);
+end
+
 MultiCycleSpikeCount = cell(size(ValveTimes.PREXIndex,2),size(SpikeTimes.tsec,1),CyclestoCheck);
 MultiCycleSpikeRate = cell(size(ValveTimes.PREXIndex,2),size(SpikeTimes.tsec,1),CyclestoCheck);
 MultiCycleBreathPeriod = cell(CyclestoCheck,1);
@@ -13,8 +20,8 @@ for Unit = 1:size(SpikeTimes.tsec,1)
     
     for Valve = 1:size(ValveTimes.PREXIndex,2)
         
-        for Cycle = 1:CyclestoCheck
-                Adder = Cycle-1;
+        for Cycle = 1:length(CycleList)
+                Adder = CycleList(Cycle)-1;
                 Beginning = PREX(ValveTimes.PREXIndex{Valve}(:)+Adder);
                 EndofCycle = PREX(ValveTimes.PREXIndex{Valve}(:)+1+Adder);
                 MultiCycleBreathPeriod{Valve,Cycle} = EndofCycle-Beginning;
