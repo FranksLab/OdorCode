@@ -8,9 +8,9 @@ else
     STWfile = ['Z:\STWfiles\',FilesKK.KWIK(16:32),'stw',SpikeType,'.mat'];
 end
 
-if exist(STWfile,'file')
-    load(STWfile)
-else
+%if exist(STWfile,'file')
+%    load(STWfile)
+%else
     
     %Checks if there are multiple probes
     try
@@ -76,8 +76,9 @@ else
         
         UnitID.Wave.AverageWaveform=avgwaveform;
         UnitID.Wave.Position=position;
-        
-        
+        UnitID.ClusterNumbers=clusternumbers;
+        UnitID.AllWaveforms=allwaveforms;
+        UnitID.Spiketimes=spiketimes;
     else
         spiketimes = double(hdf5read(FilesKK.KWIK, ['/channel_groups/',probe,'/spikes/time_samples']));
         clusternumbers = double(hdf5read(FilesKK.KWIK, ['/channel_groups/',probe,'/spikes/clusters/main']));
@@ -100,8 +101,8 @@ else
     end
     
     %%
-    save(STWfile,'UnitID')
-end
+    save(STWfile,'UnitID','-v7.3')
+%end
 
 
 
