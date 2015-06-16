@@ -84,6 +84,7 @@ set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[
 % ROI = [2:5,10];
 ROI = [6,7,11];
 % ROI = 6;
+ROI = 2;
 clf
 
 for tset = 1:2
@@ -105,7 +106,7 @@ end
 
 %% IF you want to see PSTHs do this stuff....
 
- for RecordSet = 6%RecordSetList
+ for RecordSet = 2%RecordSetList
         for tset = 1:2
             for bank = 1:2
                 if ~isempty(KWIKfiles{RecordSet,tset,bank})
@@ -130,7 +131,7 @@ VWeight = [.15:.15:.75,0.05,1,1,.15:.15:.75,0.05,1,1];
 VColors = [1 1 0; 1 0 1; 0 1 1];
 
 
-RecordSet = 6;
+RecordSet = 2;
 close all
 figure
 PRL = [0 2000]; % Plot Rate Limits
