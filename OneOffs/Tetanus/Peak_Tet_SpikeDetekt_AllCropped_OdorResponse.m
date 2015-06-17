@@ -47,7 +47,7 @@ for RecordSet = RecordSetList
                 
                 %% Plot all the spikes that spikedetekt detected - were the BlackRock Spikes artifacts or an effect of double counting spikes?
                 [SpikeTimes] = CreateSpikeTimes(FilesKK,Fs,tWarpLinear,'All');
-                RasterAlign{RecordSet,tset,bank} = VSRasterAlign(ValveTimes,SpikeTimes);
+                RasterWarp{RecordSet,tset,bank} = VSRasterAlign(ValveTimes,SpikeTimes);
                 MultiCycleSpikeCount{RecordSet,tset,bank} = VSMultiCycleCount(ValveTimes,SpikeTimes,PREX,{[0 1]});
                 % Normalize the Spike Countz by the pre odor cycle.
                 MCnormMAT = cell2mat(MultiCycleSpikeCount{RecordSet,tset,bank});
@@ -76,26 +76,50 @@ for RecordSet = 1:max(RecordSetList)
         end
     end
 end
+
+%% IF you want to see PSTHs do this stuff....
+
+ for RecordSet = RecordSetList
+        for tset = 1:2
+            for bank = 1:2
+                if ~isempty(KWIKfiles{RecordSet,tset,bank})
+                    for Valve = 1:size(RasterWarp{RecordSet,tset,bank},1)
+                        jloop = 1:size(RasterWarp{RecordSet,tset,bank}{Valve},1);
+                        clear RSTR
+                        for j = 1:length(jloop)
+                            k = jloop(j);
+                            RSTR(j).Times = RasterWarp{RecordSet,tset,bank}{Valve}{k}(RasterWarp{RecordSet,tset,bank}{Valve}{k}>PTL(1) & RasterWarp{RecordSet,tset,bank}{Valve}{k}<PTL(2));
+                        end
+                        [SMPSTH{RecordSet,tset,bank,Valve},t] = psth(RSTR,.01,'n',PTL);
+                        peakdata(RecordSet,tset,bank,Valve)=(max(SMPSTH{RecordSet,tset,bank,Valve}(t>0&t<BreathStats.AvgPeriod))-max(SMPSTH{RecordSet,tset,bank,Valve}(t<0&t>-BreathStats.AvgPeriod)))...
+                        /max(SMPSTH{RecordSet,tset,bank,Valve}(t<0&t>-BreathStats.AvgPeriod));
+                    end
+                end
+            end
+        end
+end
+peakdata(peakdata==0)=NaN;
+
 %% plotting
 figure(1)
 positions = [300 400 800 300]; set(gcf,'Position',positions);
 set(gcf,'PaperUnits','points','PaperPosition',[0 0 positions(3:4)],'PaperSize',[positions(3:4)]);
 
-% ROI = [2:5,10]; % PCx
-ROI = [6,7,11]; % Bulb
-% ROI = 6;
-ROI = 2;
+ ROI = [2:5,10]; % PCx
+%ROI = [6,7,11]; % Bulb
+% ROI = RecordSetList;
+%ROI = 6;
 clf
 
 for tset = 1:2
     subplot(1,2,tset)
     for bank = 1:2
         colooor = [0 (-bank+2)*.6 0];
-        errorbar(1,nanmean(MCmean(ROI,tset,bank,1)),nanstd(MCmean(ROI,tset,bank,1))./sqrt(sum(~isnan(MCmean(ROI,tset,bank,1)))),'Color',colooor)
+        errorbar(1,nanmean(peakdata(ROI,tset,bank,1)),nanstd(peakdata(ROI,tset,bank,1))./sqrt(sum(~isnan(peakdata(ROI,tset,bank,1)))),'Color',colooor)
         hold on
-        plot(1,nanmean(MCmean(ROI,tset,bank,1)),'o','Color',colooor,'markersize',5)
-        concstack = squeeze(cat(1,MCmean(ROI,tset,bank,2:5),MCmean(ROI,tset,bank,10:13)));
-%        concstack = squeeze(cat(1,MCmean(ROI,tset,bank,2:5)))
+        plot(1,nanmean(peakdata(ROI,tset,bank,1)),'o','Color',colooor,'markersize',5)
+        concstack = squeeze(cat(1,peakdata(ROI,tset,bank,2:5),peakdata(ROI,tset,bank,10:13)))
+%        concstack = squeeze(cat(1,peakdata(ROI,tset,bank,2:5)))
         errorbar(2:5,nanmean(concstack),nanstd(concstack)./sqrt(sum(~isnan(concstack))),'Color',colooor)
         plot(2:5,nanmean(concstack),'o','Color',colooor,'MarkerFaceColor',colooor,'markersize',5)
     end
@@ -103,36 +127,19 @@ for tset = 1:2
     set(gca,'YTick',[-2 0 2 4],'XTick',[1:5],'XTickLabel',{'0','0.03', '0.1', '0.3', '1'})
     if tset == 1; title('Awake'); else title('KX'); end
 end
-print(gcf, '-dpdf','-painters', ['z:\Tetanus\BulbMCSC'])
-
-%% IF you want to see PSTHs do this stuff....
-
- for RecordSet = 2%RecordSetList
-        for tset = 1:2
-            for bank = 1:2
-                if ~isempty(KWIKfiles{RecordSet,tset,bank})
-                    for Valve = 1:size(RasterAlign{RecordSet,tset,bank},1)
-                        jloop = 1:size(RasterAlign{RecordSet,tset,bank}{Valve},1);
-                        clear RSTR
-                        for j = 1:length(jloop)
-                            k = jloop(j);
-                            RSTR(j).Times = RasterAlign{RecordSet,tset,bank}{Valve}{k}(RasterAlign{RecordSet,tset,bank}{Valve}{k}>PTL(1) & RasterAlign{RecordSet,tset,bank}{Valve}{k}<PTL(2));
-                        end
-                        [SMPSTH{RecordSet,tset,bank,Valve},t] = psth(RSTR,.01,'n',PTL);
-                    end
-                end
-            end
-        end
-end
+print(gcf, '-dpdf','-painters', ['z:\Tetanus\PCxPeak'])
 
 %%
 ConcExpts = [1:7,10:11];
 ValveSpots = [1,1,1,1,1,0,3,3,2,2,2,2,2,0,3,3];
+
+ValveSpots = [4,1,4,4,1,0,3,3,5,2,5,5,2,0,3,3];
+
 VWeight = [.15:.15:.75,0.05,1,1,.15:.15:.75,0.05,1,1];
 VColors = [1 1 0; 1 0 1; 0 1 1];
 
 
-RecordSet = 2;
+RecordSet = 11;
 close all
 figure
 PRL = [0 2000]; % Plot Rate Limits
@@ -152,10 +159,10 @@ for tset = 1:2
                     ylim(PRL)
                     axis square
                     if ismember(Valve,[5,13])
-                    maxhigh = max(SMPSTH{RecordSet,tset,bank,Valve}-SMPSTH{RecordSet,tset,bank,1});
+                    maxhigh = max(SMPSTH{RecordSet,tset,bank,Valve});%-SMPSTH{RecordSet,tset,bank,1});
                     end
                     if ismember(Valve,[2,10])
-                    maxlow = max(SMPSTH{RecordSet,tset,bank,Valve}-SMPSTH{RecordSet,tset,bank,1});
+                    maxlow = max(SMPSTH{RecordSet,tset,bank,Valve});%-SMPSTH{RecordSet,tset,bank,1});
                     end 
                     set(gca,'XTick',[])
                 else
