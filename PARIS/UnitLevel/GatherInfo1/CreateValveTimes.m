@@ -1,4 +1,4 @@
-function [ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,Fs)
+function [ValveTimes] = CreateValveTimes(FVO,VLOs,PREX,t,Fs,tWarpLinear)
 
 %% CreateValveTimesFV (FVO,VLOs)
 
@@ -17,8 +17,8 @@ if ~isempty(FVOpens)
     %% CreateValveTimesR (ValveTimes.FVSwitchTimesOn,PREX)
     
     % Assign PREX times (i.e. inhalation starts) to FVOpenings
-%     [ValveTimes.PREXIndex,ValveTimes.PREXTimes,ValveTimes.PREXTimeWarp,ValveTimes.FVTimeWarp] = PREXAssigner (ValveTimes.FVSwitchTimesOn,PREX,tWarpLinear,Fs);
-    [ValveTimes.PREXIndex,ValveTimes.PREXTimes] = PREXAssigner (ValveTimes.FVSwitchTimesOn,PREX,Fs);
+    [ValveTimes.PREXIndex,ValveTimes.PREXTimes,ValveTimes.PREXTimesWarp,ValveTimes.FVTimeWarp] = PREXAssigner (ValveTimes.FVSwitchTimesOn,PREX,tWarpLinear,Fs);
+%     [ValveTimes.PREXIndex,ValveTimes.PREXTimes] = PREXAssigner (ValveTimes.FVSwitchTimesOn,PREX,Fs);
 
     % ValveTimes.PREXTimes = ValveTimes.FVSwitchTimesOn;
     
