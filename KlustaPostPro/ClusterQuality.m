@@ -3,7 +3,9 @@ close all
 clc
 
 %%
-KWIKfile = 'Z:\SortedKWIK\RecordSet020com_1.kwik';
+Round = 2;
+
+KWIKfile = 'Z:\THYAnalysis\KWIKsort\10-Jun-2015_0091.kwik';
 FilesKK = FindFilesKK(KWIKfile);
 
 %% Get all detected spiketimes
@@ -25,7 +27,11 @@ UnitLabels{4} = unitlist(clustergroups > 0);
 % AllWaves = hdf5read(FilesKK.KWX, ['/channel_groups/0/waveforms_filtered']);
 
 %% Which clustergroup do you want to analyze (group of interest)?
-GOI = 2;
+if Round == 1
+GOI = 3;
+else
+    GOI = 2;
+end
 for unit = 1:length(UnitLabels{GOI})
         TSECS{unit} = AllSpikes(clusternumbers==UnitLabels{GOI}(unit));
 %         avgwaveform{unit} = squeeze(mean(AllWaves(:,:,clusternumbers==UnitLabels{GOI}(unit)),3))';
@@ -58,27 +64,38 @@ end
 
 rpv = HillF;
 %% Automatically move good to good and bad to MUA
-% First Round
-% goodlist = find(rpv<.25);
-% badlist = find(rpv>.8);
-% 
-% for k = 1:length(goodlist)
-%     str=['/channel_groups/','0','/clusters/main/',num2str(UnitLabels{GOI}(goodlist(k)))];
-%     h5writeatt(FilesKK.KWIK,str,'cluster_group',2);
-% end
-% 
-% for k = 1:length(badlist)
-%     str=['/channel_groups/','0','/clusters/main/',num2str(UnitLabels{GOI}(badlist(k)))];
-%     h5writeatt(FilesKK.KWIK,str,'cluster_group',1);
-% end
+% % % First Round
+if Round == 1
+goodlist = find(rpv<.25);
+badlist = find(rpv>.8);
 
+for k = 1:length(goodlist)
+    str=['/channel_groups/','0','/clusters/main/',num2str(UnitLabels{GOI}(goodlist(k)))];
+    h5writeatt(FilesKK.KWIK,str,'cluster_group',2);
+end
+
+for k = 1:length(badlist)
+    str=['/channel_groups/','0','/clusters/main/',num2str(UnitLabels{GOI}(badlist(k)))];
+    h5writeatt(FilesKK.KWIK,str,'cluster_group',1);
+end
+end
 
 %% Second Round
+
+if Round == 2
 badlist = find(rpv>.25);
 for k = 1:length(badlist)
     str=['/channel_groups/','0','/clusters/main/',num2str(UnitLabels{GOI}(badlist(k)))];
     h5writeatt(FilesKK.KWIK,str,'cluster_group',1);
 end
+end
+
+
+
+
+
+
+
 
 
 % % %% Stuff that normally happens in Gather Info 1
