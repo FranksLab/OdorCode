@@ -94,7 +94,7 @@ for bank = 1:length(ChunkAVR)
             CatSeries = [CatSeries CatList{j} ,'+'];
         end
     end
-    CatCmd{bank} = ['copy /b ' CatSeries(1:end-1) ,' ', fname{1}(1:12) [num2str(bank),'COM.dat']];
+    CatCmd{bank} = ['copy /b ' CatSeries(1:end-1) ,' ', fname{1}(1:15) [num2str(bank),'.dat']];
 end
 %%
 
