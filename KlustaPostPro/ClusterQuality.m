@@ -3,9 +3,12 @@ close all
 clc
 
 %%
-Round = 2;
+Round = 1;
 
-KWIKfile = 'Z:\THYAnalysis\KWIKsort\10-Jun-2015_0091.kwik';
+KWIKfile = 'Z:\UnitSortingAnalysis\parametertest2\chunks1\19-Nov-2014-0042_t53_start300_max500.kwik';
+% KWIKfile = 'Z:\THYAnalysis\KWIKsort\24-Jun-2015_0101.kwik';
+% KWIKfile = 'Z:\SortedKWIK\RecordSet024com_1.kwik';
+
 FilesKK = FindFilesKK(KWIKfile);
 
 %% Get all detected spiketimes

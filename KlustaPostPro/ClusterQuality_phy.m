@@ -3,9 +3,9 @@ close all
 clc
 
 %%
-Round = 2;
+Round = 1;
 
-KWIKfile = 'Z:\ParameterTest\21-Jul-2015-0011_t53.kwik';
+KWIKfile = 'Z:\TSDAnalysis\RecordSet016te1_1.kwik';
 % KWIKfile = 'Z:\THYAnalysis\KWIKsort\24-Jun-2015_0101.kwik';
 % KWIKfile = 'Z:\SortedKWIK\RecordSet024com_1.kwik';
 
@@ -99,12 +99,12 @@ for k = 1:length(badlist)
     str=['/channel_groups/','0','/clusters/main/',num2str(UnitLabels{GOI}(badlist(k)))];
     h5writeatt(FilesKK.KWIK,str,'cluster_group',int32(1));
 end
-end
+
 BADSPIKES = TSECS(badlist);
 BADSPIKES = cell2mat(BADSPIKES');
 fprintf('%.0f badspikes out of %.0f\n',length(BADSPIKES), length(AllSpikes))
 fprintf('%.0f bad clusters out of %.0f\n',length(badlist), length(TSECS))
-
+end
 % %% 
 % % x = int32(1);
 % thatlist = UnitLabels{1};
