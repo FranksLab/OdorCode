@@ -12,62 +12,85 @@ RawBankChannels = [32 32];
 LiveBankChannels = [30 32];
 
 % Put all of the files (.ns6; .dat; .raw.kwd) into a folder. And select it:
-[datafiles, pathname] = uigetfile({'*.dat;*.ns6;*.kwd'},'Which are your data files?','Z:\UnitSortingAnalysis','MultiSelect','on');
-
-
-%% Get the same chunk of time and channels loaded from of your data files.
-TimeArg = ['t:',num2str(TimeRange(1)*30000+1),':',num2str(TimeRange(2)*30000+1)];
-NS6file = 'z:\UnitSortingAnalysis\18-Apr-2015_Analysis\18-Apr-2015-001.ns6';
-NS6 = openNSx(NS6file,'c:33:64',TimeArg);
-openRawDat = double(NS6.Data);
+[datafiles, pathname] = uigetfile({'*.ns6;*.dat;*.kwd'},'Which are your data files?','Z:\UnitSortingAnalysis','MultiSelect','on');
 
 %%
-load Z:\ExperimentCatalog_AWKX.mat
+extensionlist = {'ns6','dat','kwd'};
+for extension = 1:3
+n = strfind(datafiles, extensionlist{extension});
+index = ~cellfun(@isempty, n);
+FileLocations.(extensionlist{extension}) = [pathname,datafiles{index}];
+end
 
-ES = 0; % Epoch Window
-EL6 = (TimeRange(2)-TimeRange(1))*30000;
-RecordSet = 20;
-Record = 1;
-path = ['Z:\UnitSortingAnalysis\',Date{RecordSet},'_Analysis\'];
-Raw = [path,Date{RecordSet},'-',Raws{RecordSet}{Record}];
-AIP = [path,Date{RecordSet},'-',AIPs{RecordSet}{Record}];
 
-%% Have to get Final Valve Times
-FVOpens = TimeRange(1);
-FV6 = FVOpens*30000;
+% going into a cell and finding things that have specific extensions- how
+% to search inside a cell for a specific string.
+% 
+% FileLocations
+% 
 
-%% NS6 epochs
-ES6 = FV6+ES*30000;
 
-%% Get channel count for NS6
-FID = fopen(Raw,'r','ieee-le');
-dataHeaderBytes = 9; % headerbytes number from NPMK open* scripts
-fseek(FID, 8, 'bof'); % move past filetype specifying bits
-BasicHeader   = fread(FID, 306, '*uint8'); % read in the basic header to get HeaderBytes and ChannelCount
-ChannelCount = double(typecast(BasicHeader(303:306), 'uint32')); % pull ChannelCount out of the header
 
-EL6Bytes = EL6*ChannelCount;
-ES6Bytes = ES6*ChannelCount*2;
+% FileLocations =  
+% 
+%   ns6: 'Z:\UnitSortingAnalysis\09-Jul-2015_Analysis\PreProTroubleShoot\09-Jul-2015_001.ns6'
+%   dat: 'Z:\UnitSortingAnalysis\09-Jul-2015_Analysis\PreProTroubleShoot\09-Jul-2015_0012.dat'
+%   kwd: 'Z:\UnitSortingAnalysis\09-Jul-2015_Analysis\PreProTroubleShoot\09-Jul-2015_0012.raw.kwd'  
+% 
 
-HeaderBytes = double(typecast(BasicHeader(3:6), 'uint32')) + dataHeaderBytes; % how many Bytes to skip before data
-
-ep = 1;
-fseek(FID,round(HeaderBytes + ES6Bytes(ep)), 'bof')
-Epoch = fread(FID, round(EL6Bytes), '*int16');
-
-data = reshape(Epoch,[ChannelCount length(Epoch)/ChannelCount]); % to get back to linearized just use (:) on a matrix this shape
-readRawDat = double(data);
-readRawDat = readRawDat(33:64,:);
-
-%%
-subplot(2,1,1)
-plot(openRawDat(16,:))
-hold on
-plot(readRawDat(16,:),'r')
-hold off
-
-subplot(2,1,2)
-plot(openRawDat(1,:))
-hold on
-plot(readRawDat(1,:),'r')
-hold off
+% %% Get the same chunk of time and channels loaded from of your data files.
+% TimeArg = ['t:',num2str(TimeRange(1)*30000+1),':',num2str(TimeRange(2)*30000+1)];
+% NS6file = 'z:\UnitSortingAnalysis\18-Apr-2015_Analysis\18-Apr-2015-001.ns6';
+% NS6 = openNSx(NS6file,'c:33:64',TimeArg);
+% openRawDat = double(NS6.Data);
+% 
+% %%
+% load Z:\ExperimentCatalog_AWKX.mat
+% 
+% ES = 0; % Epoch Window
+% EL6 = (TimeRange(2)-TimeRange(1))*30000;
+% RecordSet = 20;
+% Record = 1;
+% path = ['Z:\UnitSortingAnalysis\',Date{RecordSet},'_Analysis\'];
+% Raw = [path,Date{RecordSet},'-',Raws{RecordSet}{Record}];
+% AIP = [path,Date{RecordSet},'-',AIPs{RecordSet}{Record}];
+% 
+% %% Have to get Final Valve Times
+% FVOpens = TimeRange(1);
+% FV6 = FVOpens*30000;
+% 
+% %% NS6 epochs
+% ES6 = FV6+ES*30000;
+% 
+% %% Get channel count for NS6
+% FID = fopen(Raw,'r','ieee-le');
+% dataHeaderBytes = 9; % headerbytes number from NPMK open* scripts
+% fseek(FID, 8, 'bof'); % move past filetype specifying bits
+% BasicHeader   = fread(FID, 306, '*uint8'); % read in the basic header to get HeaderBytes and ChannelCount
+% ChannelCount = double(typecast(BasicHeader(303:306), 'uint32')); % pull ChannelCount out of the header
+% 
+% EL6Bytes = EL6*ChannelCount;
+% ES6Bytes = ES6*ChannelCount*2;
+% 
+% HeaderBytes = double(typecast(BasicHeader(3:6), 'uint32')) + dataHeaderBytes; % how many Bytes to skip before data
+% 
+% ep = 1;
+% fseek(FID,round(HeaderBytes + ES6Bytes(ep)), 'bof')
+% Epoch = fread(FID, round(EL6Bytes), '*int16');
+% 
+% data = reshape(Epoch,[ChannelCount length(Epoch)/ChannelCount]); % to get back to linearized just use (:) on a matrix this shape
+% readRawDat = double(data);
+% readRawDat = readRawDat(33:64,:);
+% 
+% %%
+% subplot(2,1,1)
+% plot(openRawDat(16,:))
+% hold on
+% plot(readRawDat(16,:),'r')
+% hold off
+% 
+% subplot(2,1,2)
+% plot(openRawDat(1,:))
+% hold on
+% plot(readRawDat(1,:),'r')
+% hold off
